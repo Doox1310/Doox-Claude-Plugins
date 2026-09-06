@@ -18,7 +18,10 @@ belongs here.
 | `market-research` | the user names a target market and asks to research it, or asks for a market report | a new `.xlsx` built from the saved report framework, filled, every figure sourced |
 | `project-update` | the user reports a change to a task — done, pending, slipped, blocked, deadline moved | the confirmed cells written into the plan files, and a report of what changed. The only skill that writes to a plan file |
 | `project-insights` | the user asks what is stuck or going wrong, asks to summarise/classify issues, asks what finished projects taught, asks how far along a project is, or hands over a plan file with every task done | 4 sections in the chat reply — open issues by work area and issue type, past issues and their patterns, lessons across the archived plans, progress forecast. No mail, ever |
-| `document-review` | the user hands over documents — báo giá, hồ sơ năng lực, tiêu chuẩn, hợp đồng, spec — and asks to dịch, tóm tắt, so sánh, duyệt, chấm, xếp hạng or đề cử | tables in the chat reply — the reading of the documents, or a normalised comparison plus a shortlist. Reads only what the user supplied, never a plan file |
+| `doc-compare` | the user hands over documents and asks to tóm tắt, đọc, so sánh, or what differs and what looks bất thường | tables in the chat reply. Reads only what the user supplied, never a plan file |
+| `doc-translate` | the user hands over a `.docx` / `.xlsx` / `.pptx` and asks to dịch it | a new translated file keeping the original layout, plus what was passed through untranslated |
+| `bid-review` | the user hands over báo giá or hồ sơ năng lực and asks to duyệt, chấm, xếp hạng, đề cử | a normalised comparison plus a shortlist, in the chat reply |
+| `plan-consolidation` | the user hands over several kế hoạch files of different structures and asks to quy hoạch về một form chung, or to gộp kế hoạch nhiều phòng ban | new `.xlsx` files — normalised, or one merged read-only file. Two commands, never chained |
 
 `project-report` reads **one** file and answers "where does this market stand"; `reminder` reads
 **every** file in the project folder and answers "what has to happen today"; `project-insights` reads
@@ -27,8 +30,37 @@ before, and where this ends up"; `project-update` is the only one that **writes*
 cells the user named, after confirming them. Do not use one to approximate the other — a reminder is
 not a shortened progress report, a progress report of one market does not tell a PIC what is due,
 neither of them classifies an issue or forecasts anything, and none of them edits a cell.
-`document-review` sits outside that group entirely: it never opens a plan file, and it works only on
-the documents the user handed over in the session.
+`doc-compare`, `doc-translate` and `bid-review` sit outside that group entirely: they never open a
+plan file, and they work only on the documents the user handed over in the session. `plan-consolidation`
+does read plan files, but it reshapes and copies them rather than reporting on them — it answers
+neither "where does this stand" nor "what is due", and it never writes to a file it read.
+
+## The five document rules
+
+These govern `doc-compare`, `doc-translate` and `bid-review` — every line those skills print.
+Referred to there as rules 2.1 – 2.5.
+
+**2.1 — Never replace the document's data with model knowledge.** The price in the file is the price,
+the model number in the file is the model number, even when a better-known figure exists. The user
+asking to research or verify something is a different request, and it is `market-research`.
+
+**2.2 — Missing data is named, never filled.** `Chưa có thông tin` when the document is silent,
+`Chưa xác minh` when the document asserts something it does not evidence. Both are real answers.
+A blank cell quietly filled with a plausible value is the failure these skills exist to prevent.
+
+**2.3 — Names, codes and units pass through untouched.** Tên pháp lý, mã số thuế, mã hiệu, model,
+số hiệu tiêu chuẩn, đơn vị đo — carried over exactly as written, in any language, including inside a
+translation. `IEC 61851-1` stays `IEC 61851-1`. `Công ty TNHH …` is not translated into English and
+not "corrected".
+
+**2.4 — Compare only within the same scope.** Two figures are comparable after they have been put on
+the same basis: same hạng mục, same đơn vị tính, same khối lượng, same tax basis, same currency, same
+inclusions. Anything that resists normalisation is reported as `Không so sánh được` with the reason —
+never forced onto the table because the row needed a value.
+
+**2.5 — Every finding names its source and position.** Which document, which page/sheet/mục/dòng. A
+difference between two documents that does not say where each side came from cannot be checked by the
+person who has to act on it.
 
 ## Plan file naming
 
@@ -156,6 +188,8 @@ Dates print as `dd/mm/yyyy` everywhere.
 **`project-update` is the only skill that writes to a plan file. Every other skill is read-only** —
 `reminder`, `project-report` and `project-insights` read and print, never touch a cell. A report
 that "fixed a wrong date while it was in there" is a bug in that skill, not a service.
+`plan-consolidation` reads plan files and writes **new** ones; it never writes back to a file it
+read, and a "corrected" source file is the same bug.
 
 Plan files are co-authored — Google Drive, OneDrive, SharePoint — so a write lands in someone else's
 file the moment it is saved. The rules that make it safe live in `project-update`, and hold for
@@ -191,9 +225,12 @@ Update it when a run reveals:
 
 Rewrite the affected lines rather than appending; a README that only grows stops being read.
 
-A Doox skill writes to four things and nothing else: a plan file under `project-update`, this README,
-and — under `market-research` only — the market report `.xlsx` it produces plus that report's source-log
-folder. Every other skill is read-only.
+A Doox skill writes to these things and nothing else: a plan file under `project-update`; this README;
+under `market-research`, the market report `.xlsx` it produces plus its source-log folder
+(`doox-sources/<market-slug>/`, holding that market's evidence cache and the run's claim ledger);
+under `plan-consolidation`, the new `.xlsx` files it generates; under `doc-translate`, the translated
+copy it generates. Every other skill is read-only, and none of them ever writes over a file the user
+supplied.
 
 ### The README lives locally, never on a connector
 
@@ -241,8 +278,10 @@ is.** No `README.md` at all, a README with no `## Người dùng`, a section wit
 all the same case.
 
 **This is the first step of every run that touches a plan file, and it is a gate.**
-`market-research` and `document-review` are the exceptions: they read no plan file and show nobody's
-rows, so they run without the gate, for either role. Settle who is running this before
+`market-research`, `doc-compare`, `doc-translate` and `bid-review` are the exceptions: they read no
+plan file and show nobody's rows, so they run without the gate, for either role. `plan-consolidation`
+is the opposite case — it reads whole plan files, so it is gated **and** restricted to a verified
+`Project Manager`; see its own skill for the one case where no gate applies. Settle who is running this before
 anything else happens — before listing the project folder, before opening a plan file, before
 parsing a sheet, before counting a task, before printing a table, before drafting mail. Nothing about
 a plan file is read or shown while any of the three facts is missing, and a `Chuyên gia` has no rows

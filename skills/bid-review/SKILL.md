@@ -1,120 +1,38 @@
 ---
-name: document-review
-description: Review the documents the user hands over in the session — translate, summarise and compare them, normalise several quotations onto one scope and shortlist them, or score contractor capability dossiers against the twelve capability groups with the evidence behind every line. Use when the user sends quotations, contractor dossiers, standards, contracts or any external document and asks to đọc, dịch, tóm tắt, so sánh, duyệt, chấm, xếp hạng or đề cử. Reads only what the user supplied; never a plan file.
+name: bid-review
+description: Use when the user hands over báo giá from several vendors or hồ sơ năng lực from several contractors and asks to duyệt, so sánh giá, chấm, xếp hạng or đề cử. Not for reading, translating or summarising documents in general.
 ---
 
-# Document Review
+# Bid Review
 
 ## 1. What this skill is for
 
-The user drops documents into the session — báo giá from several vendors, hồ sơ năng lực from
-several contractors, a standard, a contract, a foreign-language spec — and asks for a reading of
-them. Four requests, one skill, because in practice they arrive as one job: five quotations come in,
-two of them in English, they need translating, normalising onto the same scope, comparing, then
-shortlisting.
+Several quotations for the same scope, or several contractor dossiers, and a
+decision to make: which ones qualify, how they compare on one basis, which to
+shortlist.
 
 | Request | Section |
 |---|---|
-| dịch, tóm tắt, so sánh, trích dẫn tài liệu | §3 |
 | duyệt báo giá, so sánh giá, đề cử phương án | §4 |
 | duyệt hồ sơ năng lực nhà thầu, chấm, xếp hạng | §5 |
 
-Not for the project plan files — those are `project-report`, `reminder`, `project-insights`,
-`project-update`. Not for researching a market from public sources — that is `market-research`, which
-goes out to the internet; this skill stays inside the documents in front of it.
+Reading, translating, summarising or comparing documents in general is not this
+skill: `doc-compare` reads and compares, `doc-translate` produces a translated file.
+Those two usually run first — five quotations arrive, two in English, they are
+translated and read before anything is scored here. Not for plan files, and not for
+researching a market from public sources (`market-research`).
 
-**Read-only, and no identity gate.** This skill shows nobody's rows and touches no plan file, so it
-runs for either role without the `using-doox` identity check. It writes nothing: the output is
-tables in the chat reply. The user wanting the result as a file asks for it, and it is a new file —
-never a rewrite of a document they supplied.
+**Read-only, and no identity gate.** This skill shows nobody's rows and touches no
+plan file, so it runs for either role without the `using-doox` identity check. It
+writes nothing: the output is tables in the chat reply.
 
-## 2. The five rules
+## 2. The rules that govern every line below
 
-These hold in every section below and they are the whole reason this skill exists. Translating and
-summarising need no instructions; **not inventing** does.
-
-**2.1 — Never replace the document's data with model knowledge.** The price in the file is the price,
-the model number in the file is the model number, even when a better-known figure exists. The user
-asking to research or verify something is a different request, and it is `market-research`.
-
-**2.2 — Missing data is named, never filled.** `Chưa có thông tin` when the document is silent,
-`Chưa xác minh` when the document asserts something it does not evidence. Both are real answers.
-A blank cell quietly filled with a plausible value is the failure this skill is built to prevent.
-
-**2.3 — Names, codes and units pass through untouched.** Tên pháp lý, mã số thuế, mã hiệu, model,
-số hiệu tiêu chuẩn, đơn vị đo — carried over exactly as written, in any language, including inside a
-translation. `IEC 61851-1` stays `IEC 61851-1`. `Công ty TNHH …` is not translated into English and
-not "corrected".
-
-**2.4 — Compare only within the same scope.** Two figures are comparable after they have been put on
-the same basis: same hạng mục, same đơn vị tính, same khối lượng, same tax basis, same currency, same
-inclusions. Anything that resists normalisation is reported as `Không so sánh được` with the reason —
-never forced onto the table because the row needed a value.
-
-**2.5 — Every finding names its source and position.** Which document, which page/sheet/mục/dòng. A
-difference between two documents that does not say where each side came from cannot be checked by the
-person who has to act on it.
-
-## 3. Translate, summarise, compare
-
-### 3.1 Identify before reading
-
-Establish, per document: what it is (báo giá / hồ sơ năng lực / tiêu chuẩn / hợp đồng / spec /
-khác), its language, and what the user wants out of it. State the reading in one line per document
-before producing anything:
-
-```
-1. Bao gia - Cong ty A.pdf | Báo giá | EN | 12 trang
-2. Ho so nang luc - Cong ty B.docx | Hồ sơ năng lực | VI | 34 trang
-```
-
-A document whose type is not clear from its content is asked about, not assumed. The type decides
-which section runs, and running §4 on a hồ sơ năng lực produces a confident wrong table.
-
-### 3.2 Extract along the document's own structure
-
-Pull tiêu đề / mục / bảng / số liệu / điều kiện / ngoại lệ as the document organises them, then
-summarise the main points and the items that need a decision. Do not reorganise a document into a
-shape it does not have — the user has to find these things again in the original.
-
-**Điều kiện and ngoại lệ survive summarising.** A summary that keeps the price and drops "giá chưa
-bao gồm VAT, chưa bao gồm vận chuyển đến chân công trình" is worse than no summary. Same for số
-liệu, mốc thời gian and kết luận: shorten the prose, never the conditions attached to a number.
-
-### 3.3 Translating
-
-Into Vietnamese, with the professional term the field actually uses, at the length of the original —
-no condensing unless the user asked for a summary as well. Rule 2.3 governs what stays untranslated.
-
-A term with no settled Vietnamese equivalent keeps the original in brackets after the translation the
-first time it appears.
-
-### 3.4 Comparing several documents
-
-Same set of criteria applied to every document, derived from what the documents have in common — not
-a criterion invented for one of them. Output three groups, each line sourced per rule 2.5:
-
-- **Giống** — the documents agree;
-- **Khác** — they differ without contradicting (different scope, different assumption);
-- **Xung đột** — they cannot both be true.
-
-`Xung đột` is never resolved by picking the more plausible side. Print both, name both sources, say
-what would settle it.
-
-### 3.5 Output
-
-```
-Tài liệu tham khảo — [tên tài liệu / nhóm tài liệu]
-
-1. Tóm tắt nội dung chính
-2. Số liệu & điều kiện quan trọng
-   - Nội dung | Giá trị | Điều kiện áp dụng | Nguồn (tài liệu, vị trí)
-3. Điểm giống / khác / xung đột giữa các tài liệu
-4. Các điểm chưa đủ cơ sở kết luận
-```
-
-Section 4 is not optional and is not left empty when something is missing — it is where rule 2.2
-lands.
+**REQUIRED BACKGROUND:** the five document rules in `using-doox` — never substitute
+model knowledge for what the document says, name missing data instead of filling it,
+pass codes and units through untouched, compare only within the same scope, source
+every finding. They are referred to below as rules 2.1 – 2.5 and they are the whole
+reason this skill exists: scoring needs no instructions, **not inventing** does.
 
 ## 4. Reviewing quotations
 

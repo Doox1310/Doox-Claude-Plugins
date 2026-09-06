@@ -87,7 +87,12 @@ If the public description frames the company primarily around an unrelated line 
 - **stop rule: saturation** — two consecutive frames produce no new MST, and F1–F5 have all been worked. Not "3–5 found". The workbook's 3–5 minimum is a floor for the summary row, never a target for the list;
 - state residual blind spots (firms with no web presence, unpublished tender results, provinces not covered).
 
-This enumeration runs on its **own budget, separate from the §7 report quota**, because registry pages are cheap to open and the report quota would otherwise cap the list at the first few SEO results: roughly 15–25 searches and 8–12 opened documents in `nhanh`, 35–60 searches and 20–30 documents in `sâu`. §7's "stop when sufficient" does not override the saturation rule.
+This enumeration runs on its **own budget, separate from both lines of the §8 report quota**, because registry pages are cheap to open and the report quota would otherwise cap the list at the first few SEO results. The budget is set by the objective, not by the run's mode:
+
+- contractor selection **is** a stated objective — roughly 35–60 searches and 20–30 opened documents;
+- contractors appear only as one partner group in the `Bảng 3` overview — roughly 15–25 searches and 8–12 documents.
+
+§8's "stop when sufficient" does not override the saturation rule.
 
 Dispatch frames to parallel workers by default — one worker per frame, non-overlapping, returning candidate rows (MST, name, role evidence, source URL, date) and never raw document text. A frame brief is the one exception to §8's fixed-URL rule: the frame already pins the authority and the domain, so the worker runs the §8 step-3 gate itself inside that frame and reports how many results it opened. Frames F6–F10 are the loose ones — a worker there opens only what a registry-, owner- or permit-level snippet already supports.
 
