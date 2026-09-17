@@ -1,6 +1,6 @@
 ---
 name: reminder
-description: Read every market's plan file (.xlsx) in the project folder and produce the daily reminder — the PM's full table, or a specialist's own tasks — and on a PM run draft one Gmail per PIC. Use when the user asks what has to be done today, asks to remind the team, or runs the 9am reminder.
+description: Read every market's plan file (.xlsx) in the project folder and produce the daily reminder — the PM's full table, or a specialist's own tasks — and on a PM run draft one Outlook mail per PIC. Use when the user asks what has to be done today, asks to remind the team, or runs the 9am reminder.
 ---
 
 # Reminder
@@ -145,7 +145,7 @@ only their own address status, not the team's.
 
 ## 7. Mail
 
-**Only a `Project Manager` run writes mail.** One Gmail **draft** per PIC code that has an email and
+**Only a `Project Manager` run writes mail.** One Outlook **draft** per PIC code that has an email and
 at least one row due: recipient that address, body that code's rows in the mục 1 layout (eleven
 columns, no `PIC` column) and split into the same three tables, subject `Nhắc việc [dd/mm/yyyy]`.
 In the mail the empty cases are dropped — a PIC gets the tables that have rows, with no

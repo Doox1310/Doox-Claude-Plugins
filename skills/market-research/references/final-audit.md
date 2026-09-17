@@ -49,3 +49,18 @@ Fix the claim or expose the limitation before delivery.
 ## E. Contractor-list audit
 
 Only when the objective includes contractor selection. Run audit E as written in `contractor-enumeration.md`. It is short by design — running out of budget is a reason to ship the workbook with named gaps, never a reason to skip it.
+
+## F. Competitor-comparison audit
+
+Only when the objective includes `competitor/CPO`. Check before printing:
+
+- every D1–D10 row is measured on the same basis for both sides, or the cell says `Không so sánh được` with the reason (§7.4a);
+- every scale figure carries its state — `Đang vận hành` / `Đang xây` / `Đã công bố` — and the comparison ran on the operating column only (§7.4b);
+- every scale figure carries an as-of date, pulled to the data-lock date or with the gap stated;
+- **no "mình hơn" line rests on a competitor cell that is empty** (§7.5) — those belong in `Chưa kết luận được`;
+- every competitor sits in exactly one bucket, and the set was segmented before it was ranked;
+- C1–C3 were worked or recorded as unavailable;
+- no D1 value came from a CPO's own superlative wording;
+- no competitor cost, margin or utilisation appears as a fact;
+- the own-side row is sourced from the user/documents, never from model knowledge (§7.1);
+- the section recommends nothing (§7.7).
