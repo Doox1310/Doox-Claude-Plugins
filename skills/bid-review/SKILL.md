@@ -13,8 +13,8 @@ shortlist.
 
 | Request | Section |
 |---|---|
-| duyệt báo giá, so sánh giá, đề cử phương án | §4 |
-| duyệt hồ sơ năng lực nhà thầu, chấm, xếp hạng | §5 |
+| duyệt báo giá, so sánh giá, đề cử phương án | §3 |
+| duyệt hồ sơ năng lực nhà thầu, chấm, xếp hạng | §4 |
 
 Reading, translating, summarising or comparing documents in general is not this
 skill: `doc-compare` reads and compares, `doc-translate` produces a translated file.
@@ -34,21 +34,21 @@ pass codes and units through untouched, compare only within the same scope, sour
 every finding. They are referred to below as rules 2.1 – 2.5 and they are the whole
 reason this skill exists: scoring needs no instructions, **not inventing** does.
 
-## 4. Reviewing quotations
+## 3. Reviewing quotations
 
-### 4.1 Settle the basis first
+### 3.1 Settle the basis first
 
 Before comparing anything, establish and state:
 
 - **thị trường / dự án** the quotations belong to;
-- **the criteria in force** — see §4.2;
+- **the criteria in force** — see §3.2;
 - **ngưỡng chênh lệch giá or nguyên tắc ưu tiên**, if the user set one. No threshold set means
   ranking reports the spread and does not apply a cut-off of its own invention.
 
 Quotations for different scopes that the user believes are comparable: say so before normalising, and
 name what differs.
 
-### 4.2 Which criteria apply
+### 3.2 Which criteria apply
 
 Criteria come from one of three places, in this order:
 
@@ -65,7 +65,7 @@ Criteria come from one of three places, in this order:
 the benchmark the other vendors are measured against just because it arrived first. Only case 1 and
 case 2 set criteria.
 
-### 4.3 Normalise
+### 3.3 Normalise
 
 Put every quotation on the same basis, one row per hạng mục, before any comparison:
 
@@ -93,7 +93,7 @@ Against a standard framework, each line gets: `Đạt` / `Thiếu` / `Khác chu�
 are different problems with different fixes — a quotation that is cheaper because it quoted less
 volume is not a cheaper quotation. Report them apart, per hạng mục and in total.
 
-### 4.4 Elimination, then ranking
+### 3.4 Elimination, then ranking
 
 Eliminate first, on these grounds only, each naming the specific hạng mục or điều kiện:
 
@@ -102,14 +102,20 @@ Eliminate first, on these grounds only, each naming the specific hạng mục or
 - điều kiện thương mại không đáp ứng yêu cầu đã nêu;
 - không đủ dữ liệu để xác minh.
 
+**The first two grounds need a framework to exist.** Under §3.2 case 3 nothing defines what is
+`bắt buộc` or what the `tiêu chuẩn` is, so eliminating on either one would be inventing the standard
+this skill refuses to invent. In that case only the last two grounds are available — say so, and
+report a missing hạng mục as a scope difference in the comparison table rather than as a
+disqualification.
+
 Rank what remains on: mức độ đáp ứng kỹ thuật/phạm vi → chi phí so với khung chuẩn → điều kiện
-thương mại → tiến độ/bảo hành. Where the user set a priority rule in §4.1, it wins.
+thương mại → tiến độ/bảo hành. Where the user set a priority rule in §3.1, it wins.
 
 Shortlist size: more than 3 quotations → recommend at least 3; more than 5 → recommend at most 5.
 **Never pad the shortlist to reach the number.** Three quotations of which one qualifies produces a
 shortlist of one plus the reasons the others fell out.
 
-### 4.5 Output
+### 3.5 Output
 
 ```
 Duyệt báo giá — [thị trường / dự án]
@@ -127,9 +133,9 @@ Duyệt báo giá — [thị trường / dự án]
 Every eliminated quotation appears in section 3 with its reason. A quotation that entered the review
 and appears nowhere in the output is a coverage failure.
 
-## 5. Reviewing contractor dossiers
+## 4. Reviewing contractor dossiers
 
-### 5.1 The twelve capability groups
+### 4.1 The twelve capability groups
 
 Every dossier is mapped onto these, and they are the row labels of the output matrix:
 
@@ -138,7 +144,7 @@ nhân sự chủ chốt · tài chính · năng lực triển khai đồng thờ
 
 A group the dossier does not address is `Chưa có thông tin` — a filled row, not an omitted one.
 
-### 5.2 Evidence, or nothing
+### 4.2 Evidence, or nothing
 
 **Only data with evidence inside the dossier counts.** A capability statement with no dự án, chứng
 chỉ, báo cáo tài chính or hồ sơ nhân sự behind it is recorded as `Chưa xác minh` and scored as
@@ -150,7 +156,7 @@ attached, nor a project listed without owner, scope or year.
 Per line: what the dossier claims, what evidence backs it, where that evidence sits (rule 2.5), and
 the resulting mức đáp ứng.
 
-### 5.3 Mandatory criteria before scoring
+### 4.3 Mandatory criteria before scoring
 
 State which of the twelve are bắt buộc for this scope, and what disqualifies, **before scoring
 anything** — a criterion promoted to mandatory after the results are visible is not a criterion.
@@ -160,15 +166,29 @@ say so and rank on mức độ đáp ứng across the twelve groups without inve
 matrix and the gaps carry the decision, and a made-up score would make it look settled when it is
 not.
 
-### 5.4 Shortlist
+**With no framework, the mandatory set is derived from the scope the user stated and from nothing
+else.** `EPC trọn gói, đấu nối trung thế 22kV` carries its own requirements — a construction licence
+covering that voltage, a licence to work grid-side, evidence of one comparable delivered project.
+Derive only what the stated scope actually implies, print the list with the words of the scope each
+item came from, and print it **before** the matrix. A criterion that cannot be traced back to
+something the user said about the scope is an invented criterion; drop it. Where the user stated no
+scope at all, ask for it rather than deriving a set from the dossiers.
+
+### 4.4 Shortlist
 
 More than 3 dossiers → at most 3 recommended; more than 5 → at most 5. A contractor failing a
 mandatory criterion never enters the shortlist, whatever its other scores.
 
+**Those are ceilings and there is no floor. Never pad the shortlist to reach a number** — the same
+rule as §3.4, and it bites harder here, because a mandatory criterion is exactly the kind of thing a
+strong dossier fails on. Three dossiers of which one qualifies produces a shortlist of one plus the
+reasons the other two fell out; none qualifying produces an empty shortlist and the reasons, never
+the least-bad promoted to fill it.
+
 Every recommended contractor carries: năng lực nổi trội, điểm yếu, khoảng trống dữ liệu, and the risk
 of handing them turnkey scope.
 
-### 5.5 Output
+### 4.5 Output
 
 ```
 Duyệt hồ sơ năng lực — [thị trường / dự án]
@@ -183,7 +203,7 @@ Duyệt hồ sơ năng lực — [thị trường / dự án]
 5. Kết luận & rủi ro khi giao turnkey
 ```
 
-## 6. Before replying
+## 5. Before replying
 
 Check, against the documents read in this run:
 
@@ -193,7 +213,7 @@ Check, against the documents read in this run:
 - every conversion, normalisation and total reproduces from the stated inputs;
 - every `Chưa có thông tin` / `Chưa xác minh` says what is missing and who would confirm it;
 - nothing marked `Không so sánh được` was quietly compared anyway;
-- the basis of the criteria (§4.2, §5.3) is stated in the output, not just decided internally;
+- the basis of the criteria (§3.2, §4.3) is stated in the output, not just decided internally;
 - the shortlist was not padded to a target number.
 
 Then state in the reply: documents read, the criteria basis used, and what still needs to be

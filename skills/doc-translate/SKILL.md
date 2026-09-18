@@ -49,8 +49,11 @@ reported as missing. Do not delete keys from the JSON.
 everywhere.** A word that must read differently in two places has to be edited in the
 output document afterwards; say so rather than leaving the user to find it.
 
-**Never overwrite the source.** Output is a new file, `[tên gốc]_VI.[ext]`. The
-script refuses an output path equal to its input.
+**Never overwrite the source.** Output is a new file, `[tên gốc]_[mã ngôn ngữ đích].[ext]` —
+`_VI` for the default Vietnamese target, `_EN` when the user asked for English, and so on.
+The suffix names where the file is going, so a `_VI` on an English translation mislabels
+it for everyone who later opens the folder. The script takes the name from `-o` and
+hardcodes nothing; it refuses only an output path equal to its input.
 
 **Report `WARNING … matched nothing`** if `apply` prints it. It means the source
 changed between the two commands, and those strings are missing from the output.

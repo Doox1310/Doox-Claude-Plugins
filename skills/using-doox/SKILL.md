@@ -50,7 +50,10 @@ not read plan files unless the user asks for deadlines to be pulled from them.
 ## The five document rules
 
 These govern `doc-compare`, `doc-translate` and `bid-review` — every line those skills print.
-Referred to there as rules 2.1 – 2.5.
+
+**`2.1` – `2.5` are stable rule IDs, not a section number in this file.** They are named after
+the section that cites them (`bid-review` §2) and they keep those IDs wherever they are quoted;
+nothing here is numbered `2`, and renumbering a skill never renumbers a rule.
 
 **2.1 — Never replace the document's data with model knowledge.** The price in the file is the price,
 the model number in the file is the model number, even when a better-known figure exists. The user
@@ -116,6 +119,12 @@ Ignore Excel lock files: `~$…` and `.~lock.…#`.
 Every skill reads a plan file the same way. This section is the only description of it — a skill
 that needs a field takes it from here.
 
+**How the file is opened.** No harness here parses `.xlsx` with its file-reading tool — reading one
+means a small `openpyxl` script run through the shell, and that is the expected mechanism, not a
+workaround. Load with `data_only=True` so a formula cell yields its cached value rather than the
+formula text. A native Google Sheet reached through a connector is read through that connector
+instead; it cannot be written (see "Writing a plan file").
+
 The data lives in two sheets and has to be joined:
 
 - The plan detail sheet — Danh mục CV, Phương án triển khai, Tiêu chí hoàn thành, Người phụ trách,
@@ -153,8 +162,13 @@ report. Never claim one sheet "has extra task rows" without that first differing
 Five required columns: **Danh mục công việc**, **Trạng thái (text)**, the **checkbox**, **Ngày bắt
 đầu**, **Ngày kết thúc**. If any one of them is missing, stop and ask the user — do not guess.
 
-Report which columns were matched before printing anything, e.g. `sheet 'KH Bảng 3 - Chi tiết' cột
-J = Ngày kết thúc`. One line per file.
+Report which columns were matched before printing anything. **One line per file — not one per column
+and not one per sheet**, even though a file has two. The five required columns go on that one line,
+each with the sheet and the column letter it was found at:
+
+```
+Bo Bien Nga: chi tiết 'KH Bảng 3 - Chi tiết' cột D = Danh mục CV, I = Ngày bắt đầu, J = Ngày kết thúc, K = Trạng thái (chữ); kiểm soát 'KH Kiểm soát tiến độ & sự cố' cột J = Trạng thái (checkbox)
+```
 
 A row with no Danh mục CV, or with a Danh mục but both date cells empty, is a section heading
 (`A`, `1`, `2`…). It is not a task: drop it from every table and from every count.
@@ -285,13 +299,27 @@ live in the README:
 - Mã PIC: Doox3          <!-- chỉ với vai trò Chuyên gia -->
 ```
 
+Those four are the whole schema. There is no separate `Chức vụ` field and none is asked for: a skill
+that needs a job title for a signature — `mail-draft` is the only one — uses `Vai trò` as written.
+
 **Missing the section, or missing any one of those lines, means asking — no matter which run this
 is.** No `README.md` at all, a README with no `## Người dùng`, a section with a name but no email:
 all the same case.
 
+**A README that disagrees with the operator is the same case too.** Where the harness exposes the
+signed-in account's address and it is not the `Email` in the README, the recorded identity belongs to
+somebody else — a shared folder, a copied README, a machine handed over. Do not run on it and do not
+reconcile it by picking the more senior of the two: clear the three facts and ask again from step 1.
+A specialist silently inheriting a `Project Manager` README reads every row of every market, which is
+the one failure this whole section exists to prevent. Where the harness exposes no address, the
+README stands as written.
+
 **This is the first step of every run that touches a plan file, and it is a gate.**
 `market-research`, `doc-compare`, `doc-translate` and `bid-review` are the exceptions: they read no
-plan file and show nobody's rows, so they run without the gate, for either role. `plan-consolidation`
+plan file and show nobody's rows, so they run without the gate, for either role. `calendar` is a
+conditional exception — it touches the calendar, not a plan file, so it runs ungated **until** the
+user asks for deadlines to be pulled out of a plan file; that request puts the gate back on for that
+run, and the rows pulled are filtered by role like any other. `plan-consolidation`
 is the opposite case — it reads whole plan files, so it is gated **and** restricted to a verified
 `Project Manager`; see its own skill for the one case where no gate applies. Settle who is running this before
 anything else happens — before listing the project folder, before opening a plan file, before

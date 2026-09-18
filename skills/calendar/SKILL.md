@@ -50,6 +50,17 @@ Missing details are asked for, not filled in. No default duration invented for a
 nobody stated, no attendee added because they were on a similar meeting before, no địa điểm guessed.
 The one exception: an end time missing where the user gave a clear duration ("họp 30 phút lúc 2h").
 
+A start time with no duration and no end time is the ordinary case of that rule, not a gap in it —
+"2h chiều" says when it begins and nothing about when it ends. Ask; do not reach for an hour because
+an hour is what meetings usually are.
+
+**An attendee named by PIC code needs a real address, and this skill has no way to invent one.**
+Build the `code → email` directory the way `reminder` §5 does — scan every row of every plan file in
+the project folder, handle all four separators — and use what it returns. Nothing returned means
+asking the user for the address: an invitation fires the moment the event exists, so a guessed
+address is a meeting request in a stranger's inbox. `Thầu` is a contractor and has no personal
+address at all.
+
 **Dời và huỷ read before they write.** Find the event, print it as it stands now, say what will change,
 then ask. Two events match the description → ask which, never pick the nearer one.
 

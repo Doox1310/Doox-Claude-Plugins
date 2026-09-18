@@ -50,6 +50,10 @@ failure: the draft is still written, with the recipient left empty and that said
 **Never guess an address.** Not from a name, not from a pattern seen in other addresses, not from the
 domain of a colleague's.
 
+A recipient who resolved to nothing but a PIC code is addressed by that code — `Kính gửi anh/chị
+Doox3`. The code is what the plan file calls them; inventing a personal name to make the salutation
+read better puts a person who does not exist at the top of the mail.
+
 ## 4. Fill the form
 
 Read `assets/form-mail.md` and follow it — section order, subject line, sign-off. That file is the

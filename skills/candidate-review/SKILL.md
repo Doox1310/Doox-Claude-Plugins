@@ -80,3 +80,15 @@ Per the framework's "Đầu ra bắt buộc" section, in the chat reply. End wit
 The assessment is input to a human decision, never the decision. Do not write that a candidate should
 be hired or rejected — write what the material shows, what it does not, and what is still worth
 asking.
+
+**The framework's `Kết luận` is not the exception to that.** `Đề cử` / `Cân nhắc` /
+`Không phù hợp` say how far the material carried the candidate against the framework — they are the
+sanctioned vocabulary for that reading and nothing more. Write the label, write the evidence behind
+it, and stop: no `nên tuyển`, no `nên loại`, no offer, no ranking presented as a decision. `Đề cử`
+means the material supports putting them forward; the person who hires still decides.
+
+**`Chưa đủ dữ liệu` at §0 is a third outcome, not a failure.** §5 ranks those who passed §0 and says
+what to do when nobody passed; a §0 that could not be scored at all — because the position's điều
+kiện bắt buộc were never stated — is neither. Print the per-candidate assessments in full, say plainly
+that no ranking can be issued until §0 is settled, and name what would settle it. Never convert an
+unscoreable §0 into a pass so the ranking can be produced, and never into a fail.

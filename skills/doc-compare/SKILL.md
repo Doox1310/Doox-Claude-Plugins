@@ -88,6 +88,23 @@ No khung chuẩn supplied means **no `lệch khung chuẩn` finding at all** —
 plainly instead of inventing a standard to measure against. An outlier is reported
 as `cần làm rõ`, never as `sai`: the odd one out may be the correct one.
 
+### Bằng chứng không phải chữ
+
+A requirement is often carried by formatting rather than words — a cell shaded against
+a colour legend, a ✓/✗ matrix, a struck-through clause, a merged cell spanning columns
+it does not belong to. **That is the document's own content, and reading it is rule 2.1,
+not outside knowledge.** Decode it against the legend the document itself prints, and
+say which mechanism you read: `ô nền cam FFC000 = "Bắt buộc" theo chú giải màu mục 1`.
+
+It is also where internal contradictions hide, because the colour and the footnote are
+written by different people at different times. A cell shaded `Bắt buộc` whose Ghi chú
+reads `Khuyến nghị` is a `Mâu thuẫn nội bộ` with baseline `chính tài liệu đó` — quote
+both sides and neither wins.
+
+A formatting signal with **no legend** in the document is not decoded and not guessed:
+report that the document encodes something by colour/mark without saying what, and name
+the cells. Reading a colour by convention is inventing data.
+
 Never correct an anomalous figure. Report it with both values and its position.
 
 ## 6. Output

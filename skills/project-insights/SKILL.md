@@ -241,10 +241,19 @@ Heading, verbatim: `4. Dự báo tiến độ`. One table, one row per unfinishe
 Below the table, one line per market that is behind, naming what is holding it: the overdue tasks
 and the Nhóm việc they sit in.
 
-**Two things this forecast cannot do, and both get said rather than guessed.** Velocity assumes the
-rest of the project moves at the pace of what is done so far, which a project that has only finished
-its easy tasks will beat by a wide margin — print the forecast date with `(theo tốc độ hiện tại)`
-attached. And a project with no completed task at all has no velocity: print `-`, not a date.
+**Three things this forecast cannot do, and all three get said rather than guessed.** Velocity assumes
+the rest of the project moves at the pace of what is done so far, which a project that has only
+finished its easy tasks will beat by a wide margin — print the forecast date with
+`(theo tốc độ hiện tại)` attached. A project with no completed task at all has no velocity: print
+`-`, not a date.
+
+And the same shortage bites the other way round, harder. **Fewer than 5 completed tasks is not a
+velocity, and no date is printed from one.** Three done out of 81 over 91 days extrapolates to a
+finish in 2033 against a plan that ends in October — arithmetically correct, wrong by any reading,
+and the kind of number that gets quoted in a meeting. Print `-` in the cell and, below the table, the
+inputs that were not enough: `Bo Bien Nga: 3/81 đầu việc hoàn thành trong 91 ngày — chưa đủ mẫu để
+dự báo ngày kết thúc.` The `% hoàn thành`, `% theo kế hoạch` and `Chênh lệch` columns are unaffected;
+they count rows and need no velocity, and they are what actually shows the project is behind.
 
 **Per-station progress (`% tiến độ trạm/trụ`) needs a column naming the station**, and the reference
 file has none — its tasks are market-wide. When no such column exists, print the market rows and add

@@ -67,7 +67,10 @@ Treat the workbook as the **output contract**:
 
 - `00 - Hướng dẫn` defines status, evidence, date, estimate, gap, and conclusion rules and remains unchanged.
 - Default output name: `Báo cáo thị trường [Thị trường] dd_mm_yyyy.xlsx`, unless the user/project specifies another naming convention. Whatever the name, it must not split into three parts on ` - `: `using-doox` reads any such spreadsheet as a project plan file and pulls the report into the daily reminder.
-- The report sheet defines what each row/column requires and its quality standard.
+- The report sheet defines what each row/column requires and its quality standard. On the bundled
+  asset it is named **`Khung báo cáo thị trường mẫu`** — that exact string is what `--sheet` takes;
+  the other two sheets are `00 - Hướng dẫn` and `Bảng 3B - Danh sách nhà thầu`. A user-supplied
+  framework names its sheets differently: list them before guessing, never pass a name from here.
 - Instruction text in writable report cells is placeholder text to replace, not content to preserve.
 - Do not rely on remembered row numbers, merged ranges, or layouts; inspect them before writing. Write a merged range at its top-left anchor cell; writing any other cell of the range fails.
 - Do not insert, delete, renumber, retitle, or reorder framework rows unless the workbook itself explicitly requires repeatable rows or the user asks.
@@ -162,11 +165,17 @@ When a secondary source cites an original dataset/order/law, follow the citation
 
 Do not attempt contractor work from the summary above: a generic web search ranks intermediaries first, so a list built without the frames is a list of resellers.
 
+**The frames as written are the Vietnam instantiation.** F1–F5 name Vietnamese portals (`muasamcong.mpi.gov.vn`, `nangluchdxd.gov.vn`, `dangkykinhdoanh.gov.vn`, EVN provincial utilities, Sở Xây dựng), §6.3 reads VSIC mã ngành, and the query strings are Vietnamese. **The method ports to any market; those URLs and codes do not.** For a market outside Vietnam, spend a bounded discovery pass — charged to the contractor budget (§6.6) — identifying that jurisdiction's equivalent of each frame before enumerating anything: its public-procurement results portal, its construction-licence or contractor registry, its utility's approved-contractor list, its company registry and industry-code scheme, its provincial/municipal permit authority. Record the mapping in the ledger, name it in the §14 reply, and key candidates on that jurisdiction's own company identifier the way the Vietnam frames key on MST.
+
+**A frame with no local equivalent is a named blind spot, not a frame quietly dropped.** Where the discovery pass finds no public tender-results portal or no licence registry, say which frames could not be worked and what that leaves unverifiable — an enumeration missing F1 and F2 cannot claim saturation (§6.6), and a role classification with no registry behind it stays `Chưa xác định` (§6.1) rather than resting on a company's own website.
+
 ## 7. Competitive position — mình so với đối thủ
 
 **When the objective includes `competitor/CPO`, read `references/competitor-comparison.md` before starting, and follow it.** It carries the own-side rule (§7.1 — never inferred from model knowledge), the competitor buckets and enumeration frames C1–C7 (§7.2), the ten comparison dimensions (§7.3), unit normalisation and the built-vs-announced split (§7.4), the asymmetry rule (§7.5), the four-part output (§7.6), the boundaries and budget (§7.7), and audit F (§13F).
 
 Output goes to the chat reply as tables, not into the workbook — the bundled framework has no competitor block yet.
+
+That makes it the one deliverable of this skill with nowhere durable to live: the workbook and the ledger survive the session, the comparison does not. Its claims still go through the ledger like every other claim (§10), so the evidence behind it is kept even though the tables are not. Say so in the §14 reply — the comparison is in the chat reply only, and the user should save it if they need it after the session.
 
 Do not attempt the comparison from the summary above: the two failures it exists to prevent — comparing trạm against cổng, and counting announced capacity as operating capacity — both look like ordinary tables until someone acts on them.
 

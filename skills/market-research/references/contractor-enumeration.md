@@ -8,6 +8,37 @@ objective includes contractor selection. Section and table numbering matches the
 
 Applies whenever the objective includes contractor selection. Everything here is decision-grade.
 
+### 6.0 Which market these frames are written for
+
+**Every concrete portal, registry, code scheme and query string below is Vietnam.** F1–F5 name
+Vietnamese systems, §6.3 reads VSIC mã ngành, candidates are keyed on MST, and the search strings are
+Vietnamese. F6 (project-reverse) and F7 (snowball) are the only jurisdiction-neutral frames.
+
+What ports to another market is the **method**: enumerate from registries before searching, classify
+role from independent evidence rather than self-description, key every candidate on one government
+identifier, and stop on saturation rather than on a count. What does not port is every URL and code
+on this page.
+
+Running this for a market outside Vietnam starts with a bounded discovery pass — charged to the §6.6
+budget, before any enumeration — that finds the local equivalent of each frame:
+
+| Frame | What to look for in the target market |
+|---|---|
+| F1 | the public procurement / tender-results portal, and its term for design-and-build or turnkey packages |
+| F2 | the construction-licence or contractor-qualification registry, and its grading scheme |
+| F3 | the utility's or system operator's list of contractors approved for grid-side work |
+| F4 | the company registry, and its industry-classification scheme — this supplies the identifier everything is keyed on |
+| F5 | the provincial/municipal authority that issues building and electrical permits |
+| F6, F7 | unchanged — these need no local system |
+
+Record the mapping in the ledger and state it in the §14 reply, so the next report on that market
+reuses it instead of rediscovering it.
+
+**A frame with no local equivalent is named, never silently dropped.** Say which frames could not be
+worked and what that costs: without F1 or F2 the list cannot claim saturation (§6.6), and a role
+that no registry corroborates stays `Chưa xác định` (§6.1) rather than being settled by a company's
+own website.
+
 ### 6.1 Target profile — say what "Cấp 1" means in this run
 
 Default target: **tổng thầu turnkey (EPC/EC)** — one company that self-performs construction and carries the whole scope: thiết kế, vật tư/thiết bị, thi công xây dựng và điện, xin phép, thử nghiệm/nghiệm thu, bàn giao. Only a user statement changes this.

@@ -59,5 +59,13 @@ ràng buộc với nơi cũ.
 4. **Câu hỏi cần làm rõ ở vòng sau**
 5. **Kết luận** — Đề cử / Cân nhắc / Không phù hợp, kèm lý do ngắn
 
+Ba nhãn này nói hồ sơ đi được tới đâu so với khung, **không phải quyết định tuyển hay loại**.
+`Đề cử` nghĩa là tài liệu đủ cơ sở để đưa ứng viên đi tiếp — người tuyển vẫn là người quyết.
+Không viết "nên tuyển" / "nên loại" ở bất kỳ mục nào.
+
+Chưa biết điều kiện bắt buộc của vị trí thì mục 0 là **Chưa đủ dữ liệu** — không phải đạt,
+không phải trượt. Vẫn in đủ bảng chấm từng ứng viên, nhưng chưa ra được thứ tự đề cử; nêu rõ
+cần gì để chốt mục 0.
+
 Nhiều ứng viên cùng lúc: thêm **bảng so sánh ngang** và **thứ tự đề cử**. Không ép đủ số
 lượng đề cử nếu không ai đạt điều kiện bắt buộc.

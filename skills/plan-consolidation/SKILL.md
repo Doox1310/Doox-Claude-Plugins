@@ -22,7 +22,16 @@ This skill reads whole plan files, which is exactly the row filter that `using-d
 exists to enforce. Settle identity first, per `using-doox`, and **only a verified
 `Project Manager` may run it**, on the files whose `Tên PM` matches their name. A
 `Chuyên gia` is refused: consolidating is how every row of every market would leave
-the filter.
+the filter. The refusal, verbatim, and nothing added to it:
+
+```
+Quy hoạch và gộp kế hoạch chỉ chạy được với vai trò Project Manager. Vai trò hiện tại
+của bạn là Chuyên gia nên mình không thực hiện được yêu cầu này.
+```
+
+Never name the PM, never list the files, never say how many rows were in them, never
+offer a filtered version instead — a refusal that shows the shape of the data has
+already leaked part of it.
 
 Exception: input files that do **not** split into three parts on ` - ` carry no PM
 name to check against. There is nothing to verify and nothing to leak a role past —
@@ -60,11 +69,31 @@ the other files leave it empty. A sheet whose role is unclear is asked about.
 **2. Group columns within each role.** Three tiers, first match wins:
 
 - identical after normalising (bỏ dấu, lowercase, bỏ dấu câu và khoảng trắng thừa);
-- known synonyms — `PIC` = `Người phụ trách` = `Người TH` = `Chủ trì`; `Hạn hoàn thành` = `Ngày kết thúc` = `Deadline`;
+- known synonyms, one line per group:
+  - `Danh mục CV` = `Nội dung công việc` = `Đầu việc` = `Hạng mục công việc`
+  - `Người phụ trách` = `PIC` = `Người TH` = `Chủ trì`
+  - `Ngày bắt đầu` = `Start` = `Ngày BĐ`
+  - `Ngày kết thúc` = `Hạn hoàn thành` = `Deadline` = `Ngày KT`
+  - `Trạng thái` = `Tình trạng` = `Tình trang` = `Status`
+  - `Vấn đề phát sinh` = `Vướng mắc` = `Issue`
+  - `Phương án giải quyết` = `Hướng xử lý` = `Phương án xử lý`
+  - `Cập nhật hiện trạng` = `Hiện trạng` = `Tình hình hiện tại`
+
+  The list is not closed — a pair this obvious that is missing from it belongs in tier 2,
+  not in tier 3. Tier 3 is for columns whose meaning genuinely cannot be read off the
+  name. Sending `Ngày bắt đầu` / `Start` to the user as a question spends their attention
+  on something nobody needed to be asked.
 - the column's **values**, not its name — mostly dates → a date column; three repeating labels → a status column. This tier only proposes; the user confirms.
 
 **3. Name each column with the variant used most often across the sources.** Never
 invent a new name: the user has to recognise their own column.
+
+Two files means every merged column is a 1–1 tie, and that is the normal case, not the
+edge one. Break a tie in this order, first rule that decides it: the variant listed
+first in the tier-2 synonym group above; then the one that also appears in the other
+sheets of the same workbook; then the longer, unabbreviated form (`Ngày kết thúc` over
+`Deadline`). State the pick in the `Gộp:` line of the form so the user can overrule it
+— a tie broken silently is the one column they will not think to check.
 
 **4. Order.** Columns in ≥50% of files first, then the rest — **kept, never
 dropped** — then the three provenance columns the script appends.

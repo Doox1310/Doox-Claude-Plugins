@@ -5,6 +5,10 @@ không cần sửa `SKILL.md`.
 
 Mục nào không có dữ liệu trong đầu vào thì **bỏ hẳn mục đó**. Không viết câu lấp chỗ trống.
 
+Trừ một trường hợp: user **yêu cầu nêu** một thứ mà đầu vào không có. Khi đó giữ mục lại và
+viết `[cần bổ sung: …]` vào đúng chỗ thiếu, đúng như `SKILL.md` mục 2 — bỏ mục đi là giấu mất
+chính thứ user vừa dặn phải có trong mail.
+
 ---
 
 **Tiêu đề:** `[Chủ đề] — [Thị trường / Dự án]`
@@ -22,7 +26,8 @@ Kính gửi anh/chị [Tên người nhận],
 [Từng đầu việc một dòng. Không có việc cần ai làm thì bỏ mục này]
 
 4. Thời hạn
-[Ngày cụ thể dd/mm/yyyy. Đầu vào không nêu hạn thì bỏ mục này]
+[Ngày cụ thể dd/mm/yyyy. Đầu vào không nêu hạn, user cũng không dặn nêu → bỏ mục này.
+ User dặn nêu mà đầu vào không có → giữ mục, viết [cần bổ sung: …]]
 
 Trân trọng,
 [Tên người gửi]

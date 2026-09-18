@@ -172,6 +172,14 @@ Below the table, in this order, whatever applies:
 Then wait. **A confirmation is a yes to the table as printed.** The user answering with a change —
 "đúng rồi nhưng deadline là 21/08" — is not a yes: rebuild the table and ask again.
 
+**No row resolved at all: there is no table, and that is a complete answer.** Section 3 runs before
+this one, so a batch where every intent hit a repeated label or matched nothing never reaches a
+change-set. Print what section 3 produced — the candidate rows per ambiguous intent, the intents that
+matched no row — and one closing line saying plainly that nothing was written, e.g. `Chưa ghi ô nào
+vào file — cả ba nội dung đều chưa xác định được đúng một dòng.` Do not print an empty confirmation
+table, do not ask for a yes to nothing, and do not resolve an ambiguity by picking a row so that the
+batch has something in it.
+
 ## 7. Desync already in the file
 
 Rule 4. Before writing a row, compare what the two sheets say about it. Report anything that already
