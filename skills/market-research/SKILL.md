@@ -124,6 +124,8 @@ Never write an untracked factual number or silently fill a gap from model knowle
 
 **The objective selects the decision-grade set, and that set is the whole depth decision of the run** (§2, §9). Decision-grade claims — anything affecting legal applicability, permit, interconnection, cost, tax, schedule, current licence/certification, site feasibility, contractor selection, or a final conclusion — receive the strongest verification, first and out of their own budget line. Mark the set explicitly during the split; a claim not marked then is researched at base depth, so marking everything decision-grade defeats the split and marking too little quietly under-verifies the decision.
 
+**A `dg` mark needs a one-word reason from that list, recorded in the ledger row at split time** (`legal`, `permit`, `interconnection`, `cost`, `tax`, `schedule`, `licence`, `feasibility`, `contractor`, `conclusion`) — never the bare tag with no reason. A claim justified only by "the report is about X" rather than by what *that specific claim* affects is `base`, not `dg`. If more than roughly a third of the split ends up `dg`, stop and recheck the reasons before researching anything — a split that heavy is marking the topic, not the claim, and it doubles the run's cost for no verification gain.
+
 For contractor/vendor claims, **supply-chain role** (§6 taxonomy) is its own decision-grade claim, separate from licence and project-experience claims. Never infer it from a first-party capability statement alone. Building the candidate list itself is a claim-generating task with its own method — see §6; do not start it with a generic web search.
 
 ## 5. Source quality and claim authority
@@ -240,7 +242,7 @@ Contractor enumeration (§6.6) carries its own budget on top of both and is not 
 
 The step-3 gate decides *whether* a document is worth opening; the worker decides *who pays* for opening it. Both are needed — dispatching an unfiltered result list only moves the waste, and gating without dispatching still leaves every opened document in the main context for the rest of the run.
 
-- **What goes out.** Only gate survivors. Dispatch is the default at every mode; open inline only one or two short pages. Three or more, any long PDF, or anything drawn against the decision-grade allowance goes to a worker. `nhanh` is where a stray document hurts most, because the budget it eats is the smaller one.
+- **What goes out.** Only gate survivors. Dispatch is the default at every mode. Inline is allowed only for a single page **under ~2,000 words / ~12,000 characters of visible text** — check the page length before opening it, not after; a source with no visible length signal (behind a viewer, a scanned PDF, an unknown-length feed) is dispatched, never guessed short. Two or more documents in the same batch, any PDF, anything over that size, or anything drawn against the decision-grade allowance goes to a worker — no exception for a page that merely "reads fast." `nhanh` is where a stray document hurts most, because the budget it eats is the smaller one.
 - **The brief.** A fixed list of gate-approved URLs plus the claims that batch must close — never an open-ended "research this topic", which reopens the gate inside the worker where you cannot see it. Give each worker non-overlapping authority/domain boundaries and the seen-source set.
 - **The model.** Set it explicitly to the **smallest fast model available**, via the agent tool's model override rather than the inherited default. Transcribing a figure, date, article number or fee schedule from a gated URL is not judgement; the judgement already happened at the gate. Step up to a mid-size worker only for extraction that requires reading law or reconciling definitions — a long legal instrument, a tariff order with customer classes, a §6.4 role determination. Dispatching at the inherited default pays the main model's rate for transcription and captures none of the saving.
 - **The return.** A §10 ledger row per claim and nothing else: no narrative, no document summary, no quoted passage beyond the sentence or table cell carrying the value and its conditions. Prose in a return has moved the document into main context by another route — the exact cost dispatch exists to avoid. State the row shape in the brief; reject a return that ignores it instead of reformatting it in the main thread.
@@ -263,7 +265,7 @@ doox-sources/<market-slug>/
 
 One row per claim, opened by the §4 split and closed as the claim resolves:
 
-`claim | grade | batch | state | origin | result | status candidate | scope/unit/period | source/publisher/URL | publication/effective/access date | condition/definition | output cell(s)`
+`claim | grade | dg reason | batch | state | origin | result | status candidate | scope/unit/period | source/publisher/URL | publication/effective/access date | condition/definition | output cell(s)`
 
 For calculated claims also record:
 
@@ -271,7 +273,7 @@ For calculated claims also record:
 
 Four of those columns exist to make the run auditable without holding counters in context:
 
-- `grade` — `base` or `dg`. Set at the split (§4); it decides which budget line the claim spends from (§9).
+- `grade` — `base` or `dg`. Set at the split (§4); it decides which budget line the claim spends from (§9). A `dg` row carries its one-word reason in `dg reason`; a `base` row leaves that column empty.
 - `batch` — the authority batch the claim belongs to, so a batch can be dispatched and closed as a unit.
 - `state` — `open` until resolved, then the §4 status. No `open` rows left is the definition of a finished run and the input to §13 gate A.
 - `origin` — `fetch`, `cache`, `estimate`, or `gap`. Distinct URLs with `origin=fetch` are the documents actually opened, so the §14 budget figures are counted from the file rather than recalled.
