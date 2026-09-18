@@ -14,10 +14,13 @@ Not for scoring báo giá or hồ sơ năng lực — that is `bid-review`, whic
 BOQ or a capability framework. Not for producing a translated file — that is
 `doc-translate`.
 
-**REQUIRED BACKGROUND:** the five document rules in `using-doox` govern every line
-of output here — never substitute model knowledge for what the document says, name
-missing data instead of filling it, pass codes and units through untouched, compare
-only within the same scope, and source every finding.
+**REQUIRED BACKGROUND:** read `../using-doox/references/document-rules.md`. Rules
+`DR1` – `DR5` govern every line of output here — never substitute model knowledge for
+what the document says, name missing data instead of filling it, pass codes and units
+through untouched, compare only within the same scope, and source every finding.
+
+Read that file, not `using-doox/SKILL.md`: this skill runs no identity gate and opens
+no plan file, so nothing else in `using-doox` applies to it.
 
 Read-only, no identity gate, no file written. Output is tables in the chat reply.
 
@@ -92,7 +95,7 @@ as `cần làm rõ`, never as `sai`: the odd one out may be the correct one.
 
 A requirement is often carried by formatting rather than words — a cell shaded against
 a colour legend, a ✓/✗ matrix, a struck-through clause, a merged cell spanning columns
-it does not belong to. **That is the document's own content, and reading it is rule 2.1,
+it does not belong to. **That is the document's own content, and reading it is rule `DR1`,
 not outside knowledge.** Decode it against the legend the document itself prints, and
 say which mechanism you read: `ô nền cam FFC000 = "Bắt buộc" theo chú giải màu mục 1`.
 

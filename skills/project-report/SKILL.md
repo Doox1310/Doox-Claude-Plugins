@@ -1,6 +1,6 @@
 ---
 name: project-report
-description: Read a market's project plan (.xlsx) and produce the progress report in the customer's template — overdue, near deadline, in progress, done, starting soon. Use when the user hands over a plan file, asks how a project is doing, asks what is overdue or coming up, or asks for a progress report for a market.
+description: Read ONE market's project plan and produce the progress report in the customer's template — every task sorted into overdue, near deadline, in progress, done. Use when the user asks for a báo cáo tiến độ, asks how one market's project is doing, asks what is overdue, or hands over a plan file and asks for the report. NOT the day's to-do list or team reminder (that is `reminder`), NOT issue classification or a completion forecast (that is `project-insights`), NOT for changing a value in the file (that is `project-update`). Load the `using-doox` skill first — it holds the identity gate and the file-reading rules this skill depends on.
 ---
 
 # Progress report
@@ -11,6 +11,11 @@ The user hands over a plan file (`.xlsx`) and asks about progress, or asks for a
 one market.
 
 ## 2. Input
+
+**Load the `using-doox` skill before anything else in this section.** If this skill was dispatched on
+its own, that has not happened yet — do it now, before listing the folder and before opening the
+file. The identity gate lives there, and a report printed before the role is known cannot be
+un-shown.
 
 - Who is running this — `using-doox`, "Who is running this". If the README does not answer it, ask
   before reading the file. A `Project Manager` gets every row, but only of a file whose `Tên PM`

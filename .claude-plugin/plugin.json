@@ -1,9 +1,11 @@
 {
-  "name": "doox",
-  "version": "0.9.1",
-  "description": "Trợ lý AI hỗ trợ quản lý và vận hành dự án: cập nhật kế hoạch, theo dõi & dự báo tiến độ, nhắc việc, tổng hợp báo cáo, quản lý tri thức; đồng thời phân tích tài liệu, BOQ, báo giá, hồ sơ nhà thầu và nghiên cứu thị trường theo khung tiêu chuẩn.",
+  "name": "doox-assistant",
+  "version": "1.0.0",
+  "description": "Doox Assistant — trợ lý AI hỗ trợ quản lý và vận hành dự án: cập nhật kế hoạch, theo dõi & dự báo tiến độ, nhắc việc, tổng hợp báo cáo, quản lý tri thức; đồng thời phân tích tài liệu, BOQ, báo giá, hồ sơ nhà thầu và nghiên cứu thị trường theo khung tiêu chuẩn.",
   "author": {
     "name": "Nguyễn Ngọc Trí Vĩ",
     "email": "nntrivi2001@gmail.com"
-  }
+  },
+  "homepage": "https://github.com/nntrivi2001/Doox-Claude-Plugins",
+  "repository": "https://github.com/nntrivi2001/Doox-Claude-Plugins"
 }

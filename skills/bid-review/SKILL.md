@@ -28,11 +28,15 @@ writes nothing: the output is tables in the chat reply.
 
 ## 2. The rules that govern every line below
 
-**REQUIRED BACKGROUND:** the five document rules in `using-doox` — never substitute
-model knowledge for what the document says, name missing data instead of filling it,
-pass codes and units through untouched, compare only within the same scope, source
-every finding. They are referred to below as rules 2.1 – 2.5 and they are the whole
-reason this skill exists: scoring needs no instructions, **not inventing** does.
+**REQUIRED BACKGROUND:** read `../using-doox/references/document-rules.md` — the five
+document rules: never substitute model knowledge for what the document says, name
+missing data instead of filling it, pass codes and units through untouched, compare
+only within the same scope, source every finding. They are referred to below as rules
+`DR1` – `DR5` and they are the whole reason this skill exists: scoring needs no
+instructions, **not inventing** does.
+
+Read that file, not `using-doox/SKILL.md`. This skill runs no identity gate and opens no
+plan file, so nothing else in `using-doox` applies to it.
 
 ## 3. Reviewing quotations
 
@@ -74,7 +78,7 @@ Put every quotation on the same basis, one row per hạng mục, before any comp
 | Hạng mục | matched to the BOQ line, or to the equivalent line in the other quotations |
 | Đơn vị tính | converted, with the conversion stated |
 | Khối lượng | |
-| Vật tư / model | mã hiệu passed through per rule 2.3 |
+| Vật tư / model | mã hiệu passed through per rule `DR3` |
 | Nhân công | separated from materials wherever the document allows |
 | Thuế / phí | tax-inclusive vs exclusive made explicit |
 | Vận chuyển | including whether it reaches site |
@@ -153,7 +157,7 @@ nothing — not as a low score, and not as a high one because the wording was co
 Marketing description is not evidence. Neither is a client logo wall, a certificate named but not
 attached, nor a project listed without owner, scope or year.
 
-Per line: what the dossier claims, what evidence backs it, where that evidence sits (rule 2.5), and
+Per line: what the dossier claims, what evidence backs it, where that evidence sits (rule `DR5`), and
 the resulting mức đáp ứng.
 
 ### 4.3 Mandatory criteria before scoring
@@ -209,7 +213,7 @@ Check, against the documents read in this run:
 
 - every document handed over appears in the output, including the ones eliminated;
 - no figure, model code, tên pháp lý or ngày tháng in the output that is not in a document or in a
-  calculation whose inputs are (rules 2.1, 2.3);
+  calculation whose inputs are (rules `DR1`, `DR3`);
 - every conversion, normalisation and total reproduces from the stated inputs;
 - every `Chưa có thông tin` / `Chưa xác minh` says what is missing and who would confirm it;
 - nothing marked `Không so sánh được` was quietly compared anyway;

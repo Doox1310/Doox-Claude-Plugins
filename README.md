@@ -1,0 +1,70 @@
+# Doox Assistant
+
+Trợ lý AI hỗ trợ quản lý và vận hành dự án: cập nhật kế hoạch, theo dõi & dự báo tiến độ, nhắc việc,
+tổng hợp báo cáo, quản lý tri thức; đồng thời phân tích tài liệu, BOQ, báo giá, hồ sơ nhà thầu và
+nghiên cứu thị trường theo khung tiêu chuẩn.
+
+13 skill markdown thuần. Không có thư viện Python trung tâm; 3 skill mang script riêng.
+
+## Cài
+
+```
+/plugin marketplace add <đường dẫn hoặc repo>
+/plugin install doox-assistant
+```
+
+Khởi động lại phiên sau khi bật — skill nạp lúc session start.
+
+## Skill
+
+| Skill | Dùng khi | Ra |
+|---|---|---|
+| `using-doox` | luôn luôn, trước các skill đọc file kế hoạch | quy ước dùng chung, không in gì |
+| `project-report` | hỏi một thị trường đang thế nào | 4 bảng trong chat |
+| `reminder` | hỏi hôm nay phải xử lý gì | bảng trong chat + draft Outlook mỗi PIC (chỉ vai trò PM) |
+| `project-insights` | hỏi đang vướng gì, bao giờ xong | 4 mục trong chat |
+| `project-update` | báo một đầu việc đổi trạng thái / hạn / vướng mắc | ghi vào file kế hoạch sau khi xác nhận |
+| `plan-consolidation` | quy hoạch nhiều kế hoạch về một form, hoặc gộp | file `.xlsx` mới |
+| `market-research` | nghiên cứu thị trường, tìm nhà thầu, so đối thủ | `.xlsx` theo khung + bảng so sánh trong chat |
+| `doc-compare` | đọc, tóm tắt, so sánh tài liệu | bảng trong chat |
+| `doc-translate` | dịch `.docx` / `.xlsx` / `.pptx` giữ layout | file dịch mới |
+| `bid-review` | duyệt báo giá, duyệt hồ sơ năng lực | bảng so sánh + shortlist trong chat |
+| `candidate-review` | đánh giá CV / phỏng vấn ứng viên | bảng chấm trong chat |
+| `mail-draft` | soạn mail từ memo hoặc dữ liệu có sẵn | draft Outlook + bản in trong chat |
+| `calendar` | đặt lịch, xếp lịch, xem lịch | event Google Calendar sau khi xác nhận |
+
+## Phụ thuộc ngoài — đọc trước khi trông cậy
+
+Plugin này **không tự chạy được gì theo lịch**. Không hook, không cron, không slash command;
+`plugin.json` chỉ khai metadata.
+
+- **Run nhắc việc 9h sáng.** `reminder` viết cho tình huống "run 9h nổ" và nói rõ phải in báo cáo
+  kể cả khi không có việc nào đến hạn, vì một buổi sáng im lặng phải có nghĩa là run hỏng. **Cái
+  hẹn giờ đó là của Cowork, không nằm trong plugin.** Cài plugin ở nơi khác thì không có run 9h nào
+  cả, và không có gì báo cho biết. Muốn có trong Claude Code thì phải tự dựng — `/schedule` hoặc
+  một cron ngoài gọi vào.
+- **Outlook** — `reminder` và `mail-draft` tạo draft qua connector Outlook. Không có thì in ra chat
+  và nói rõ không tạo được draft. Không bao giờ rơi sang nhà cung cấp mail khác.
+- **Google Calendar** — `calendar` dùng connector Google, là chỗ duy nhất trong plugin không phải
+  Microsoft. Sắp xếp tạm thời.
+- **Đọc `.xlsx`** — không harness nào parse `.xlsx` bằng tool đọc file, nên mọi run đọc kế hoạch
+  đều chạy `openpyxl` qua shell với `data_only=True`. Cần Python có `openpyxl`.
+
+## Test
+
+Bộ test **không nằm trong repo này**, và đó là chủ ý: fixture của nó là file kế hoạch thật của
+khách hàng, không publish được. Nó giữ nội bộ, bên cạnh mã nguồn.
+
+Gồm 16 case phủ cả 13 skill, chấm hai thứ:
+
+- **độ chính xác** — số liệu, phân loại, trích dẫn khớp bộ đọc tham chiếu (`groundtruth.py`);
+- **độ kỷ luật** — không bịa dữ liệu, không ghi vào file khách ngoài `project-update`, không gửi
+  mail hay tạo lịch khi chưa duyệt, không rò dữ liệu chéo giữa các vai trò.
+
+Kết quả lần chạy gần nhất trên bản `0.9.x`: **16/16 ĐẠT**, SHA-256 của cả 5 bản copy file kế
+hoạch trong sandbox giống hệt bản gốc — không skill nào ghi vào `.xlsx`. Bản `1.0.0` đổi tên
+plugin và tách 3 reference nên cần chạy lại.
+
+Muốn dựng bộ test cho bản fork của mình thì cần: một file kế hoạch theo đúng quy ước
+`[Thị trường] - [Tên dự án] - [Tên PM]`, một bộ đọc tham chiếu độc lập với skill để so kết quả,
+và sandbox có/không có `README.md` để thử cổng danh tính.

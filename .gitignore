@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 .omc/
+
+# Bộ test giữ nội bộ: fixture là file kế hoạch thật của khách, không publish.
+tests/

@@ -1,6 +1,6 @@
 ---
 name: reminder
-description: Read every market's plan file (.xlsx) in the project folder and produce the daily reminder — the PM's full table, or a specialist's own tasks — and on a PM run draft one Outlook mail per PIC. Use when the user asks what has to be done today, asks to remind the team, or runs the 9am reminder.
+description: Read EVERY market's plan file in the project folder and produce the daily reminder — only the rows that are overdue, due within 3 days, or starting today — as the PM's full table or a specialist's own tasks, plus one Outlook draft per PIC on a PM run. Use when the user asks what has to be handled today, asks to nhắc việc or remind the PICs, or the scheduled morning run fires. NOT a full progress report of one market (that is `project-report`), NOT issue analysis or forecasting (that is `project-insights`). Load the `using-doox` skill first — it holds the identity gate and the file-reading rules this skill depends on.
 ---
 
 # Reminder
@@ -8,6 +8,11 @@ description: Read every market's plan file (.xlsx) in the project folder and pro
 ## 1. When to use
 
 The user asks what has to be handled today, asks to remind the PICs, or the 9am scheduled run fires.
+
+**The 9am run is not part of this plugin.** The schedule belongs to the harness — Cowork provides it;
+`plugin.json` declares no hook, no cron and no command. Installed anywhere else, this skill runs only
+when a user asks, and nothing announces the difference. Say so if the user assumes a morning mail
+that never arrived: the skill did not fail, it was never fired.
 
 ## 2. Input
 
@@ -60,19 +65,16 @@ The 3-day threshold comes from `idea.txt` (`ngày hoàn thành - 3 ngày`).
 Needed on a `Project Manager` run only — that is the only run that writes mail. Skip this section
 entirely on a `Chuyên gia` run.
 
-The PIC cell holds an anonymised code — `Doox1`–`Doox10`, `Qn1`–`Qn10`, `Thầu`. The email address is
-typed **once, on one row**, next to its code; every other row carries the bare code.
+Build the directory per `using-doox`, section "The `PIC → email` directory" — the one-row-per-code
+layout, the four separators including the en dash `–` (U+2013), and the rule that a missing address
+is never guessed. Do not re-derive it here.
 
-So build the directory before drafting: scan every row of every file, collect each `code → email`
-pair found, and apply it to all rows carrying that code. The cell separates code from email four
-different ways — a newline, an en dash `–` (U+2013, not the ASCII `-`), parentheses, or nothing but a
-space. Handle all four; matching only the ASCII hyphen drops most of the file.
+What this skill does with the result:
 
-`Thầu` is a contractor, not a person, and has no personal address. Its rows appear in the PM table
-and get no mail. A `Chuyên gia` therefore never sees `Thầu` rows unless their own code supports one.
-
-A code with no email anywhere in the files still has its rows in the PM table. It gets no draft, and
-it is listed at the end of the report so the user can fill the address in. Never guess an address.
+- `Thầu` appears in the PM table and gets no mail. A `Chuyên gia` therefore never sees `Thầu` rows
+  unless their own code supports one.
+- A code with no email still has its rows in the PM table. It gets no draft, and it is listed at the
+  end of the report so the user can fill the address in.
 
 ## 6. Output
 

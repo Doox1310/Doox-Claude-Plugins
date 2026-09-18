@@ -40,9 +40,10 @@ Three sources, in this order:
 1. **The user named it in the request** — an address, or a person. Takes precedence over everything.
 2. **The material names it** — an address or a name written in the memo or file.
 3. **A PIC code resolved against the plan files** — the user says "gửi cho Doox3". Build the
-   `code → email` directory exactly as `reminder` §5 does: scan every row of every plan file in the
-   Cowork project folder, collect each pair, handle all four separators (newline, en dash `–`
-   U+2013, parentheses, bare space). `Thầu` is a contractor and has no personal address.
+   `code → email` directory per `using-doox`, section "The `PIC → email` directory": scan every row
+   of every plan file in the Cowork project folder, collect each pair, handle all four separators
+   (newline, en dash `–` U+2013, parentheses, bare space). `Thầu` is a contractor and has no
+   personal address.
 
 Two sources disagreeing is not resolved by picking one — **ask**. A source producing nothing is not a
 failure: the draft is still written, with the recipient left empty and that said plainly after it.

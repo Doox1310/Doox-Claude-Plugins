@@ -1,6 +1,6 @@
 ---
 name: project-insights
-description: Read the plan files and produce the issue summary — open issues grouped by work area and by issue type, past issues with what they had in common, lessons drawn across the finished plans, and a progress forecast per market. Use when the user asks what is going wrong on a project, asks for a summary or classification of issues or incidents, asks which issues are blocking, asks what past or finished projects can teach, asks how far along a project is or when it will finish, or hands over a plan file whose tasks are all done.
+description: Read the plan files and produce the issue summary — open issues grouped by work area and by issue type, past issues with what they had in common, lessons drawn across the finished plans, and a completion forecast per market. Use when the user asks what is going wrong or what is blocking, asks to tổng hợp or phân loại vấn đề, asks what finished projects can teach, asks when a project will finish, or hands over a plan file whose tasks are all done. NOT a per-task progress snapshot of one market (that is `project-report`), NOT the day's to-do list (that is `reminder`). Load the `using-doox` skill first — it holds the identity gate and the file-reading rules this skill depends on.
 ---
 
 # Project insights

@@ -55,11 +55,14 @@ A start time with no duration and no end time is the ordinary case of that rule,
 an hour is what meetings usually are.
 
 **An attendee named by PIC code needs a real address, and this skill has no way to invent one.**
-Build the `code → email` directory the way `reminder` §5 does — scan every row of every plan file in
-the project folder, handle all four separators — and use what it returns. Nothing returned means
-asking the user for the address: an invitation fires the moment the event exists, so a guessed
-address is a meeting request in a stranger's inbox. `Thầu` is a contractor and has no personal
-address at all.
+Build the `code → email` directory per `using-doox`, section "The `PIC → email` directory" — scan
+every row of every plan file in the project folder, handle all four separators — and use what it
+returns. Nothing returned means asking the user for the address: an invitation fires the moment the
+event exists, so a guessed address is a meeting request in a stranger's inbox. `Thầu` is a contractor
+and has no personal address at all.
+
+Reading the directory opens plan files, so it puts the identity gate back on for that run — the same
+condition as pulling deadlines out of a plan file (§4).
 
 **Dời và huỷ read before they write.** Find the event, print it as it stands now, say what will change,
 then ask. Two events match the description → ask which, never pick the nearer one.

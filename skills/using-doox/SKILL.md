@@ -1,6 +1,6 @@
 ---
 name: using-doox
-description: Conventions shared by every Doox skill — which Doox skill answers which request, the first-run questions to ask when the user's identity is not yet known, how a plan file's name encodes its market and project, how to read and join the two sheets of a plan file, where each field comes from, and what counts as done. Use before reporting on, reminding from, or archiving a plan file, and whenever a Doox skill needs the market name or a field out of the file.
+description: REQUIRED FIRST for every Doox skill that opens a plan file — `project-report`, `reminder`, `project-insights`, `project-update`, `plan-consolidation`, `mail-draft`, and `calendar` once it reads a file. Load this before that skill, not after: it carries the identity gate that decides whose rows may be shown at all, which Doox skill answers which request, how a plan file's name encodes its market and project, how the two sheets are joined and which sheet each field comes from, and what counts as done. Skipping it shows one person another person's rows.
 ---
 
 # Using Doox
@@ -47,35 +47,15 @@ việc này" is `mail-draft`.
 never one in place of the other. `calendar` is the only skill that touches the calendar, and it does
 not read plan files unless the user asks for deadlines to be pulled from them.
 
-## The five document rules
+## The five document rules — `references/document-rules.md`
 
-These govern `doc-compare`, `doc-translate` and `bid-review` — every line those skills print.
+`DR1` – `DR5` govern `doc-compare`, `doc-translate` and `bid-review`: never substitute model
+knowledge for what the document says, name missing data instead of filling it, pass codes and units
+through untouched, compare only within the same scope, source every finding.
 
-**`2.1` – `2.5` are stable rule IDs, not a section number in this file.** They are named after
-the section that cites them (`bid-review` §2) and they keep those IDs wherever they are quoted;
-nothing here is numbered `2`, and renumbering a skill never renumbers a rule.
-
-**2.1 — Never replace the document's data with model knowledge.** The price in the file is the price,
-the model number in the file is the model number, even when a better-known figure exists. The user
-asking to research or verify something is a different request, and it is `market-research`.
-
-**2.2 — Missing data is named, never filled.** `Chưa có thông tin` when the document is silent,
-`Chưa xác minh` when the document asserts something it does not evidence. Both are real answers.
-A blank cell quietly filled with a plausible value is the failure these skills exist to prevent.
-
-**2.3 — Names, codes and units pass through untouched.** Tên pháp lý, mã số thuế, mã hiệu, model,
-số hiệu tiêu chuẩn, đơn vị đo — carried over exactly as written, in any language, including inside a
-translation. `IEC 61851-1` stays `IEC 61851-1`. `Công ty TNHH …` is not translated into English and
-not "corrected".
-
-**2.4 — Compare only within the same scope.** Two figures are comparable after they have been put on
-the same basis: same hạng mục, same đơn vị tính, same khối lượng, same tax basis, same currency, same
-inclusions. Anything that resists normalisation is reported as `Không so sánh được` with the reason —
-never forced onto the table because the row needed a value.
-
-**2.5 — Every finding names its source and position.** Which document, which page/sheet/mục/dòng. A
-difference between two documents that does not say where each side came from cannot be checked by the
-person who has to act on it.
+**Those three skills read `references/document-rules.md` directly and do not load this file.** They
+run no identity gate and touch no plan file, so nothing else here applies to them — pulling the whole
+of `using-doox` in to reach thirty lines is the cost this split exists to avoid.
 
 ## Plan file naming
 
@@ -209,6 +189,31 @@ counts as not done. The text column holds three values: `Chưa triển khai`, `�
 
 Dates print as `dd/mm/yyyy` everywhere.
 
+### The `PIC → email` directory
+
+A third party's address is read out of the plan files and never from anywhere else. This is the one
+description of how; `reminder`, `mail-draft` and `calendar` all take it from here.
+
+The PIC cell holds an anonymised code — `Doox1`–`Doox10`, `Qn1`–`Qn10`, `Thầu`. The address is typed
+**once, on one row**, next to its code; every other row carries the bare code. So build the directory
+before needing it: scan every row of every plan file in the project folder, collect each `code →
+email` pair found, and apply it to all rows carrying that code.
+
+**The cell separates code from email four different ways** — a newline, an en dash `–` (U+2013, not
+the ASCII `-`), parentheses, or nothing but a space. Handle all four; matching only the ASCII hyphen
+drops most of the file.
+
+`Thầu` is a contractor, not a person, and has no personal address at all. Its rows still appear
+wherever rows are printed; it never receives mail and is never an attendee.
+
+**A code with no email anywhere in the files gets no address, and none is invented.** Not from a
+name, not from a pattern seen in the other addresses, not from a colleague's domain. What each skill
+does with that is its own: `reminder` lists the code at the end of the report, `mail-draft` leaves
+the recipient empty and says so, `calendar` asks the user. None of them guesses.
+
+This is not the same thing as "Matching the user to a PIC" below — that settles which code belongs to
+the **person running the session**. This one looks up somebody else's contact.
+
 ## Writing a plan file
 
 **`project-update` is the only skill that writes to a plan file. Every other skill is read-only** —
@@ -314,14 +319,22 @@ A specialist silently inheriting a `Project Manager` README reads every row of e
 the one failure this whole section exists to prevent. Where the harness exposes no address, the
 README stands as written.
 
-**This is the first step of every run that touches a plan file, and it is a gate.**
-`market-research`, `doc-compare`, `doc-translate` and `bid-review` are the exceptions: they read no
-plan file and show nobody's rows, so they run without the gate, for either role. `calendar` is a
-conditional exception — it touches the calendar, not a plan file, so it runs ungated **until** the
-user asks for deadlines to be pulled out of a plan file; that request puts the gate back on for that
-run, and the rows pulled are filtered by role like any other. `plan-consolidation`
-is the opposite case — it reads whole plan files, so it is gated **and** restricted to a verified
-`Project Manager`; see its own skill for the one case where no gate applies. Settle who is running this before
+**This is the first step of every run that touches a plan file, and it is a gate.** Which skill sits
+where is settled here and nowhere else — a skill claiming to be exempt in its own file does not make
+it so:
+
+| Skill | Gate |
+|---|---|
+| `project-report`, `reminder`, `project-insights`, `project-update` | always |
+| `plan-consolidation` | always, **and** restricted to a verified `Project Manager`; see its own skill for the one case where no gate applies |
+| `market-research`, `doc-compare`, `doc-translate`, `bid-review`, `candidate-review` | never — they read no plan file and show nobody's rows, so they run for either role |
+| `calendar` | conditional — ungated until the run opens a plan file, which is either a deadline pull or a `PIC → email` lookup; that puts the gate back on and the rows are filtered by role like any other |
+| `mail-draft` | always, for a different reason — it signs the mail with the user's `Tên` and `Vai trò`, so it needs the identity even when it opens no plan file. The role filter applies too, the moment it resolves a PIC code |
+
+The five ungated skills read only what the user handed over in the session. That is the whole test:
+a skill that can reach a plan file is gated, and no other consideration exempts it.
+
+Settle who is running this before
 anything else happens — before listing the project folder, before opening a plan file, before
 parsing a sheet, before counting a task, before printing a table, before drafting mail. Nothing about
 a plan file is read or shown while any of the three facts is missing, and a `Chuyên gia` has no rows
@@ -329,139 +342,19 @@ selected for them until their PIC is settled too. Do not "get a head start" on t
 for the answer: work done before the identity is known is work that may belong to someone else, and a
 report printed first cannot be un-shown once the role turns out to be wrong.
 
+**The procedure lives in `references/identity-intake.md`.** How to ask (the role through the
+structured-question tool, the name and email as text, both bare), how a `Chuyên gia` is matched to a
+PIC code, and how a claimed `Project Manager` is verified against the filename — all of it is there,
+verbatim and unchanged.
+
+**Read it only when there is a gap to fill.** A README carrying all four fields, with its `Email`
+agreeing with the signed-in account, answers the gate on its own — that is the ordinary run after the
+first one, and it reads nothing further. Open the reference when the section is missing, a line
+inside it is missing, the recorded email disagrees with the operator, or a `Chuyên gia` has no
+`Mã PIC` yet.
+
 Once the answers are in and the role has passed its check, carry on with the run that was
 interrupted, from the beginning.
-
-**How to ask — two steps, the same in every harness.** Never a numbered list of questions in prose.
-
-Step 1 — the role, always through the structured-question tool: `AskUserQuestion` in Claude Code and
-Cowork, whatever the running harness calls its equivalent. The question is `Vai trò / chức vụ của bạn?`,
-with exactly two options:
-
-- `Project Manager`
-- `Chuyên gia`
-
-Do not type the two options out as text for the user to answer in a sentence. A role asked without a
-picker is a bug. Wait for the pick before asking anything else.
-
-Step 2 — name and email, only after the role came back, as plain text in exactly this wording and
-nothing else:
-
-```
-Mình cần thêm một số thông tin sau:
-  Họ và tên của bạn:
-  Email của bạn:
-Bạn vui lòng cung cấp thêm các thông tin trên để tiếp tục nhé.
-```
-
-**The role goes through the tool and the two names do not.** The tool carries no free-text field, so an
-email asked through it comes back as a picked option instead of an address — that is why step 2 is text
-and why the two steps are not merged into one call. Email is the field dropped most often; a run that
-recorded a name and a role but no email is incomplete and asks again.
-
-The role is a choice between exactly those two options — do not offer a third and do not infer it from
-anything else. Include only what is missing. A README holding the name and email but no role is the
-role question alone; one holding the role but no email is the text question alone, with just the
-missing line.
-
-**Not MCP elicitation.** A skill is markdown and has no tool that sends `elicitation/create`. A bundled
-MCP server can send it, and one was built and tried — Cowork does not declare the `elicitation`
-capability, so no form is rendered there and the server was dropped again. Claude Code CLI does declare
-it. If a real form is ever wanted here, that is the piece to rebuild.
-
-Do not carry on with a partial set. An answer that leaves a field blank is asked again, holding just
-that field.
-
-**Ask the questions bare.** One line may go before the form, and it is exactly this one:
-
-```
-Cho mình xin thông tin của bạn trước khi bắt đầu nhé
-```
-
-Nothing else — no explanation of why the information is needed, no mention of a missing README or of
-a Doox convention, no line after the form telling the user to fill it in. Print no preamble, no
-parenthetical, no footnote explaining what the answers are for:
-
-- Never say the name will be checked against anything, never mention that the filename carries a PM
-  name, never hint that a wrong name will be caught.
-- Never describe what each role gets to see. "PM thấy toàn bộ, Chuyên gia chỉ thấy dòng của mình" is
-  an instruction on which answer unlocks more.
-- Never offer to look a PIC code up from a name or email at this point, and never list the codes
-  found in the files.
-
-A user who is told the name is verified against the file learns exactly which name to type, and the
-check stops being a check.
-
-Write the answers into the README, then carry on with the run that was interrupted.
-
-### Matching the user to a PIC
-
-The plan file names people in `Người phụ trách` / `Người hỗ trợ` by a short name — `Doox1`–`Doox10`,
-`Qn1`–`Qn10`, `Thầu`, sometimes a real person's name. It is a name, not an opaque code, and it is
-usually derivable from what the user just typed. For a role of `Chuyên gia`, **match it yourself
-first; asking is the fallback, not the first move.**
-
-Collect every distinct PIC value across all files, then try these in order, all comparisons ignoring
-case, diacritics, spaces, dots and hyphens:
-
-1. **Email local part** — the part before `@`. `doox1@gmail.com` → `doox1` → PIC `Doox1`.
-2. **Email or name written beside the PIC** in the same cell, where the file carries one.
-3. **The user's name** against the PIC value — both the full name and its last word
-   (`Đỗ Hoàng Tùng` → `tung`).
-
-**Every one of these requires the whole value to be equal, never a prefix.** `doox1` matches `Doox1`
-and nothing else — `Doox10` is a different person, and a prefix match hands one specialist another's
-rows.
-
-Exactly one PIC matched — take it, record it as `Mã PIC` in the README, say nothing about how it was
-found, and stop matching on later runs.
-
-Two or more matched, or none did — ask, with a picker.
-
-**The picker offers the likeliest candidates, not the whole list.** Rank by how close each PIC is to
-the email local part and the name — shared prefix, shared digits, edit distance — and offer the top
-few, plus the harness's own free-text escape. Only when nothing resembles the user at all does the
-picker fall back to every PIC found in the files.
-
-The question is bare: `PIC của bạn là gì?` — one question, the candidates ranked above as its options,
-plus the harness's free-text escape. Do not explain why the automatic
-match failed, do not
-say the file carries no email or name beside the PIC, do not describe what was searched — that
-narrates the file's structure and tells the user which answer would have worked.
-
-Record the answer.
-
-A `Project Manager` has no `Mã PIC` line and needs no match — but the claim itself gets checked, see
-below.
-
-### Verifying a claimed Project Manager
-
-The real PM's name is in the filename, the third part of `[Thị trường] - [Tên dự án] - [Tên PM]`. A
-user who answers `Project Manager` is checked against it before they are shown anything.
-
-Compare their `Tên` with the `Tên PM` of the files they are asking about. Ignore case, ignore
-diacritics, ignore repeated whitespace; require the rest to match. Matching one file grants the PM
-view of that file only — a PM of the Bo Bien Nga market is not the PM of every market, so the
-reminder covers just the files where the name matches.
-
-**No match anywhere — refuse, and reveal nothing:**
-
-> Tên bạn khai không khớp với PM của file kế hoạch. Vui lòng khai báo lại thông tin hoặc chọn lại vai
-> trò.
-
-**Never print, quote, hint at, or partially reveal the real PM name in this situation** — not the
-name, not its initials, not its length, not "gần đúng", not a list of the PM names available to pick
-from, not the filename that contains it. Someone who can guess names and read the failure messages
-must learn nothing about which guess was closer. State only that the claim did not match.
-
-Then ask again the same way the harness asks: in Cowork, one form holding the role and the name; in
-chat, the role picker first — so the user can pick `Chuyên gia` instead — then the name line if they
-stay on `Project Manager`. Do not proceed to a report, a reminder, or a draft in the meantime, and do not
-fall back to showing a specialist's view of data they have not been matched to. A failed check that
-still prints something is not a check.
-
-Write nothing to the README until a check passes — a rejected claim must not be recorded as fact and
-must not persist into the next run.
 
 ### What each role sees
 

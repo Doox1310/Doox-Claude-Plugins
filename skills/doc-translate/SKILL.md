@@ -36,10 +36,17 @@ Read `scripts/ooxml.py` only if it errors. Its behaviour is the two commands abo
 original, professional term the field uses. Condense only if the user also asked for
 a summary.
 
-**Names, codes and units pass through untouched** — tên pháp lý, mã số thuế, mã
-hiệu, model, số hiệu tiêu chuẩn, đơn vị đo. `IEC 61851-1` stays `IEC 61851-1`,
-`Công ty TNHH …` is not turned into English. A term with no settled Vietnamese
-equivalent keeps the original in brackets the first time it appears.
+**Names, codes and units pass through untouched** — rule `DR3` of
+`../using-doox/references/document-rules.md`, which also governs this skill: tên pháp
+lý, mã số thuế, mã hiệu, model, số hiệu tiêu chuẩn, đơn vị đo. `IEC 61851-1` stays
+`IEC 61851-1`, `Công ty TNHH …` is not turned into English. A term with no settled
+Vietnamese equivalent keeps the original in brackets the first time it appears.
+
+`DR3` is inlined above because it is the rule this skill breaks most easily. The other
+four still apply — `DR1` above all: a figure in the source document is translated, never
+corrected against what the model believes it should be. Read the reference when a
+document's own data looks wrong; do not read `using-doox/SKILL.md`, none of it applies
+here.
 
 **A key left `""`, or set to its own source text, is passed through untranslated** —
 that is how a mã hiệu stays a mã hiệu. Both are treated as handled and neither is

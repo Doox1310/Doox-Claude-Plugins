@@ -13,8 +13,12 @@ someone typed up — and asks for an assessment.
 Not for contractors: a hồ sơ năng lực nhà thầu is `bid-review`, a different framework and a
 different question. This skill assesses **a person for a job**.
 
-Read-only, no identity gate, writes no file. The output is tables in the chat reply. A user wanting
-it as a file asks, and it is a new file.
+Read-only, writes no file. The output is tables in the chat reply. A user wanting it as a file asks,
+and it is a new file.
+
+**No identity gate** — it opens no plan file and shows nobody's rows, so it runs for either role.
+`using-doox`, "Who is running this", carries the table that says so; this skill does not decide its
+own exemption. Nothing else in `using-doox` applies here, so do not load it.
 
 ## 2. Input
 
