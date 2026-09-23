@@ -13,12 +13,12 @@ belongs here.
 | Skill | Use it when | Output |
 |---|---|---|
 | `using-doox` | always, before the others | nothing — conventions only |
-| `project-report` | the user asks how one market's project is doing, or hands over a plan file and asks for the report | 4 tables in the customer's template, in the chat reply |
+| `project-report` | the user asks how one market's project is doing, or hands over a plan file and asks for the report | 4 tables in the customer's template, in the chat reply + the same report as a new `.docx` |
 | `reminder` | the user asks what has to be handled today, asks to remind the PICs, or the 9am run fires | PM: one table across their markets + an Outlook draft per PIC (gửi khi PM yêu cầu). Chuyên gia: their own tables, no mail |
-| `market-research` | the user names a target market and asks to research it, asks for a market report, asks to tìm nhà thầu, or asks how we compare against competitors/CPO | a new `.xlsx` built from the saved report framework, filled, every figure sourced — plus, for a competitor objective, the comparison tables in the chat reply |
+| `market-research` | the user names a target market and asks to research it, asks for a market report, asks to tìm nhà thầu, or asks how we compare against competitors/CPO | a new `.xlsx` built from the saved report framework, filled, every figure sourced — plus, for an answer outside the workbook (competitor comparison, a single question), a `.docx` beside it |
 | `mail-draft` | the user hands over a memo, a file or session data and asks to soạn/viết/draft a mail about it | one Outlook draft + the same content in the chat reply, filled into the saved form. Draft never sent unless the user says so in the same turn |
 | `calendar` | the user asks to đặt lịch, dời lịch, xếp lịch tránh trùng, or asks what is on the calendar | the proposed event or arrangement in the chat reply, written to Google Calendar only after the user confirms. Reads the calendar freely, writes never without a yes |
-| `candidate-review` | the user hands over a CV, hồ sơ ứng viên or interview transcript/recording and asks to đánh giá, chấm, so sánh or đề cử nhân sự | the scoring tables in the chat reply — per the saved evaluation framework, every mức carrying its evidence and source. Reads only what the user supplied |
+| `candidate-review` | the user hands over a CV, hồ sơ ứng viên or interview transcript/recording and asks to đánh giá, chấm, so sánh or đề cử nhân sự | the scoring tables in the chat reply — per the saved evaluation framework, every mức carrying its evidence and source, plus the same as a new `.docx`. Reads only what the user supplied |
 | `project-update` | the user reports a change to a task — done, pending, slipped, blocked, deadline moved | the confirmed cells written into the plan files, and a report of what changed. The only skill that writes to a plan file |
 | `project-insights` | the user asks what is stuck or going wrong, asks to summarise/classify issues, asks what finished projects taught, asks how far along a project is, or hands over a plan file with every task done | 4 sections in the chat reply — open issues by work area and issue type, past issues and their patterns, lessons across the archived plans, progress forecast. No mail, ever |
 | `doc-compare` | the user hands over documents and asks to tóm tắt, đọc, so sánh, or what differs and what looks bất thường | tables in the chat reply. Reads only what the user supplied, never a plan file |
@@ -300,10 +300,17 @@ Rewrite the affected lines rather than appending; a README that only grows stops
 
 A Doox skill writes to these things and nothing else: a plan file under `project-update`; this README;
 under `market-research`, the market report `.xlsx` it produces plus its source-log folder
-(`doox-sources/<market-slug>/`, holding that market's evidence cache and the run's claim ledger);
+(`doox-sources/<market-slug>/`, holding that market's evidence cache and the run's claim ledger)
+and the `.docx` (or its `.md` fallback) of any research answer outside the workbook;
 under `plan-consolidation`, the new `.xlsx` files it generates; under `doc-translate`, the translated
-copy it generates. Every other skill is read-only, and none of them ever writes over a file the user
+copy it generates; under `project-report` and `candidate-review`, the new `.docx` (or `.md` fallback)
+of the report they print. Every other skill is read-only, and none of them ever writes over a file the user
 supplied.
+
+Every file a skill produces goes to the local working folder the user opened for the session (in
+Cowork, what shows under Output), or the session's outputs folder when none is open. Never deliver
+through Claude Docs, an artifact, or a document a connector creates on a remote service — that is not
+a file on the user's machine.
 
 ### The README lives locally, never on a connector
 

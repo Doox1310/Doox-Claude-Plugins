@@ -7,9 +7,12 @@ Ranh giới, đọc trước khi dùng:
 
 - Yêu cầu **điền khung báo cáo thị trường** (`assets/khung-bao-cao-thi-truong.xlsx`) chạy theo
   `SKILL.md` §3 và §12 như cũ. File này không thay thế khung đó và không đổi một ô nào của nó.
-- Yêu cầu nghiên cứu **trả lời trong chat** — một câu hỏi lẻ, một bảng so sánh, một hồ sơ nhà thầu,
-  một kịch bản, một bản cập nhật thay đổi — dùng RX1–RX5 dưới đây làm bố cục câu trả lời.
-- §7 (so sánh đối thủ) in ra chat chứ không vào workbook, nên nó là RX2; §6 (tìm nhà thầu) là RX3.
+- Yêu cầu nghiên cứu **ngoài workbook** — một câu hỏi lẻ, một bảng so sánh, một hồ sơ nhà thầu,
+  một kịch bản, một bản cập nhật thay đổi — dùng RX1–RX5 dưới đây làm bố cục câu trả lời, ghi ra
+  file `.docx` trên máy người dùng (`SKILL.md` §2), chat chỉ tóm tắt và nêu tên file.
+- §7 (so sánh đối thủ) ghi ra `.docx` riêng chứ không vào workbook, nên nó là RX2. §6 (tìm nhà thầu)
+  là RX3 nhưng danh sách chỉ nằm trong workbook (`Bảng 3B`); RX3 chỉ là bố cục phần tóm tắt trong
+  chat, không ghi thêm `.docx`.
   Hai section đó vẫn giữ nguyên phương pháp enumeration của mình — RX chỉ quyết định **hình dạng
   đầu ra**, không thay `references/contractor-enumeration.md` hay `references/competitor-comparison.md`.
 

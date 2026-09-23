@@ -13,34 +13,37 @@ giữ nguyên ngôn ngữ của nguồn**, mail theo ngôn ngữ người nhận
 dịch thuật.
 
 Ba skill chạy theo **thư viện form** đặt trong `assets/`: `mail-draft` (EX1–EX5), `project-report`
-(GX1–GX5, nhánh ngoài báo cáo tiến độ) và `market-research` (RX1–RX5 cho phần trả lời trong chat,
+(GX1–GX5, nhánh ngoài báo cáo tiến độ) và `market-research` (RX1–RX5 cho phần trả lời ngoài workbook, ghi ra `.docx`,
 kèm 2 reference tra cứu: topic lens và từ điển chỉ số). Sửa file form là đổi hành vi — không cần
 sửa `SKILL.md`.
 
 ## Cài
 
 ```
-/plugin marketplace add <đường dẫn hoặc repo>
-/plugin install doox-assistant
+/plugin marketplace add Doox1310/Doox-Claude-Plugins
+/plugin install doox-assistant@doox
 ```
 
 Khởi động lại phiên sau khi bật — skill nạp lúc session start.
+
+Hai lệnh trên là của Claude Code. Trên Cowork: tab Cowork → Customize → Plugins → **Add marketplace**,
+nhập `Doox1310/Doox-Claude-Plugins`, rồi cài `doox-assistant` như plugin thường.
 
 ## Skill
 
 | Skill | Dùng khi | Ra |
 |---|---|---|
 | `using-doox` | luôn luôn, trước các skill đọc file kế hoạch | quy ước dùng chung, không in gì |
-| `project-report` | hỏi một thị trường đang thế nào; hoặc xin một báo cáo quản trị khác (quyết định, kế hoạch, rủi ro, biên bản) | 4 bảng trong chat, hoặc một form GX1–GX5 trong chat |
+| `project-report` | hỏi một thị trường đang thế nào; hoặc xin một báo cáo quản trị khác (quyết định, kế hoạch, rủi ro, biên bản) | 4 bảng trong chat, hoặc một form GX1–GX5 trong chat — kèm bản `.docx` |
 | `reminder` | hỏi hôm nay phải xử lý gì | bảng trong chat + draft Outlook mỗi PIC (chỉ vai trò PM) |
 | `project-insights` | hỏi đang vướng gì, bao giờ xong | 4 mục trong chat |
 | `project-update` | báo một đầu việc đổi trạng thái / hạn / vướng mắc | ghi vào file kế hoạch sau khi xác nhận |
 | `plan-consolidation` | quy hoạch nhiều kế hoạch về một form, hoặc gộp | file `.xlsx` mới |
-| `market-research` | nghiên cứu thị trường, tìm nhà thầu, so đối thủ | `.xlsx` theo khung + bảng so sánh trong chat |
+| `market-research` | nghiên cứu thị trường, tìm nhà thầu, so đối thủ | `.xlsx` theo khung; câu hỏi lẻ và so sánh đối thủ ra `.docx` riêng |
 | `doc-compare` | đọc, tóm tắt, so sánh tài liệu | bảng trong chat |
 | `doc-translate` | dịch `.docx` / `.xlsx` / `.pptx` giữ layout | file dịch mới |
 | `bid-review` | duyệt báo giá, duyệt hồ sơ năng lực | bảng so sánh + shortlist trong chat |
-| `candidate-review` | đánh giá CV / phỏng vấn ứng viên | bảng chấm trong chat |
+| `candidate-review` | đánh giá CV / phỏng vấn ứng viên | bảng chấm trong chat + bản `.docx` |
 | `mail-draft` | soạn mail từ memo hoặc dữ liệu có sẵn | draft Outlook + bản in trong chat, theo form EX1–EX5 |
 | `calendar` | đặt lịch, xếp lịch, xem lịch | event Google Calendar sau khi xác nhận |
 

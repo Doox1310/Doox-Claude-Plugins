@@ -21,8 +21,8 @@ viết bằng tiếng Anh vì chúng là **khung**, không phải ngôn ngữ đ
 không bao giờ in ra.
 
 Hai luật của `SKILL.md` mục 6 vẫn nguyên giá trị ở cả hai nhánh: skill này **không ghi vào file kế
-hoạch**, và mâu thuẫn trạng thái thì liệt kê chứ không sửa. Nhánh GX cũng không tạo file — báo cáo là
-chính nội dung chat reply, trừ khi user yêu cầu khác.
+hoạch**, và mâu thuẫn trạng thái thì liệt kê chứ không sửa. Cả hai nhánh in đầy đủ báo cáo ra chat **và** ghi
+cùng nội dung ra file `.docx` mới trên máy người dùng (`SKILL.md` mục 5).
 
 ## Chọn form
 

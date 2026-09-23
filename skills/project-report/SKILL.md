@@ -27,8 +27,8 @@ never drop a table because a GX form has no equivalent.
 The management branch exists for the material the four tables cannot hold — a decision that needs an
 approver, a plan that needs owners and gates, a meeting that needs a decision register. Read
 `assets/form-report.md`, pick one form by the outcome the reader needs, and follow that form's
-`reasoning`, `missing_data` and `template_*` fields. Output is the chat reply, same as the progress
-branch; produce no file.
+`reasoning`, `missing_data` and `template_*` fields. Output is the chat reply plus the same content in
+a `.docx`, same as the progress branch (§5).
 
 An ask that could be either — a plan file handed over with "viết cho tôi báo cáo gửi sếp" — is
 **asked about, not guessed**. One question, then run one branch.
@@ -92,9 +92,13 @@ reverse, counts as not done and still lands in table 1/2/3 by its dates. Flag it
 
 ## 5. Output
 
-**The report is the chat reply itself.** Produce no `.docx`, `.md`, `.pdf`, `.xlsx` or any other
-file, and do not offer to. A file attachment is not a delivery of this report; it is a way of not
-delivering it.
+**The report is the chat reply, and the same report is also saved as a file.** Print it in full in
+the reply (below), then write the identical content to `Báo cáo tiến độ [Thị trường] dd_mm_yyyy.docx`
+(GX branch: `Báo cáo [tên form, e.g. Phê duyệt] [Thị trường] dd_mm_yyyy.docx`) in the local working
+folder, per `using-doox` — a `.md` of the same name only when a `.docx` cannot be produced; if the name
+exists, add ` (2)`, ` (3)`… rather than overwrite. The file carries exactly the rows the role may see,
+nothing more. The file never replaces the printed report: a reply that points at the file instead of
+printing the tables has not delivered it.
 
 **Print every table in full, as Markdown, in the reply.** All four sections, every row of every
 section, every column in the order given below, each cell carried whole. `Phương án triển khai` and
@@ -189,7 +193,8 @@ After table 4: the status-conflict list, if there is one.
 
 **Quy tắc riêng của skill này — `project-report` không ghi vào file kế hoạch.** A status conflict it
 finds is listed, never corrected; the correction goes through `project-update`, with its
-confirmation. The one file it writes is the project `README.md`, per `using-doox`.
+confirmation. The files it writes are the project `README.md`, per `using-doox`, and the new report
+`.docx` (§5).
 
 Both rules hold on the management branch too. A GX report reads the plan file; it never edits it.
 
@@ -249,7 +254,7 @@ conclusion first, then its tables. `reasoning` is the order the argument is made
 what must survive any shortening, `missing_data` is the gap that may not be hidden, and
 `adaptive_blocks` are added only when the material actually triggers them.
 
-Produce no file and do not offer to — same as the progress branch. Default length is one page, around
+Save it to a `.docx` exactly as §5 does for the progress branch. Default length is one page, around
 250–450 words, shorter for an alert or an action register, unless the user asked otherwise.
 
 Written in the user's language (`using-doox`, "Language"), with every value quoted from the material

@@ -9,6 +9,13 @@ description: Use when a user asks for EV-charging market research, a market repo
 
 Produce a **sourced EV-charging market report in the saved `.xlsx` framework**. The report is evidence for human review, not an investment verdict, site-readiness certification, legal opinion, utility commitment, or vendor quotation.
 
+**Every run leaves a file on the user's machine.** Write every deliverable — the workbook, and any RX
+answer (§2) — into the local working folder the user opened for the session (in Cowork, what shows
+under Output); with no folder opened, the session's outputs folder. Never deliver through Claude
+Docs, an artifact, or any document a connector creates or edits on a remote service: that is not a
+file on the user's machine, and a run that leaves only that has produced no deliverable. The chat
+reply summarises the file and names it; it never replaces it.
+
 Permanent plugin files stay minimal:
 
 - `SKILL.md` — research and verification method.
@@ -19,7 +26,7 @@ Permanent plugin files stay minimal:
 - `scripts/wb.py` — writable-cell lister, workbook inspector and batch writer.
 - `scripts/cache.py` — cross-run evidence cache (§10).
 - `assets/khung-bao-cao-thi-truong.xlsx` — output schema and cell-level requirements.
-- `assets/form-research.md` — RX1–RX5, the shape of a research answer that goes to the chat reply
+- `assets/form-research.md` — RX1–RX5, the shape of a research answer that goes to its own `.docx`
   instead of the workbook. Read at step 1, once the objective is settled.
 - `references/topic-lenses.md` — R01–R52, per topic: what to sweep and the counting trap it carries.
   Read the matching row before searching that topic, never the whole file.
@@ -34,7 +41,7 @@ Do not add permanent claim/source/config files. The ledger and the evidence cach
 
 | # | Step | Owns it | Runs |
 |---|---|---|---|
-| 1 | Settle scope, objective, deliverable, data-lock date, mode; pick the RX form for anything answered in chat | §2 | once — one structured-question call, or none |
+| 1 | Settle scope, objective, deliverable, data-lock date, mode; pick the RX form for anything outside the workbook | §2 | once — one structured-question call, or none |
 | 2 | Copy the asset; list the writable cells; inspect the report sheet in full | §3 | once |
 | 3 | Split every writable row into atomic claims, mark the decision-grade set, batch by authority, open the ledger | §4, §10 | once |
 | 4 | Sweep the cache for the whole split | §9.0 | once, before any search |
@@ -59,17 +66,24 @@ Use facts already supplied; do not ask again. Resolve only what materially chang
 - when the objective includes contractor selection: the **contractor target profile** — default `tổng thầu turnkey` (see §6). Do not ask again if the user already stated it.
 - when the objective includes `competitor/CPO`: the **own-side profile** — per §7.1, along the §7.3 dimensions. It is never inferred, and an unsupplied own-side turns the run into a landscape report, not a comparison.
 
-Three objectives run a chapter of their own and are worth naming apart from the rest, since each has its own frames, budget and output: **tìm nhà thầu** → §6; **nghiên cứu thị trường/khu vực** → the workbook, §12; **so sánh đối thủ cạnh tranh** → §7, which prints to the chat reply rather than the workbook. They combine freely — a run may do all three — but each one asked for pulls in its own section whole, never a lighter version of it.
+Three objectives run a chapter of their own and are worth naming apart from the rest, since each has its own frames, budget and output: **tìm nhà thầu** → §6; **nghiên cứu thị trường/khu vực** → the workbook, §12; **so sánh đối thủ cạnh tranh** → §7, which goes to its own `.docx` rather than the workbook. They combine freely — a run may do all three — but each one asked for pulls in its own section whole, never a lighter version of it.
 
 **Settle the deliverable at the same time as the objective, and read `assets/form-research.md` once
 it is settled.** Two shapes exist and they are not interchangeable: the workbook (§3, §12), and a
-research answer written into the chat reply. Whatever goes to the chat takes the shape of one RX
-form — RX1 for a question or a landscape, RX2 for a comparison or benchmark (this is §7's own-side
+research answer written to its own `.docx`. Whatever does not go into the workbook takes the shape of
+one RX form — RX1 for a question or a landscape, RX2 for a comparison or benchmark (this is §7's own-side
 comparison), RX3 for a named counterparty or shortlist (§6's contractor list), RX4 for an entry or
 scenario thesis, RX5 for what changed against a dated baseline. The RX form decides the **shape of the
 answer only**. Evidence classes (§5), the ledger and cache (§10), the budget (§9) and the four
 statuses (§4) are unchanged by it, and no RX form replaces `references/contractor-enumeration.md` or
 `references/competitor-comparison.md`.
+
+An RX answer is not left in the chat alone: write it, in its RX form, to
+`Nghiên cứu [Chủ đề] [Thị trường] dd_mm_yyyy.docx` in the working folder (§1) — beside the workbook
+when the run also makes one; a `.md` of the same name only when a `.docx` cannot be produced — then
+summarise it in the reply. If that name already exists, add ` (2)`, ` (3)`… rather than overwrite it.
+The one exception is §6's contractor list: it lives in the workbook (`Bảng 3B`) only, and RX3 shapes
+its summary in the reply — never a second copy in a `.docx`.
 
 **Three languages meet in a single run, and they are not the same language.** The reply and any
 RX deliverable follow the user (`using-doox`, "Language" — vi, en or fr). **The workbook keeps its
@@ -205,7 +219,7 @@ When a secondary source cites an original dataset/order/law, follow the citation
 
 Do not attempt contractor work from the summary above: a generic web search ranks intermediaries first, so a list built without the frames is a list of resellers.
 
-The output takes the shape of **RX3** (`assets/form-research.md`): a fit verdict in plain words, the
+The list itself goes into `Bảng 3B`; the reply's summary of it takes the shape of **RX3** (`assets/form-research.md`), with no separate `.docx` (§2): a fit verdict in plain words, the
 shortlist table with proven scope separated from claimed scope, the conditions attached to each
 candidate, and the external checks still outstanding. Candidates the evidence does not settle stay
 provisional — an unverified firm is named as unverified, never scored into a number.
@@ -218,9 +232,9 @@ provisional — an unverified firm is named as unverified, never scored into a n
 
 **When the objective includes `competitor/CPO`, read `references/competitor-comparison.md` before starting, and follow it.** It carries the own-side rule (§7.1 — never inferred from model knowledge), the competitor buckets and enumeration frames C1–C7 (§7.2), the ten comparison dimensions (§7.3), unit normalisation and the built-vs-announced split (§7.4), the asymmetry rule (§7.5), the four-part output (§7.6), the boundaries and budget (§7.7), and audit F (§13F).
 
-Output goes to the chat reply as tables, not into the workbook — the bundled framework has no competitor block yet. It takes the shape of **RX2** (`assets/form-research.md`): the comparison basis stated before the table, one row per side on a like-for-like measure, the trade-off conclusion made conditional, and the cells that could not be made comparable left as `Chưa kết luận được` rather than forced into a ranking.
+Output goes to its own `.docx` as tables (§2), summarised in the chat reply, not into the workbook — the bundled framework has no competitor block yet. It takes the shape of **RX2** (`assets/form-research.md`): the comparison basis stated before the table, one row per side on a like-for-like measure, the trade-off conclusion made conditional, and the cells that could not be made comparable left as `Chưa kết luận được` rather than forced into a ranking.
 
-That makes it the one deliverable of this skill with nowhere durable to live: the workbook and the ledger survive the session, the comparison does not. Its claims still go through the ledger like every other claim (§10), so the evidence behind it is kept even though the tables are not. Say so in the §14 reply — the comparison is in the chat reply only, and the user should save it if they need it after the session.
+Its claims still go through the ledger like every other claim (§10).
 
 Do not attempt the comparison from the summary above: the two failures it exists to prevent — comparing trạm against cổng, and counting announced capacity as operating capacity — both look like ordinary tables until someone acts on them.
 
@@ -461,6 +475,6 @@ The report is complete only when:
 A deliverable that went to the chat rather than the workbook is written in its RX form (§2) and is
 complete on that form's terms: its evidence carries scope and date, its material gap is still visible,
 and its conclusion stays conditional on the evidence behind it. Name the form used in the reply, and
-say that a chat-only deliverable does not survive the session unless the user saves it.
+the `.docx` it was written to.
 
 Every figure in the reply is **counted from the ledger** (§10), never recalled: claims by `grade`, documents by distinct URL where `origin=fetch`, cache closures where `origin=cache`, gaps where `origin=gap`. State: output file, mode (`nhanh`/`sâu`), data-lock date, claims marked decision-grade out of the total, searches and documents opened **split into base line versus decision-grade allowance**, candidates gated out, claims closed from the cache without a fetch, unique evidence sources, decision-grade claims still `Chưa xác minh`, whether any gap came from hitting a ceiling rather than from absent public evidence, and whether all final audit gates passed. For a competitor objective also state: competitors compared by bucket, which of C1–C3 were worked, how many D-rows ended `Chưa kết luận được` for lack of competitor data, and whether the own-side was supplied in full. For a contractor objective also state: frames worked, companies listed, how many are `Tổng thầu turnkey`, how many in Nhóm A, whether saturation was reached, and the residual blind spots. Offer follow-up work only when the user asks or when it directly closes a named gap already present in the report.

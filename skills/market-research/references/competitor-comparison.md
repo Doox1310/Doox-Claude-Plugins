@@ -6,8 +6,8 @@ The question this section answers is not "who else is in this market". It is **"
 against them, on what evidence, and where does that leave us exposed"**. A list of competitors with
 their station counts is the input, not the output.
 
-Output goes to the **chat reply as tables**, not into the workbook — the bundled framework has no
-competitor block yet. Everything else in this skill still applies: sourcing (§5), freshness (§8),
+Output goes to **its own `.docx` as tables** (SKILL.md §2), summarised in the chat reply, not into
+the workbook — the bundled framework has no competitor block yet. Everything else in this skill still applies: sourcing (§5), freshness (§8),
 the evidence record (§10), conflicts (§11).
 
 ## 7.1 "Mình" has to be stated, never assumed
@@ -119,7 +119,7 @@ is more useful than a flattering table, because it names what to go and find out
 
 ## 7.6 Output
 
-Four parts, in the chat reply, in this order.
+Four parts, in the `.docx`, in this order.
 
 **1. Bảng so sánh ngang.** Rows D1–D10, columns: `Mình` then one per competitor. Each cell carries
 value, `Nguồn`, `Ngày`, and `Độ chắc chắn` (Đã xác minh / Ước tính có cơ sở / Chưa xác minh).

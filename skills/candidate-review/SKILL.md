@@ -13,8 +13,8 @@ someone typed up — and asks for an assessment.
 Not for contractors: a hồ sơ năng lực nhà thầu is `bid-review`, a different framework and a
 different question. This skill assesses **a person for a job**.
 
-Read-only, writes no file. The output is tables in the chat reply. A user wanting it as a file asks,
-and it is a new file.
+Read-only on everything the user supplied. The output is tables in the chat reply, plus the same
+content in one new file (§6).
 
 **No identity gate** — it opens no plan file and shows nobody's rows, so it runs for either role.
 `using-doox`, "Who is running this", carries the table that says so; this skill does not decide its
@@ -80,6 +80,12 @@ passed: say nobody passed, and do not promote the least-bad to fill the list.
 
 Per the framework's "Đầu ra bắt buộc" section, in the chat reply. End with the gaps: which nhóm are
 `Chưa đủ dữ liệu`, and what material would close them.
+
+Then write the same content to `Đánh giá ứng viên [Họ tên] [Vị trí] dd_mm_yyyy.docx` in the local
+working folder the user opened for the session (in Cowork, what shows under Output; with none open,
+the session's outputs folder) — a `.md` of the same name only when a `.docx` cannot be produced; if the
+name exists, add ` (2)`, ` (3)`… rather than overwrite. Never deliver it through Claude Docs, an
+artifact or a connector. The file carries nothing the chat reply may not.
 
 The assessment is input to a human decision, never the decision. Do not write that a candidate should
 be hired or rejected — write what the material shows, what it does not, and what is still worth
