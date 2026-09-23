@@ -6,6 +6,17 @@ nghiên cứu thị trường theo khung tiêu chuẩn.
 
 13 skill markdown thuần. Không có thư viện Python trung tâm; 3 skill mang script riêng.
 
+Dùng được bằng **tiếng Việt, tiếng Anh và tiếng Pháp**. Luật ngôn ngữ nằm một chỗ — `using-doox`, mục
+"Language" (và `DR3b` cho 3 skill tài liệu không nạp `using-doox`): nhãn theo ngôn ngữ user, **dữ liệu
+giữ nguyên ngôn ngữ của nguồn**, mail theo ngôn ngữ người nhận, ngày luôn `dd/mm/yyyy`. Khung
+`.xlsx` của `market-research` giữ tiếng Việt vì đó là hợp đồng đầu ra của file, không phải lựa chọn
+dịch thuật.
+
+Ba skill chạy theo **thư viện form** đặt trong `assets/`: `mail-draft` (EX1–EX5), `project-report`
+(GX1–GX5, nhánh ngoài báo cáo tiến độ) và `market-research` (RX1–RX5 cho phần trả lời trong chat,
+kèm 2 reference tra cứu: topic lens và từ điển chỉ số). Sửa file form là đổi hành vi — không cần
+sửa `SKILL.md`.
+
 ## Cài
 
 ```
@@ -20,7 +31,7 @@ Khởi động lại phiên sau khi bật — skill nạp lúc session start.
 | Skill | Dùng khi | Ra |
 |---|---|---|
 | `using-doox` | luôn luôn, trước các skill đọc file kế hoạch | quy ước dùng chung, không in gì |
-| `project-report` | hỏi một thị trường đang thế nào | 4 bảng trong chat |
+| `project-report` | hỏi một thị trường đang thế nào; hoặc xin một báo cáo quản trị khác (quyết định, kế hoạch, rủi ro, biên bản) | 4 bảng trong chat, hoặc một form GX1–GX5 trong chat |
 | `reminder` | hỏi hôm nay phải xử lý gì | bảng trong chat + draft Outlook mỗi PIC (chỉ vai trò PM) |
 | `project-insights` | hỏi đang vướng gì, bao giờ xong | 4 mục trong chat |
 | `project-update` | báo một đầu việc đổi trạng thái / hạn / vướng mắc | ghi vào file kế hoạch sau khi xác nhận |
@@ -30,7 +41,7 @@ Khởi động lại phiên sau khi bật — skill nạp lúc session start.
 | `doc-translate` | dịch `.docx` / `.xlsx` / `.pptx` giữ layout | file dịch mới |
 | `bid-review` | duyệt báo giá, duyệt hồ sơ năng lực | bảng so sánh + shortlist trong chat |
 | `candidate-review` | đánh giá CV / phỏng vấn ứng viên | bảng chấm trong chat |
-| `mail-draft` | soạn mail từ memo hoặc dữ liệu có sẵn | draft Outlook + bản in trong chat |
+| `mail-draft` | soạn mail từ memo hoặc dữ liệu có sẵn | draft Outlook + bản in trong chat, theo form EX1–EX5 |
 | `calendar` | đặt lịch, xếp lịch, xem lịch | event Google Calendar sau khi xác nhận |
 
 ## Phụ thuộc ngoài — đọc trước khi trông cậy
@@ -63,7 +74,8 @@ Gồm 16 case phủ cả 13 skill, chấm hai thứ:
 
 Kết quả lần chạy gần nhất trên bản `0.9.x`: **16/16 ĐẠT**, SHA-256 của cả 5 bản copy file kế
 hoạch trong sandbox giống hệt bản gốc — không skill nào ghi vào `.xlsx`. Bản `1.0.0` đổi tên
-plugin và tách 3 reference nên cần chạy lại.
+plugin và tách 3 reference, bản `1.1.0` thêm thư viện form EX/GX/RX và nhánh báo cáo quản trị của
+`project-report` — cả hai đều cần chạy lại, và `1.1.0` cần thêm case cho việc chọn nhầm nhánh.
 
 Muốn dựng bộ test cho bản fork của mình thì cần: một file kế hoạch theo đúng quy ước
 `[Thị trường] - [Tên dự án] - [Tên PM]`, một bộ đọc tham chiếu độc lập với skill để so kết quả,

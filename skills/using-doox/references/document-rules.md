@@ -20,6 +20,13 @@ số hiệu tiêu chuẩn, đơn vị đo — carried over exactly as written, i
 translation. `IEC 61851-1` stays `IEC 61851-1`. `Công ty TNHH …` is not translated into English and
 not "corrected".
 
+**DR3b — The reply's language is the user's; the document's language is the document's.** The plugin
+is used in Vietnamese, English and French. Headings, labels and the skill's own sentences follow the
+user's request; everything quoted from the document stays in the document's language, and a quoted
+sentence that also needs a translation carries the original beside it, marked as a translation. Dates
+print `dd/mm/yyyy` in all three. `doc-translate` is the one exception and only where the user asked:
+it translates the body, and `DR3` still holds inside the translation.
+
 **DR4 — Compare only within the same scope.** Two figures are comparable after they have been put on
 the same basis: same hạng mục, same đơn vị tính, same khối lượng, same tax basis, same currency, same
 inclusions. Anything that resists normalisation is reported as `Không so sánh được` with the reason —

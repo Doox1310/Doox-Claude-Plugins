@@ -19,6 +19,12 @@ Permanent plugin files stay minimal:
 - `scripts/wb.py` — writable-cell lister, workbook inspector and batch writer.
 - `scripts/cache.py` — cross-run evidence cache (§10).
 - `assets/khung-bao-cao-thi-truong.xlsx` — output schema and cell-level requirements.
+- `assets/form-research.md` — RX1–RX5, the shape of a research answer that goes to the chat reply
+  instead of the workbook. Read at step 1, once the objective is settled.
+- `references/topic-lenses.md` — R01–R52, per topic: what to sweep and the counting trap it carries.
+  Read the matching row before searching that topic, never the whole file.
+- `references/metrics.md` — K01–K56 metric definitions. Read the matching rows before putting two
+  numbers in the same table (§11).
 
 Each reference carries its rules in full; the section that points at it carries only the trigger. Read the reference at the point named — never work a section from its stub.
 
@@ -28,7 +34,7 @@ Do not add permanent claim/source/config files. The ledger and the evidence cach
 
 | # | Step | Owns it | Runs |
 |---|---|---|---|
-| 1 | Settle scope, objective, data-lock date, mode | §2 | once — one structured-question call, or none |
+| 1 | Settle scope, objective, deliverable, data-lock date, mode; pick the RX form for anything answered in chat | §2 | once — one structured-question call, or none |
 | 2 | Copy the asset; list the writable cells; inspect the report sheet in full | §3 | once |
 | 3 | Split every writable row into atomic claims, mark the decision-grade set, batch by authority, open the ledger | §4, §10 | once |
 | 4 | Sweep the cache for the whole split | §9.0 | once, before any search |
@@ -54,6 +60,32 @@ Use facts already supplied; do not ask again. Resolve only what materially chang
 - when the objective includes `competitor/CPO`: the **own-side profile** — per §7.1, along the §7.3 dimensions. It is never inferred, and an unsupplied own-side turns the run into a landscape report, not a comparison.
 
 Three objectives run a chapter of their own and are worth naming apart from the rest, since each has its own frames, budget and output: **tìm nhà thầu** → §6; **nghiên cứu thị trường/khu vực** → the workbook, §12; **so sánh đối thủ cạnh tranh** → §7, which prints to the chat reply rather than the workbook. They combine freely — a run may do all three — but each one asked for pulls in its own section whole, never a lighter version of it.
+
+**Settle the deliverable at the same time as the objective, and read `assets/form-research.md` once
+it is settled.** Two shapes exist and they are not interchangeable: the workbook (§3, §12), and a
+research answer written into the chat reply. Whatever goes to the chat takes the shape of one RX
+form — RX1 for a question or a landscape, RX2 for a comparison or benchmark (this is §7's own-side
+comparison), RX3 for a named counterparty or shortlist (§6's contractor list), RX4 for an entry or
+scenario thesis, RX5 for what changed against a dated baseline. The RX form decides the **shape of the
+answer only**. Evidence classes (§5), the ledger and cache (§10), the budget (§9) and the four
+statuses (§4) are unchanged by it, and no RX form replaces `references/contractor-enumeration.md` or
+`references/competitor-comparison.md`.
+
+**Three languages meet in a single run, and they are not the same language.** The reply and any
+RX deliverable follow the user (`using-doox`, "Language" — vi, en or fr). **The workbook keeps its
+own**: the bundled framework is Vietnamese, so its sheet names, its field labels and the four status
+words `Đã xác minh` / `Ước tính` / `Chưa xác minh` / `Không áp dụng` are written into the cells
+exactly as the framework has them, whatever language the user is working in — they are the output
+contract of that file, not a translation choice, and a status rendered as `Verified` breaks every
+downstream read of the report. A user-supplied framework is filled in *its* language, the same way.
+**Searching follows the market**: queries, official terminology and document names are in the
+jurisdiction's own language, because that is where the primary sources are. A figure, a legal
+citation or a quoted clause keeps the language it was published in; a translation of it is labelled
+as one and never replaces the original in the ledger.
+
+When an RX deliverable in English or French carries a status, give it as the canonical Vietnamese
+term with the reader's gloss once — `Chưa xác minh (not verified)` — so the chat and the workbook
+still say the same thing.
 
 Ask for a missing essential in one structured-question call covering everything still unknown — never as a numbered list of questions in prose, and never one question per turn.
 
@@ -114,6 +146,12 @@ A cell value may be a **JSON list**, which is joined with newlines. `write` forc
 
 In the same pass that reads the framework, silently split every writable row into **atomic claims** — the whole workbook at once, not row by row. Every number, percentage, date, range, currency value, legal assertion, licence/certification status, named operator/partner fact, and factual premise used in a conclusion is a claim.
 
+**Read the matching rows of `references/topic-lenses.md` while splitting, one row per topic the
+workbook actually touches.** Each row carries the scope to sweep and the counting trap that topic
+carries — announced versus operating capacity, registered versus active, site versus connector,
+national versus city. The trap belongs in the split, where it decides how a claim is worded, not in
+the audit where it becomes a rewrite. Never read the file end to end; it is a lookup.
+
 Then **batch the claims by the authority that will answer them**, not by row. One tariff order, registry page or statistics release usually answers several claims spread across unrelated rows; researching row by row fetches the same document repeatedly. A batch is one authority/document plus every claim it can close.
 
 **Write the split straight into the ledger (§10) as open rows — do not hold it in the conversation.** The split is the largest artefact the run produces before any research happens: one row per claim, forty-odd rows for a full report, each carrying its target cell, its authority batch and whether it is decision-grade. Held in context it is re-sent on every turn for the rest of the run; held in the ledger it is queryable, survives an interruption, and doubles as the coverage checklist §13 gate A needs. The run is finished when no row is still open.
@@ -167,6 +205,11 @@ When a secondary source cites an original dataset/order/law, follow the citation
 
 Do not attempt contractor work from the summary above: a generic web search ranks intermediaries first, so a list built without the frames is a list of resellers.
 
+The output takes the shape of **RX3** (`assets/form-research.md`): a fit verdict in plain words, the
+shortlist table with proven scope separated from claimed scope, the conditions attached to each
+candidate, and the external checks still outstanding. Candidates the evidence does not settle stay
+provisional — an unverified firm is named as unverified, never scored into a number.
+
 **The frames as written are the Vietnam instantiation.** F1–F5 name Vietnamese portals (`muasamcong.mpi.gov.vn`, `nangluchdxd.gov.vn`, `dangkykinhdoanh.gov.vn`, EVN provincial utilities, Sở Xây dựng), §6.3 reads VSIC mã ngành, and the query strings are Vietnamese. **The method ports to any market; those URLs and codes do not.** For a market outside Vietnam, spend a bounded discovery pass — charged to the contractor budget (§6.6) — identifying that jurisdiction's equivalent of each frame before enumerating anything: its public-procurement results portal, its construction-licence or contractor registry, its utility's approved-contractor list, its company registry and industry-code scheme, its provincial/municipal permit authority. Record the mapping in the ledger, name it in the §14 reply, and key candidates on that jurisdiction's own company identifier the way the Vietnam frames key on MST.
 
 **A frame with no local equivalent is a named blind spot, not a frame quietly dropped.** Where the discovery pass finds no public tender-results portal or no licence registry, say which frames could not be worked and what that leaves unverifiable — an enumeration missing F1 and F2 cannot claim saturation (§6.6), and a role classification with no registry behind it stays `Chưa xác định` (§6.1) rather than resting on a company's own website.
@@ -175,7 +218,7 @@ Do not attempt contractor work from the summary above: a generic web search rank
 
 **When the objective includes `competitor/CPO`, read `references/competitor-comparison.md` before starting, and follow it.** It carries the own-side rule (§7.1 — never inferred from model knowledge), the competitor buckets and enumeration frames C1–C7 (§7.2), the ten comparison dimensions (§7.3), unit normalisation and the built-vs-announced split (§7.4), the asymmetry rule (§7.5), the four-part output (§7.6), the boundaries and budget (§7.7), and audit F (§13F).
 
-Output goes to the chat reply as tables, not into the workbook — the bundled framework has no competitor block yet.
+Output goes to the chat reply as tables, not into the workbook — the bundled framework has no competitor block yet. It takes the shape of **RX2** (`assets/form-research.md`): the comparison basis stated before the table, one row per side on a like-for-like measure, the trade-off conclusion made conditional, and the cells that could not be made comparable left as `Chưa kết luận được` rather than forced into a ranking.
 
 That makes it the one deliverable of this skill with nowhere durable to live: the workbook and the ledger survive the session, the comparison does not. Its claims still go through the ledger like every other claim (§10), so the evidence behind it is kept even though the tables are not. Say so in the §14 reply — the comparison is in the chat reply only, and the user should save it if they need it after the session.
 
@@ -321,6 +364,13 @@ Add records as each batch closes rather than in one dump at the end, so an inter
 
 ## 11. Conflicts and normalisation
 
+**Read the matching rows of `references/metrics.md` before putting two numbers in the same table.**
+It gives each measure its definition, unit and the scope that must travel with it, and it names the
+pairs that look comparable and are not — GMV against operator revenue, uptime against charge success,
+asking price against realised value, advertised income against net income. A source whose own
+definition differs from the dictionary keeps its own definition, and the difference is reconciled
+before the comparison rather than absorbed into it.
+
 Before comparing values, normalise only when definitions permit it:
 
 - geography and population/customer class;
@@ -407,5 +457,10 @@ The report is complete only when:
 - for a competitor objective: audit F passes.
 
 “100% processed” means every required claim is verified, estimated with evidence, positively not applicable, or explicitly unresolved. It does **not** mean public information exists for every project-specific fact.
+
+A deliverable that went to the chat rather than the workbook is written in its RX form (§2) and is
+complete on that form's terms: its evidence carries scope and date, its material gap is still visible,
+and its conclusion stays conditional on the evidence behind it. Name the form used in the reply, and
+say that a chat-only deliverable does not survive the session unless the user saves it.
 
 Every figure in the reply is **counted from the ledger** (§10), never recalled: claims by `grade`, documents by distinct URL where `origin=fetch`, cache closures where `origin=cache`, gaps where `origin=gap`. State: output file, mode (`nhanh`/`sâu`), data-lock date, claims marked decision-grade out of the total, searches and documents opened **split into base line versus decision-grade allowance**, candidates gated out, claims closed from the cache without a fetch, unique evidence sources, decision-grade claims still `Chưa xác minh`, whether any gap came from hitting a ceiling rather than from absent public evidence, and whether all final audit gates passed. For a competitor objective also state: competitors compared by bucket, which of C1–C3 were worked, how many D-rows ended `Chưa kết luận được` for lack of competitor data, and whether the own-side was supplied in full. For a contractor objective also state: frames worked, companies listed, how many are `Tổng thầu turnkey`, how many in Nhóm A, whether saturation was reached, and the residual blind spots. Offer follow-up work only when the user asks or when it directly closes a named gap already present in the report.

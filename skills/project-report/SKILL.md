@@ -1,16 +1,42 @@
 ---
 name: project-report
-description: Read ONE market's project plan and produce the progress report in the customer's template — every task sorted into overdue, near deadline, in progress, done. Use when the user asks for a báo cáo tiến độ, asks how one market's project is doing, asks what is overdue, or hands over a plan file and asks for the report. NOT the day's to-do list or team reminder (that is `reminder`), NOT issue classification or a completion forecast (that is `project-insights`), NOT for changing a value in the file (that is `project-update`). Load the `using-doox` skill first — it holds the identity gate and the file-reading rules this skill depends on.
+description: Read ONE market's project plan and produce the progress report in the customer's template — every task sorted into overdue, near deadline, in progress, done. Use when the user asks for a báo cáo tiến độ, asks how one market's project is doing, asks what is overdue, or hands over a plan file and asks for the report. Also covers management reports that are not progress
+  reports — báo cáo điều hành, đề xuất quyết định, kế hoạch triển khai, báo cáo rủi ro/escalation,
+  biên bản họp và bảng hành động — written from memos, notes or tables using the GX1–GX5 forms in
+  `assets/form-report.md`. NOT the day's to-do list or team reminder (that is `reminder`), NOT issue classification or a completion forecast (that is `project-insights`), NOT for changing a value in the file (that is `project-update`). Load the `using-doox` skill first — it holds the identity gate and the file-reading rules this skill depends on.
 ---
 
-# Progress report
+# Project report
 
 ## 1. When to use
 
 The user hands over a plan file (`.xlsx`) and asks about progress, or asks for a progress report for
 one market.
 
-## 2. Input
+**Two branches, and the wrong one silently destroys the deliverable.**
+
+| The ask | Branch | Where the rules are |
+|---|---|---|
+| Tiến độ / quá hạn / một thị trường đang thế nào, từ file kế hoạch | **Progress report** | Sections 2–6 below. Four fixed tables. |
+| Báo cáo điều hành, đề xuất quyết định, kế hoạch triển khai, báo cáo rủi ro/escalation, biên bản họp + bảng hành động — từ memo, ghi chú, email, bảng rời hoặc đầu ra của một skill khác | **Management report** | `assets/form-report.md`, forms GX1–GX5. |
+
+The progress branch is the default and it is rigid: the four tables are the customer's own template,
+not a layout choice. Never render a progress report as a GX form, never add a GX block to it, and
+never drop a table because a GX form has no equivalent.
+
+The management branch exists for the material the four tables cannot hold — a decision that needs an
+approver, a plan that needs owners and gates, a meeting that needs a decision register. Read
+`assets/form-report.md`, pick one form by the outcome the reader needs, and follow that form's
+`reasoning`, `missing_data` and `template_*` fields. Output is the chat reply, same as the progress
+branch; produce no file.
+
+An ask that could be either — a plan file handed over with "viết cho tôi báo cáo gửi sếp" — is
+**asked about, not guessed**. One question, then run one branch.
+
+## 2. Input — progress branch
+
+Sections 2 to 6 are the progress branch only. The management branch has its own input, its own form
+and its own output, all in §7.
 
 **Load the `using-doox` skill before anything else in this section.** If this skill was dispatched on
 its own, that has not happened yet — do it now, before listing the folder and before opening the
@@ -105,6 +131,32 @@ Do not rename, reorder, merge or drop a section, and do not add one — no `Các
 `Chưa bắt đầu` table, no count-total line at the end. A `Chuyên gia` still gets all four sections,
 filtered to their rows; a section left empty by the filter prints `_(không có)_` like any other.
 
+### The same four sections in English and French
+
+The Vietnamese above is **canonical** — it is the customer's template, and the four sections, their
+order and their numbering never change. What changes with the reply's language (`using-doox`,
+"Language") is the wording of the labels, and only to these:
+
+| # | vi | en | fr |
+|---|---|---|---|
+| — | `Báo cáo tiến độ dự án:` | `Project progress report:` | `Rapport d'avancement du projet :` |
+| — | `Cập nhật tiến độ dự án tại thị trường [X] dựa theo cập nhật mới nhất:` | `Progress at [X], as of the latest update:` | `Avancement sur le marché [X], selon la dernière mise à jour :` |
+| 1 | `Đầu việc quá deadline` | `Overdue tasks` | `Tâches en retard` |
+| 2 | `Các đầu việc gần deadline` | `Tasks near deadline` | `Tâches proches de l'échéance` |
+| 3 | `Các đầu việc đang trong quá trình triển khai` | `Tasks in progress` | `Tâches en cours` |
+| 4 | `Các công việc đã hoàn thành` | `Completed tasks` | `Tâches terminées` |
+
+Empty section: `_(không có)_` / `_(none)_` / `_(aucune)_`. Continued message: `(tiếp)` / `(cont.)` /
+`(suite)`. The status-conflict tag is the skill's own annotation, so it follows the reply's language:
+`[đã tick, cột chữ chưa cập nhật]` / `[checkbox ticked, text column not updated]` /
+`[case cochée, colonne texte non mise à jour]` — but the two conflicting values it reports are quoted
+from the file exactly as written.
+
+Column headers follow the same split: the eight/seven headers below are rendered in the reply's
+language, while **every cell under them is quoted from the file untouched** — `Danh mục công việc`
+values, PIC codes, `Trạng thái` words and note text stay exactly as the plan file wrote them, in the
+plan file's language. Say so in one line above the report when the two languages differ.
+
 Tables 1, 2, 3 — eight columns:
 
 | STT | Danh mục công việc | PIC | Ngày kết thúc | Hiện trạng vấn đề | Vấn đề phát sinh | Phương án xử lý | Ghi chú |
@@ -138,3 +190,80 @@ After table 4: the status-conflict list, if there is one.
 **Quy tắc riêng của skill này — `project-report` không ghi vào file kế hoạch.** A status conflict it
 finds is listed, never corrected; the correction goes through `project-update`, with its
 confirmation. The one file it writes is the project `README.md`, per `using-doox`.
+
+Both rules hold on the management branch too. A GX report reads the plan file; it never edits it.
+
+## 7. Management branch
+
+For the material the four tables cannot hold. Read `assets/form-report.md` before writing anything —
+it holds the selection table, the five forms and the twelve context rules, and a user who edited it
+gets what they edited.
+
+### 7.1 Input
+
+Whatever the user supplied in this session: a memo, meeting notes, an email, a loose table, a plan
+file, or the output of an earlier skill in the same conversation. Read it whole first.
+
+The identity gate still applies, and for the same reason: run `using-doox` before reading a plan file
+or printing anything. A `Chuyên gia` gets a report built only from rows carrying their PIC code,
+exactly as on the progress branch.
+
+**Extract, do not re-ask** — purpose, audience, scope, period or cutoff, deadline, format. Ask only
+about a gap that changes the report.
+
+Three rules decide what the report may say, and they are the reason this branch exists rather than
+free-form writing:
+
+- **A figure in the material is the figure.** Never replaced by model knowledge, never rounded into a
+  nicer number, never carried across with a different unit or period than the source used.
+- **Missing is named, not filled.** A critical input that is absent is written
+  `[INPUT NEEDED: <field>]` and listed after the report. Missing is not zero, not "no issue", not
+  approved and not complete.
+- **States are kept apart.** Đã giao ≠ đã nghiệm thu ≠ đã đóng; đề xuất ≠ đã duyệt; baseline gốc ≠
+  ngày điều chỉnh chưa được duyệt. Owner-complete does not establish reviewer acceptance, and an
+  unapproved change is a proposal, not a new baseline.
+
+### 7.2 Pick the form
+
+One form, by the outcome the reader needs — not by cadence and not by topic:
+
+| The reader needs | Form |
+|---|---|
+| kết quả hiện tại / tiến độ so với baseline | GX1 |
+| một lựa chọn, một phê duyệt, một thay đổi baseline | GX2 |
+| biến một mục tiêu thành kế hoạch triển khai hoặc khắc phục | GX3 |
+| đánh giá rủi ro / sự cố và định phương án, hoặc escalate vượt thẩm quyền | GX4 |
+| ghi nhận quyết định, giao việc, theo dõi cam kết đã có | GX5 |
+
+A risk needing intervention takes GX4 first. Otherwise: GX2 → GX3 → GX5 → GX1. Then read the one
+`90_Context_Rules` row matching the source report type — weekly, project status, escalation,
+milestone, change proposal and so on. That row adds checks; it never selects a second form.
+
+Material fitting no row uses the closest intent and states the assumption. A request that is really
+two reports — a decision proposal and a meeting record — is asked about, not merged.
+
+### 7.3 Output
+
+The chat reply, in the shape the chosen form's `template_*` fields give: its title line, its
+conclusion first, then its tables. `reasoning` is the order the argument is made in, `core_output` is
+what must survive any shortening, `missing_data` is the gap that may not be hidden, and
+`adaptive_blocks` are added only when the material actually triggers them.
+
+Produce no file and do not offer to — same as the progress branch. Default length is one page, around
+250–450 words, shorter for an alert or an action register, unless the user asked otherwise.
+
+Written in the user's language (`using-doox`, "Language"), with every value quoted from the material
+left in the material's own language. The GX `template_*` fields are English because they are the
+frame, not the output language. Form IDs and field keys — `GX2`, `template_options` — are internal and
+never printed.
+
+Before returning, check the report against its own inputs: arithmetic and denominators reproduce,
+periods and units match the wording, every `[INPUT NEEDED: …]` is still visible, and no
+`{{placeholder}}` survived. Then say which form was used and list the gaps.
+
+### 7.4 Boundaries
+
+This branch writes a report from supplied internal facts. It does not go out and research an external
+question — that is `market-research` — and it does not send anything. A report the user then wants
+mailed goes to `mail-draft`, with the figures, the cutoff and the wording of any decision carried
+across unchanged. Run only the stage that was asked for.

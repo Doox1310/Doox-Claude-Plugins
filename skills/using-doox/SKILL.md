@@ -1,6 +1,6 @@
 ---
 name: using-doox
-description: REQUIRED FIRST for every Doox skill that opens a plan file — `project-report`, `reminder`, `project-insights`, `project-update`, `plan-consolidation`, `mail-draft`, and `calendar` once it reads a file. Load this before that skill, not after: it carries the identity gate that decides whose rows may be shown at all, which Doox skill answers which request, how a plan file's name encodes its market and project, how the two sheets are joined and which sheet each field comes from, and what counts as done. Skipping it shows one person another person's rows.
+description: "REQUIRED FIRST for every Doox skill that opens a plan file — `project-report`, `reminder`, `project-insights`, `project-update`, `plan-consolidation`, `mail-draft`, and `calendar` once it reads a file. Load this before that skill, not after: it carries the identity gate that decides whose rows may be shown at all, which Doox skill answers which request, how a plan file's name encodes its market and project, how the two sheets are joined and which sheet each field comes from, what counts as done, and which of the three interface languages (vi/en/fr) the reply is written in. Skipping it shows one person another person's rows."
 ---
 
 # Using Doox
@@ -56,6 +56,48 @@ through untouched, compare only within the same scope, source every finding.
 **Those three skills read `references/document-rules.md` directly and do not load this file.** They
 run no identity gate and touch no plan file, so nothing else here applies to them — pulling the whole
 of `using-doox` in to reach thirty lines is the cost this split exists to avoid.
+
+## Language — vi / en / fr
+
+This plugin is used in **Vietnamese, English and French**. Every skill answers in the user's language;
+none of them assumes Vietnamese.
+
+**Which language.** The language the user wrote the request in. If the request is too short to tell —
+a bare filename, `ok`, `báo cáo` — use the language of the material being worked on. Still unclear,
+ask; it is one question and it decides the whole reply. A user who names a language outranks both.
+
+**What translates: the plugin's own words.** Headings, labels, column titles, explanations, the
+sentences the skill writes itself.
+
+**What never translates: the data.** This is `DR1` and `DR3` applied to language, and it holds in all
+three directions:
+
+- a value taken from a plan file, a document, a quote or a source — carried across exactly as written,
+  in whatever language it was written in;
+- tên pháp lý, mã số thuế, mã hiệu, model, số hiệu tiêu chuẩn, đơn vị đo, tên riêng — untouched;
+- a status word that lives in a file (`Hoàn thành`, `Đang triển khai`, `Đã xác minh`) — quoted as the
+  file has it, never rendered into the reply's language and written back;
+- a quoted sentence used as evidence — original first, a translation beside it only if the reader
+  needs one, and marked as a translation.
+
+So a Vietnamese plan file reported to a French user comes back with **French labels around Vietnamese
+cell values**. That is correct output, not a half-done translation. Say once, at the top of the
+report, that the data is quoted in the file's language.
+
+**Column matching is done on the file's own headers**, in the language the file uses. A plan file
+written in English or French is read by matching its headers to the five required columns; a header
+that cannot be matched stops the run and is asked about, exactly as a missing column is.
+
+**Dates are `dd/mm/yyyy` in all three languages.** Never `mm/dd`, in any reply, whatever the
+interface language — `03/04/2026` has to mean one thing across a team that reads three.
+
+**A mail is written in the recipient's language, not the user's.** A Vietnamese PM drafting to a
+French counterpart gets a French mail with a Vietnamese chat preview. Where the recipient's language
+is unknown, use the language of the thread being answered, then the user's.
+
+Numbers keep the source's decimal and thousands convention when quoted, and currencies keep their
+code (`VND`, `EUR`, `USD`) rather than a symbol, so a figure cannot change meaning by crossing a
+language.
 
 ## Plan file naming
 
