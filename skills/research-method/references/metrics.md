@@ -7,7 +7,7 @@ so được với nhau.
 Ba luật dùng bảng:
 
 - Nguồn có định nghĩa riêng khác định nghĩa ở đây → **giữ định nghĩa của nguồn**, và hòa giải trước
-  khi so sánh (`SKILL.md` §11).
+  khi so sánh (`research-method` §11).
 - Mọi quy đổi là claim `Ước tính`, phải ghi công thức, đầu vào và giả định.
 - `required_scope` thiếu thì con số chưa dùng được: một chỉ số không kèm phạm vi/kỳ/đơn vị là
   `Chưa xác minh`, không phải một con số yếu.

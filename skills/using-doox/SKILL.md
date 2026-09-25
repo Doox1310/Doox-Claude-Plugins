@@ -13,9 +13,12 @@ belongs here.
 | Skill | Use it when | Output |
 |---|---|---|
 | `using-doox` | always, before the others | nothing — conventions only |
+| `research-method` | never directly — loaded first by `market-research`, `contractor-search` and `competitor-research`; a request combining them is one run | nothing — the shared research method only |
 | `project-report` | the user asks how one market's project is doing, or hands over a plan file, checklist or tracker and asks for the progress report — in whatever layout they name | 4 tables in the customer's template (or the layout the user names), in the chat reply + the same report as a new file |
 | `reminder` | the user asks what has to be handled today, asks to remind the PICs, or the 9am run fires | PM: one table across their markets + an Outlook draft per PIC (gửi khi PM yêu cầu). Chuyên gia: their own tables, no mail |
-| `market-research` | the user names a target market and asks to research it, asks for a market report, asks to tìm nhà thầu, or asks how we compare against competitors/CPO | a new `.xlsx` built from the saved report framework, filled, every figure sourced — plus, for an answer outside the workbook (competitor comparison, a single question), a `.docx` beside it |
+| `market-research` | the user names a target market or city and asks to đánh giá / research it for our electric-taxi operation, asks for a market report, or asks a single sourced question about that market (licensing, vehicles, depot and fleet charging, cost) | a new `.xlsx` built from the saved taxi market-report framework, filled, every figure sourced — or, for a single question or an entry thesis, an RX `.docx` |
+| `contractor-search` | the user asks to tìm nhà thầu (default: xây depot & lắp sạc cho đội xe, turnkey) or to review a named partner — vehicle OEM, financier/insurer, workshop, dispatch technology, fleet services, legal/tax | the full contractor list in `Bảng 3B` of the market workbook with an RX3 summary in the reply; a named-partner review as an RX3 `.docx` |
+| `competitor-research` | the user asks how we compare against competitors — taxi and ride-hailing firms, moto-taxi, bus — in a market | an RX2 comparison `.docx`, own side vs competitors on ten fixed dimensions |
 | `mail-draft` | the user hands over a memo, a file or session data and asks to soạn/viết/draft a mail about it | one Outlook draft + the same content in the chat reply, filled into the saved form. Draft never sent unless the user says so in the same turn |
 | `calendar` | the user asks to đặt lịch, dời lịch, xếp lịch tránh trùng, or asks what is on the calendar | the proposed event or arrangement in the chat reply, written to Google Calendar only after the user confirms. Reads the calendar freely, writes never without a yes |
 | `candidate-review` | the user hands over a CV, hồ sơ ứng viên or interview transcript/recording and asks to đánh giá, chấm, so sánh or đề cử nhân sự | the scoring tables in the chat reply — per the saved evaluation framework, every mức carrying its evidence and source, plus the same as a new `.docx`. Reads only what the user supplied |
@@ -106,18 +109,18 @@ language.
 ```
 
 **The extension is optional and is not part of the convention.** A native Google Sheets file has no
-extension at all — `Bo Bien Nga - Ke hoach lap dat tram sac - Do Hoang Tung` is a plan file, and
+extension at all — `Bo Bien Nga - Ke hoach mo depot taxi dien - Do Hoang Tung` is a plan file, and
 requiring `.xlsx` is what makes a run report "no plan file found" while the file sits in the folder.
 Strip a trailing `.xlsx`/`.xls`/`.xlsm` if there is one, then split. A plan file is any spreadsheet
 whose name splits into the three parts — Google Sheets
 (`application/vnd.google-apps.spreadsheet`) and Excel alike.
 
-Example — `Bo Bien Nga - Ke hoach xay dung tram sac EV - Nguyen Van A`:
+Example — `Bo Bien Nga - Ke hoach khai truong taxi dien - Nguyen Van A`:
 
 | Field | Value |
 |---|---|
 | Thị trường | `Bo Bien Nga` |
-| Tên dự án | `Ke hoach xay dung tram sac EV` |
+| Tên dự án | `Ke hoach khai truong taxi dien` |
 | Tên PM | `Nguyen Van A` |
 
 Split on ` - ` — space, hyphen, space. **Everything before the first separator is the market,
@@ -299,9 +302,11 @@ Update it when a run reveals:
 Rewrite the affected lines rather than appending; a README that only grows stops being read.
 
 A Doox skill writes to these things and nothing else: a plan file under `project-update`; this README;
-under `market-research`, the market report `.xlsx` it produces plus its source-log folder
-(`doox-sources/<market-slug>/`, holding that market's evidence cache and the run's claim ledger)
-and the `.docx` (or its `.md` fallback) of any research answer outside the workbook;
+under `market-research`, `contractor-search` and `competitor-research`, the market report `.xlsx`
+(`Báo cáo thị trường [Thị trường] dd_mm_yyyy.xlsx`, whose `Bảng 3B` `contractor-search` fills) plus
+the shared source-log folder (`doox-sources/<market-slug>/`, holding that market's evidence cache and
+the run's claim ledger) and the `.docx` (or its `.md` fallback) of any research answer outside the
+workbook (`Nghiên cứu [Chủ đề] [Thị trường] dd_mm_yyyy.docx`);
 under `plan-consolidation`, the new `.xlsx` files it generates; under `doc-translate`, the translated
 copy it generates; under `project-update`, the new copy of a file outside the convention
 ("When a file does not match a convention"); under `project-report` and `candidate-review`, the new `.docx` (or `.md` fallback)
@@ -378,11 +383,11 @@ it so:
 |---|---|
 | `project-report`, `reminder`, `project-insights`, `project-update` | always |
 | `plan-consolidation` | always, **and** restricted to a verified `Project Manager`; see its own skill for the one case where no gate applies |
-| `market-research`, `doc-compare`, `doc-translate`, `bid-review`, `candidate-review` | never — they read no plan file and show nobody's rows, so they run for either role |
+| `market-research`, `contractor-search`, `competitor-research`, `doc-compare`, `doc-translate`, `bid-review`, `candidate-review` | never — they read no plan file and show nobody's rows, so they run for either role. `research-method` is internal — loaded by the three research skills, never run on its own — and carries no gate of its own |
 | `calendar` | conditional — ungated until the run opens a plan file, which is either a deadline pull or a `PIC → email` lookup; that puts the gate back on and the rows are filtered by role like any other |
 | `mail-draft` | always, for a different reason — it signs the mail with the user's `Tên` and `Vai trò`, so it needs the identity even when it opens no plan file. The role filter applies too, the moment it resolves a PIC code |
 
-The five ungated skills read only what the user handed over in the session. That is the whole test:
+The seven ungated skills read only what the user handed over in the session, or public sources. That is the whole test:
 a skill that can reach a plan file is gated, and no other consideration exempts it.
 
 Settle who is running this before
@@ -478,7 +483,7 @@ change to a new copy, per its own §9.
 State the reading before acting on it, one line:
 
 ```
-Thị trường: Bo Bien Nga | Dự án: Ke hoach xay dung tram sac EV (từ tên file)
+Thị trường: Bo Bien Nga | Dự án: Ke hoach khai truong taxi dien (từ tên file)
 ```
 
 A wrong reading then shows up immediately, instead of after a full report has been built on it.

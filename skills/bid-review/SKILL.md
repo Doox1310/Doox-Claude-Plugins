@@ -24,7 +24,8 @@ researching a market from public sources (`market-research`).
 
 **Read-only, and no identity gate.** This skill shows nobody's rows and touches no
 plan file, so it runs for either role without the `using-doox` identity check. It
-writes nothing: the output is tables in the chat reply.
+changes no document it was given: the output is tables in the chat reply, plus the same
+content in one new file (§6).
 
 ## 2. The rules that govern every line below
 
@@ -45,6 +46,7 @@ plan file, so nothing else in `using-doox` applies to it.
 Before comparing anything, establish and state:
 
 - **thị trường / dự án** the quotations belong to;
+- **hạng mục nhà cung cấp** — see §3.2;
 - **the criteria in force** — see §3.2;
 - **ngưỡng chênh lệch giá or nguyên tắc ưu tiên**, if the user set one. No threshold set means
   ranking reports the spread and does not apply a cut-off of its own invention.
@@ -56,11 +58,17 @@ name what differs.
 
 Criteria come from one of three places, in this order:
 
-1. **A saved standard framework** — a BOQ or evaluation framework kept as a project asset. When one
-   exists for this scope, it is the basis, and every hạng mục is judged against it.
-2. **Criteria the user supplies in the session** — a list of tiêu chí, a reference BOQ, a spec. Fully
-   valid; state that the review ran on user-supplied criteria and repeat them back before using them.
-3. **The documents themselves** — when neither exists, the comparison is structural only:
+1. **Criteria the user supplies in the session** — a list of tiêu chí, a reference BOQ, a spec. They
+   override the saved framework wherever the two cover the same point; state that the review ran on
+   user-supplied criteria and repeat them back before using them.
+2. **The saved framework** — `assets/khung-tieu-chi-nha-cung-cap.md`, one section per hạng mục nhà
+   cung cấp of GSM (xe, depot & hạ tầng sạc, thiết bị sạc, công nghệ đặt xe/điều phối, bảo hiểm, tài
+   chính/thuê mua, bảo dưỡng/sửa chữa/cứu hộ, dịch vụ đội xe hằng ngày, dịch vụ chuyên môn). Pick the
+   section from what the documents offer and the scope the user stated; state the pick. Documents
+   spanning two sections (a charger supply-and-install bid) use both. Nothing fits, or the fit is
+   unclear: ask, do not stretch a section over it. The framework names **what** to check and what
+   evidence counts; a threshold it leaves open is not one to invent.
+3. **The documents themselves** — when neither applies, the comparison is structural only:
    normalise onto a common scope, report differences, and rank on what the documents actually
    support. **Say plainly that no standard framework was applied, and that Đạt/Thiếu/Khác chuẩn
    cannot be judged** — only Có/Không có/Khác giữa các báo giá.
@@ -115,7 +123,7 @@ disqualification.
 Rank what remains on: mức độ đáp ứng kỹ thuật/phạm vi → chi phí so với khung chuẩn → điều kiện
 thương mại → tiến độ/bảo hành. Where the user set a priority rule in §3.1, it wins.
 
-Shortlist size: more than 3 quotations → recommend at least 3; more than 5 → recommend at most 5.
+Shortlist size: more than 3 quotations → recommend at most 3; more than 5 → recommend at most 5.
 **Never pad the shortlist to reach the number.** Three quotations of which one qualifies produces a
 shortlist of one plus the reasons the others fell out.
 
@@ -125,7 +133,7 @@ shortlist of one plus the reasons the others fell out.
 Duyệt báo giá — [thị trường / dự án]
 
 1. Phạm vi & tiêu chuẩn áp dụng
-   (nguồn tiêu chuẩn: khung đã lưu / user cung cấp / không có — so sánh cấu trúc)
+   (nguồn tiêu chuẩn: user cung cấp / khung GSM — [hạng mục] / không có — so sánh cấu trúc)
 2. Bảng so sánh chuẩn hóa
    - STT | Hạng mục | Tiêu chuẩn | PA A | PA B | PA C | Chênh lệch (khối lượng / đơn giá) | Nhận xét
 3. Các điểm không đạt / thiếu thông tin
@@ -139,12 +147,11 @@ and appears nowhere in the output is a coverage failure.
 
 ## 4. Reviewing contractor dossiers
 
-### 4.1 The twelve capability groups
+### 4.1 The capability groups
 
-Every dossier is mapped onto these, and they are the row labels of the output matrix:
-
-pháp lý/chứng chỉ · kinh nghiệm tương tự · năng lực civil · điện/utility · permit · HSE · QA/QC ·
-nhân sự chủ chốt · tài chính · năng lực triển khai đồng thời · thầu phụ · bảo hành & phạm vi địa bàn
+Every dossier is mapped onto the criteria of its hạng mục in the saved framework (§3.2, same pick
+rule, same user override), and those are the row labels of the output matrix. For depot construction
+and charging installation that is the framework's twelve capability groups.
 
 A group the dossier does not address is `Chưa có thông tin` — a filled row, not an omitted one.
 
@@ -162,21 +169,21 @@ the resulting mức đáp ứng.
 
 ### 4.3 Mandatory criteria before scoring
 
-State which of the twelve are bắt buộc for this scope, and what disqualifies, **before scoring
+State which groups are bắt buộc for this scope, and what disqualifies, **before scoring
 anything** — a criterion promoted to mandatory after the results are visible is not a criterion.
 
-Where the user or a saved framework supplies thresholds and weights, use them. Where neither does,
-say so and rank on mức độ đáp ứng across the twelve groups without inventing a point scale: the
+Where the user or the saved framework supplies thresholds and weights, use them. Where neither does,
+say so and rank on mức độ đáp ứng across the groups without inventing a point scale: the
 matrix and the gaps carry the decision, and a made-up score would make it look settled when it is
 not.
 
-**With no framework, the mandatory set is derived from the scope the user stated and from nothing
-else.** `EPC trọn gói, đấu nối trung thế 22kV` carries its own requirements — a construction licence
-covering that voltage, a licence to work grid-side, evidence of one comparable delivered project.
-Derive only what the stated scope actually implies, print the list with the words of the scope each
-item came from, and print it **before** the matrix. A criterion that cannot be traced back to
-something the user said about the scope is an invented criterion; drop it. Where the user stated no
-scope at all, ask for it rather than deriving a set from the dossiers.
+**With no framework that fits, the mandatory set is derived from the scope the user stated and from
+nothing else.** `thi công depot sạc, đấu nối trung thế 22kV` carries its own requirements — a
+construction licence covering that voltage, a licence to work grid-side, evidence of one comparable
+delivered project. Derive only what the stated scope actually implies, print the list with the words
+of the scope each item came from, and print it **before** the matrix. A criterion that cannot be
+traced back to something the user said about the scope is an invented criterion; drop it. Where the
+user stated no scope at all, ask for it rather than deriving a set from the dossiers.
 
 ### 4.4 Shortlist
 
@@ -190,7 +197,7 @@ reasons the other two fell out; none qualifying produces an empty shortlist and 
 the least-bad promoted to fill it.
 
 Every recommended contractor carries: năng lực nổi trội, điểm yếu, khoảng trống dữ liệu, and the risk
-of handing them turnkey scope.
+of handing them the stated scope.
 
 ### 4.5 Output
 
@@ -198,13 +205,13 @@ of handing them turnkey scope.
 Duyệt hồ sơ năng lực — [thị trường / dự án]
 
 1. Phạm vi & tiêu chí bắt buộc
-   (nguồn tiêu chí: khung đã lưu / user cung cấp / không có — đánh giá theo mức đáp ứng)
+   (nguồn tiêu chí: user cung cấp / khung GSM — [hạng mục] / không có — đánh giá theo mức đáp ứng)
 2. Ma trận năng lực
    - Nhóm tiêu chí | NT A | NT B | NT C | Bằng chứng | Ghi chú
 3. Tiêu chí thiếu / chưa xác minh, theo từng nhà thầu
 4. Shortlist đề cử
    - Xếp hạng | Nhà thầu | Mức đáp ứng | Điểm mạnh | Điểm yếu/Rủi ro | Cần kiểm tra thêm
-5. Kết luận & rủi ro khi giao turnkey
+5. Kết luận & rủi ro khi giao phạm vi đã nêu
 ```
 
 ## 5. Before replying
@@ -218,8 +225,19 @@ Check, against the documents read in this run:
 - every `Chưa có thông tin` / `Chưa xác minh` says what is missing and who would confirm it;
 - nothing marked `Không so sánh được` was quietly compared anyway;
 - the basis of the criteria (§3.2, §4.3) is stated in the output, not just decided internally;
-- the shortlist was not padded to a target number.
+- the shortlist was not padded to a target number;
+- the file of §6 was written, and holds nothing the chat reply does not.
 
 Then state in the reply: documents read, the criteria basis used, and what still needs to be
 clarified before the user can decide. Offer follow-up work only when it closes a gap already named in
 the output.
+
+## 6. The file
+
+Write the same content as the chat reply to the local working folder the user opened for the session
+(in Cowork, what shows under Output; with none open, the session's outputs folder):
+`Duyệt báo giá [Hạng mục] dd_mm_yyyy.docx` for §3, `Đánh giá hồ sơ năng lực [Hạng mục] dd_mm_yyyy.docx`
+for §4. A `.md` of the same name only when a `.docx` cannot be produced; if the name exists, add
+` (2)`, ` (3)`… rather than overwrite. The name must not split into three parts on ` - ` —
+`using-doox` would read it as a project plan file. Never deliver it through Claude Docs, an artifact
+or a connector.

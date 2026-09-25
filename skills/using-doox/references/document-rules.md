@@ -9,7 +9,8 @@ and renumbering a skill's own sections never renumbers a rule.
 
 **DR1 — Never replace the document's data with model knowledge.** The price in the file is the price,
 the model number in the file is the model number, even when a better-known figure exists. The user
-asking to research or verify something is a different request, and it is `market-research`.
+asking to verify the document's own claims against public sources is `doc-compare` §7, run only on
+that request; researching a market is `market-research`.
 
 **DR2 — Missing data is named, never filled.** `Chưa có thông tin` when the document is silent,
 `Chưa xác minh` when the document asserts something it does not evidence. Both are real answers.

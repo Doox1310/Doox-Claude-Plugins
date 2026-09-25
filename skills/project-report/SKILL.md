@@ -98,7 +98,10 @@ reverse, counts as not done and still lands in table 1/2/3 by its dates. Flag it
 
 **The report is the chat reply, and the same report is also saved as a file.** Print it in full in
 the reply (below), then write the identical content to `Báo cáo tiến độ [Thị trường] dd_mm_yyyy.docx`
-(GX branch: `Báo cáo [tên form, e.g. Phê duyệt] [Thị trường] dd_mm_yyyy.docx`) in the local working
+(GX branch: `Báo cáo [tên form] [Thị trường] dd_mm_yyyy.docx` — tên form: GX1 `Kết quả và tiến độ`,
+GX2 `Đề xuất quyết định`, GX3 `Kế hoạch triển khai`, GX4 `Rủi ro và xử lý`, GX5 `Quyết định và hành
+động`; `[Thị trường]` is omitted when the report is not about one market; whatever the name, it must
+not split into three parts on ` - `, or `using-doox` reads it as a plan file) in the local working
 folder — or, when the user named a layout (an `.xlsx` with Summary + Details, bilingual cells, a
 colour rule), in exactly that layout and file type instead, per `using-doox` — a `.md` of the same name only when a `.docx` cannot be produced; if the name
 exists, add ` (2)`, ` (3)`… rather than overwrite. The file carries exactly the rows the role may see,
@@ -255,21 +258,24 @@ two reports — a decision proposal and a meeting record — is asked about, not
 ### 7.3 Output
 
 The chat reply, in the shape the chosen form's `template_*` fields give: its title line, its
-conclusion first, then its tables. `reasoning` is the order the argument is made in, `core_output` is
-what must survive any shortening, `missing_data` is the gap that may not be hidden, and
-`adaptive_blocks` are added only when the material actually triggers them.
+conclusion first, then its tables. `reasoning` is the order the argument is made in,
+`minimum_inputs` is what must be present or flagged, the `template_*` fields are what must survive
+any shortening, `missing_data` is the gap that may not be hidden, and `adaptive_blocks` are added only
+when the material actually triggers them.
 
 Save it to a `.docx` exactly as §5 does for the progress branch. Default length is one page, around
 250–450 words, shorter for an alert or an action register, unless the user asked otherwise.
 
-Written in the user's language (`using-doox`, "Language"), with every value quoted from the material
-left in the material's own language. The GX `template_*` fields are English because they are the
-frame, not the output language. Form IDs and field keys — `GX2`, `template_options` — are internal and
-never printed.
+Written in the user's language (`using-doox`, "Language") — English when the user writes English.
+This deliberately replaces the library's "English default": the reader of this branch is the user,
+so the user's language wins. Every value quoted from the material stays in the material's own
+language. The GX `template_*` fields are English because they are the frame, not the output language.
+Form IDs and field keys — `GX2`, `template_options` — are internal and never printed.
 
 Before returning, check the report against its own inputs: arithmetic and denominators reproduce,
 periods and units match the wording, every `[INPUT NEEDED: …]` is still visible, and no
-`{{placeholder}}` survived. Then say which form was used and list the gaps.
+`{{placeholder}}` survived. Then say which form was used — by its Vietnamese name from §5 (e.g.
+`Đề xuất quyết định`), never the GX code — and list the gaps.
 
 ### 7.4 Boundaries
 

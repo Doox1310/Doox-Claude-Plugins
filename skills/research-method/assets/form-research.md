@@ -1,30 +1,57 @@
 # Form nghiên cứu — RX1–RX5
 
-Thư viện form cho phần **đầu ra nghiên cứu không nằm trong workbook**. Sửa file này là đổi form —
-không cần sửa `SKILL.md`.
+Thư viện form cho phần **đầu ra nghiên cứu không nằm trong workbook**, dùng chung cho
+`market-research`, `contractor-search` và `competitor-research`. Sửa file này là đổi form — không cần
+sửa `SKILL.md` nào. Mọi `§` dưới đây là của `research-method` trừ khi ghi tên skill khác.
 
 Ranh giới, đọc trước khi dùng:
 
-- Yêu cầu **điền khung báo cáo thị trường** (`assets/khung-bao-cao-thi-truong.xlsx`) chạy theo
-  `SKILL.md` §3 và §12 như cũ. File này không thay thế khung đó và không đổi một ô nào của nó.
-- Yêu cầu nghiên cứu **ngoài workbook** — một câu hỏi lẻ, một bảng so sánh, một hồ sơ nhà thầu,
-  một kịch bản, một bản cập nhật thay đổi — dùng RX1–RX5 dưới đây làm bố cục câu trả lời, ghi ra
-  file `.docx` trên máy người dùng (`SKILL.md` §2), chat chỉ tóm tắt và nêu tên file.
-- §7 (so sánh đối thủ) ghi ra `.docx` riêng chứ không vào workbook, nên nó là RX2. §6 (tìm nhà thầu)
-  là RX3 nhưng danh sách chỉ nằm trong workbook (`Bảng 3B`); RX3 chỉ là bố cục phần tóm tắt trong
-  chat, không ghi thêm `.docx`.
-  Hai section đó vẫn giữ nguyên phương pháp enumeration của mình — RX chỉ quyết định **hình dạng
-  đầu ra**, không thay `references/contractor-enumeration.md` hay `references/competitor-comparison.md`.
+- Yêu cầu **điền khung báo cáo thị trường** (`market-research/assets/khung-bao-cao-thi-truong.xlsx`)
+  chạy theo `market-research` §3 và §12 như cũ. File này không thay thế khung đó và không đổi một ô
+  nào của nó.
+- Yêu cầu nghiên cứu **ngoài workbook** — một câu hỏi lẻ, một bảng so sánh, một hồ sơ nhà thầu/đối
+  tác, một kịch bản, một bản cập nhật thay đổi — dùng RX1–RX5 dưới đây làm bố cục câu trả lời, ghi ra
+  file `.docx` trên máy người dùng (§1), chat chỉ tóm tắt và nêu tên file.
+- `competitor-research` ghi ra `.docx` riêng chứ không vào workbook, nên nó là RX2.
+  `contractor-search` là RX3: danh sách đầy đủ chỉ nằm trong workbook (`Bảng 3B`) và RX3 chỉ là bố
+  cục phần tóm tắt trong chat; đánh giá một đối tác có tên (xe, tài chính, bảo dưỡng, công nghệ…) là
+  RX3 ghi ra `.docx`. Hai skill đó vẫn giữ nguyên phương pháp của mình — RX chỉ quyết định **hình
+  dạng đầu ra**, không thay `contractor-search/references/contractor-enumeration.md` hay
+  `competitor-research/references/competitor-comparison.md`.
 
 Ngôn ngữ — ba thứ khác nhau trong cùng một run: **câu trả lời** theo ngôn ngữ user (vi / en / fr);
 **workbook** giữ nguyên tiếng Việt của khung, kể cả bốn trạng thái; **tìm kiếm** theo ngôn ngữ của
 thị trường đang nghiên cứu. Trích dẫn giữ nguyên ngôn ngữ gốc; bản dịch phải được gọi tên là bản dịch.
 Các trường `template_*` dưới đây là khung, không phải ngôn ngữ đầu ra.
 
-Mọi luật bằng chứng của `SKILL.md` vẫn nguyên giá trị và **thắng** khi va nhau: phân loại nguồn A/B/C/X
-(§5), ledger và cache (§10), ngân sách tìm kiếm (§9), bốn trạng thái `Đã xác minh` / `Ước tính` /
-`Chưa xác minh` / `Không áp dụng` (§4). Bốn trạng thái đó là cách Doox viết `status`/`label` mà thư
-viện này nhắc tới.
+Mọi luật bằng chứng của `research-method` vẫn nguyên giá trị và **thắng** khi va nhau: phân loại
+nguồn A/B/C/X (§5), ledger và cache (§10), ngân sách tìm kiếm (§9), bốn trạng thái `Đã xác minh` /
+`Ước tính` / `Chưa xác minh` / `Không áp dụng` (§4).
+
+**Trạng thái và nhãn — hai thứ đi cạnh nhau.** Thư viện yêu cầu gắn nhãn *fact / estimate / source
+claim / inference / scenario* (`SHARED_RULES.evidence`). Trong Doox:
+
+| Nhãn thư viện | Viết trong câu trả lời RX | Trạng thái của claim trong ledger |
+|---|---|---|
+| fact | trạng thái `Đã xác minh` | `Đã xác minh` |
+| estimate | trạng thái `Ước tính`, kèm công thức và giả định | `Ước tính` |
+| source claim | `Chưa xác minh` + ghi rõ `tự công bố` và ai công bố | `Chưa xác minh` |
+| inference | nhãn **`Suy luận`** (en *inference*, fr *inférence*) trên câu phân tích | không phải claim — dựa trên claim đã có, không mang trạng thái mạnh hơn tiền đề yếu nhất |
+| scenario | nhãn **`Kịch bản`** (en *scenario*, fr *scénario*) trên dòng kịch bản/minh họa | không phải claim — mọi đầu vào của nó là claim có trạng thái riêng |
+
+`Suy luận` và `Kịch bản` là nhãn, không phải trạng thái thứ năm: không bao giờ đi với `Đã xác minh`,
+và không được ghi vào workbook. Một câu không mang nhãn nào là câu dữ kiện và phải có trạng thái.
+
+**Thiếu dữ liệu — hai dấu khác nhau.** Thiếu bằng chứng công khai → `Chưa xác minh` kèm ai/cái gì
+cần xác nhận. Thiếu **thông tin người dùng phải cung cấp** (đội xe của mình, ngày khai trương, giá
+cước của mình…) → `[INPUT NEEDED: <trường>]` đúng chỗ cần, theo `SHARED_RULES.missing`; không đoán,
+không thay bằng 0.
+
+**Độ dài theo `default_length` của form.** Viết đúng độ dài mặc định của form đã chọn (RX1 50–120 từ
+cho câu tra cứu, 200–400 từ cho brief; RX2 một bảng + 100–200 từ; RX3 một bảng shortlist + kết luận
+ngắn, 250 từ cho một ứng viên; RX4 250–450 từ + bảng nhỏ; RX5 150–300 từ hoặc một bảng thay đổi).
+Độ dài user yêu cầu thắng. Phần sâu hơn (bảng bằng chứng, phép tính) để ở phụ lục; khoảng trống trọng
+yếu không bao giờ bị cắt để vừa độ dài.
 
 ## Chọn form
 
@@ -42,11 +69,13 @@ Chưa có mốc so sánh thì không dùng RX5 — chạy RX1 để lập mốc 
 
 ## Hai reference đi kèm
 
+Cùng thư mục `research-method`:
+
 - `references/topic-lenses.md` — 40 lens chủ đề (R01–R52): với mỗi chủ đề là phạm vi cần quét và
   **cái bẫy đếm sai** của chủ đề đó. Đọc dòng đúng chủ đề đang làm, trước khi search.
 - `references/metrics.md` — 56 định nghĩa chỉ số (K01–K56): đơn vị, phạm vi bắt buộc, và lý do hai
   con số trông giống nhau lại không so được với nhau. Đọc trước khi đặt hai số cạnh nhau trong một
-  bảng, đúng luật chuẩn hóa `SKILL.md` §11.
+  bảng, đúng luật chuẩn hóa `research-method` §11.
 
 Cả hai là tra cứu theo dòng, không phải đọc từ đầu đến cuối.
 

@@ -34,9 +34,9 @@ language.
 
 **Missing data is named, never filled.** A form section with nothing to put in it is dropped. A fact
 the mail genuinely needs but the material does not carry — a deadline the user asked to state, a
-number they asked to quote — is written `[cần bổ sung: …]` and listed after the draft. Never invent a
-plausible value to make the form look complete. That is the single failure this skill exists to
-prevent.
+number they asked to quote — is written `[INPUT NEEDED: <field>]`, in every language, and listed
+after the draft. Never invent a plausible value to make the form look complete. That is the single
+failure this skill exists to prevent.
 
 **Missing is not zero.** An absent figure is not nought, an absent status is not `Hoàn thành`, an
 absent approval is not approval, and silence from an approver is not agreement. Each of those stays
@@ -44,7 +44,7 @@ an unknown with its name written out.
 
 **Dates carry their basis.** `as_of` is the cutoff of the material, not automatically today. Keep a
 baseline date and a revised date apart, and never resolve a vague `cuối tuần` or `end of day` into a
-calendar date the material does not support — that is a `[cần bổ sung: …]`.
+calendar date the material does not support — that is an `[INPUT NEEDED: …]`.
 
 ## 3. Recipient
 
@@ -95,23 +95,28 @@ different form and never adds a second one.
 
 ## 5. Fill the form
 
-Follow `assets/form-mail.md`: the **form nhà** gives the layout of a Vietnamese project mail, and the
-chosen EX form decides what goes into it — which sections carry weight, which disappear. Its
-`reasoning` is the order the argument is made in, its `core_output` is what must survive any
-shortening, its `missing_data` says which gap may not be hidden, and its `boundary` says what the mail
-is not allowed to claim. A mail in English, or a memo/chat format the user asked for, uses that form's
-`template_subject` / `template_opening` / `template_body` / `template_closing` directly instead.
+The frame is set by who reads the mail (`assets/form-mail.md`, "Chọn khung"):
+
+- **CEO / leadership, or anyone outside the company** — the chosen EX form's `template_subject`,
+  `template_opening`, `template_body` and `template_closing`, exactly, in the recipient's language.
+- **Internal project mail in Vietnamese, between project members** — the **form nhà** (4 numbered
+  sections, subject `[Chủ đề] — [Thị trường / Dự án]`). It exists in Vietnamese only.
+- **Anything else** — internal mail in another language, or a memo/chat format the user asked for —
+  the EX `template_*` fields.
+
+Whatever the frame, the chosen EX form decides the content: its `reasoning` is the order the argument
+is made in, its `core_output` is what must survive any shortening, its `missing_data` says which gap
+may not be hidden, and its `boundary` says what the mail is not allowed to claim.
 
 Section with no data → drop the whole section, heading included. Never leave an empty heading and
 never write `(không có)` under one.
 
 **The mail is written in the recipient's language, the chat reply in the user's** — `using-doox`,
-"Language". `assets/form-mail.md` carries the house form in vi, en and fr; pick the variant by the
-recipient, not by the language the user is typing in, and use that variant's gap marker
-(`[cần bổ sung: …]` / `[missing: …]` / `[à compléter : …]`). The EX `template_*` fields are written in
-English because they are the frame, not the output language — translate them as they are filled.
-Figures, names, codes, units and quoted sentences cross into the mail untouched whatever the language,
-and dates print `dd/mm/yyyy` in all three. Recipient's language unknown: use the language of the
+"Language" — pick it by the recipient, not by the language the user is typing in. The gap marker is
+`[INPUT NEEDED: <field>]` in every language. The EX `template_*` fields are written in English because
+they are the frame, not the output language — translate them as they are filled. Figures, names,
+codes, units and quoted sentences cross into the mail untouched whatever the language, and dates print
+`dd/mm/yyyy` in every language. Recipient's language unknown: use the language of the
 thread being answered, then the user's, and say which was assumed.
 
 Form IDs and field keys — `EX2`, `core_output`, `template_body` — are internal. They never appear in
@@ -132,7 +137,8 @@ Three claims the draft may never make on its own:
   turn a suggestion into a commitment to make a sentence read cleanly.
 
 Length follows the chosen form's `default_length` unless the user asked for something else — roughly
-150–250 words for an update, 180–300 for a decision request, 100–200 for a first alert.
+150–250 words for an update, 180–300 for a decision request, 100–200 for a first alert, 120–220 for a
+support request, 120–250 for a record or follow-up.
 
 ## 6. Output
 
@@ -145,9 +151,8 @@ forward to a later draft: the request is per draft, and silence is not a request
 click; a mail already in someone's inbox cannot be recalled.
 
 **A finished draft and a review draft are said apart.** A mail with no gap marker left in it
-(`[cần bổ sung: …]` / `[missing: …]` / `[à compléter : …]`, per the mail's language) is finished. A
-mail still carrying one is a review draft: say so, and keep the gap list outside the
-mail body so nothing meant for the user leaves in the message itself. Verified uncertainty that
+(`[INPUT NEEDED: …]`) is finished. A mail still carrying one is a review draft: say so, and keep the
+gap list outside the mail body so nothing meant for the user leaves in the message itself. Verified uncertainty that
 belongs to the situation — `nguyên nhân đang được xác minh` — is not a gap and stays in the mail.
 
 Before returning, check the draft against its own inputs: the opening answers what the user asked
@@ -155,7 +160,7 @@ for, every figure and date matches the material, each material gap is still visi
 `{{placeholder}}` or assembly note survived into the text.
 
 Then say what was created: the recipient, the subject, the form used, and the list of
-`[cần bổ sung: …]` gaps if there are any.
+`[INPUT NEEDED: …]` gaps if there are any.
 
 **Microsoft only.** Outlook, not Gmail — as everywhere else in this plugin.
 

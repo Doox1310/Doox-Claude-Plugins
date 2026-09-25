@@ -5,27 +5,36 @@ không cần sửa `SKILL.md`.
 
 Hai tầng, đọc theo thứ tự:
 
-1. **Form nhà** dưới đây — bố cục mặc định của mail tiếng Việt gửi trong dự án.
-2. **Thư viện EX1–EX5** ở phần sau — chọn một form theo *kết quả người gửi cần*, rồi
-   lấy `reasoning`, `missing_data`, `boundary` của form đó làm luật viết nội dung.
+1. **Chọn khung theo người nhận** (mục "Chọn khung" ngay dưới) — `template_*` của form EX, hoặc form
+   nhà.
+2. **Thư viện EX1–EX5** ở phần sau — chọn một form theo *kết quả người gửi cần*, rồi lấy
+   `reasoning`, `core_output`, `missing_data`, `boundary` của form đó làm luật viết nội dung.
 
 Mục nào không có dữ liệu trong đầu vào thì **bỏ hẳn mục đó**. Không viết câu lấp chỗ trống.
 
 Trừ một trường hợp: user **yêu cầu nêu** một thứ mà đầu vào không có. Khi đó giữ mục lại và
-viết `[cần bổ sung: …]` vào đúng chỗ thiếu, đúng như `SKILL.md` mục 2 — bỏ mục đi là giấu mất
+viết `[INPUT NEEDED: …]` vào đúng chỗ thiếu, đúng như `SKILL.md` mục 2 — bỏ mục đi là giấu mất
 chính thứ user vừa dặn phải có trong mail.
 
 ---
 
-## Form nhà — vi / en / fr
+## Chọn khung
 
-Ba bản dưới đây là **cùng một form**: cùng tiêu đề, cùng bốn mục, cùng thứ tự. Chọn bản theo ngôn ngữ
-người nhận (`using-doox`, mục "Language") — không phải theo ngôn ngữ user đang gõ. User Việt viết cho
-đối tác Pháp thì mail là bản `fr`, bản in kèm trong chat vẫn tiếng Việt.
+| Mail gửi | Khung |
+|---|---|
+| CEO / ban lãnh đạo, hoặc bất kỳ ai ngoài công ty — mọi ngôn ngữ | Đúng `template_subject`, `template_opening`, `template_body`, `template_closing` của form EX đã chọn |
+| Thành viên dự án, nội bộ, bằng tiếng Việt | Form nhà bên dưới |
+| Mọi trường hợp khác (nội bộ bằng tiếng Anh/Pháp…), hoặc user yêu cầu memo/chat/bố cục khác | `template_*` của form EX đã chọn |
 
-Số liệu, tên riêng, mã hiệu, đơn vị trong đầu vào giữ nguyên ở cả ba bản. Ngày luôn `dd/mm/yyyy`.
+`template_*` viết bằng tiếng Anh: đó là **khung**, không phải ngôn ngữ đầu ra — giữ nguyên cấu trúc
+và thứ tự, dịch sang ngôn ngữ người nhận khi điền. Ngôn ngữ người nhận theo `using-doox`, mục
+"Language" — không phải ngôn ngữ user đang gõ. Số liệu, tên riêng, mã hiệu, đơn vị giữ nguyên ở mọi
+ngôn ngữ. Ngày luôn `dd/mm/yyyy`.
 
-### vi
+Marker thiếu dữ liệu: `[INPUT NEEDED: <field>]` — một marker duy nhất cho mọi ngôn ngữ và mọi khung.
+Liệt kê lại toàn bộ sau bản draft bằng ngôn ngữ user.
+
+## Form nhà — chỉ mail nội bộ dự án, tiếng Việt
 
 **Tiêu đề:** `[Chủ đề] — [Thị trường / Dự án]`
 
@@ -43,75 +52,17 @@ Kính gửi anh/chị [Tên người nhận],
 
 4. Thời hạn
 [Ngày cụ thể dd/mm/yyyy. Đầu vào không nêu hạn, user cũng không dặn nêu → bỏ mục này.
- User dặn nêu mà đầu vào không có → giữ mục, viết [cần bổ sung: …]]
+ User dặn nêu mà đầu vào không có → giữ mục, viết [INPUT NEEDED: thời hạn]]
 
 Trân trọng,
 [Tên người gửi]
 [Chức vụ]
 ```
 
-### en
-
-**Subject:** `[Topic] — [Market / Project]`
-
-```
-Dear [Recipient],
-
-1. Context
-[Why this mail exists — the event, meeting, document or milestone behind it]
-
-2. Key points
-[What has to be conveyed, with the figures and dates of the input kept as written]
-
-3. What we need from you
-[One action per line. No action needed by anyone → drop this section]
-
-4. Deadline
-[A specific dd/mm/yyyy date. No deadline in the input and none asked for → drop this section.
- Asked for but absent from the input → keep the section, write [missing: …]]
-
-Best regards,
-[Sender name]
-[Title]
-```
-
-### fr
-
-**Objet :** `[Sujet] — [Marché / Projet]`
-
-```
-Bonjour [Destinataire],
-
-1. Contexte
-[Pourquoi ce message — l'événement, la réunion, le document ou le jalon qui l'a déclenché]
-
-2. Points principaux
-[Ce qu'il faut transmettre, en conservant les chiffres et les dates de la source]
-
-3. Ce que nous attendons de vous
-[Une action par ligne. Aucune action attendue → supprimer cette section]
-
-4. Échéance
-[Une date précise au format dd/mm/yyyy. Aucune échéance dans la source et aucune demandée →
- supprimer cette section. Demandée mais absente → garder la section, écrire [à compléter : …]]
-
-Cordialement,
-[Nom de l'expéditeur]
-[Fonction]
-```
-
-Marqueur de lacune / gap marker: `[cần bổ sung: …]` (vi), `[missing: …]` (en), `[à compléter : …]`
-(fr). Dùng đúng marker của ngôn ngữ mail, và liệt kê lại toàn bộ sau bản draft bằng ngôn ngữ user.
-
 Form nhà là **bố cục**, EX1–EX5 là **nội dung**. Bốn mục trên là thứ tự mặc định; form EX đã chọn
 quyết định mục nào phình ra, mục nào biến mất. Ví dụ: EX3 (cảnh báo) mở đầu bằng sự việc đã xác
 nhận và mốc cập nhật kế tiếp, không mở đầu bằng bối cảnh dài; EX2 (xin quyết định) bắt buộc có mục 3
 và mục 4, vì thiếu chúng thì mail không xin được gì.
-
-Khi user yêu cầu một định dạng khác — memo, chat, hoặc một bố cục tự do — dùng thẳng
-`template_subject`, `template_opening`, `template_body`, `template_closing` của form EX đã chọn và bỏ
-form nhà. Bản thân `template_*` viết bằng tiếng Anh: đó là **khung**, không phải ngôn ngữ đầu ra —
-dịch sang ngôn ngữ người nhận khi điền.
 
 Mã form (`EX2`) và tên trường (`core_output`, `template_body`…) là ký hiệu nội bộ. Không bao giờ in
 ra trong mail, ở bất kỳ ngôn ngữ nào.
@@ -464,6 +415,9 @@ _Core form with conditional content and a fictional example._
 ## Context rules and source mapping
 
 _Source: CEO_Market_Email_Draft_Library_EN.xlsx_
+
+<!-- Dòng M02: source_locator `00_ROUTER!A17:C46` có vẻ là lỗi gõ trong workbook của khách
+     (các dòng khác trỏ sheet cùng số, ví dụ M03 → `03_MONTHLY_REPORT`). Giữ nguyên như bản gốc — chỉ ghi chú. -->
 
 | legacy_id | context | form_ids | conditional_rule | source_locator |
 |---|---|---|---|---|

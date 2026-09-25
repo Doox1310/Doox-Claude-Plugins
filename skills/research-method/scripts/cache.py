@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cross-run evidence cache for the market-report skill.
+"""Cross-run evidence cache for the research skills (research-method).
 
 A tariff order, a decree or a registry page does not change between two reports
 on the same market, but re-opening it costs the same as the first time — and
@@ -9,7 +9,7 @@ and answers the only question the cache can safely answer on its own: may this
 entry be reused, or must the source be opened again?
 
 Whether the *figure* is current is a separate question the caller answers with
-the freshness rules in SKILL.md §7; every stored date is printed back so it can.
+the freshness rules in the research-method skill (§8); every stored date is printed back so it can.
 
     python cache.py add    <cache.jsonl> <records.json>
     python cache.py lookup <cache.jsonl> --as-of YYYY-MM-DD [--claim-type T] [--q TEXT] [--url U]

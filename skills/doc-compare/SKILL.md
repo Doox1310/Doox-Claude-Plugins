@@ -1,6 +1,6 @@
 ---
 name: doc-compare
-description: Use when the user hands over one or more documents and asks to tóm tắt, đọc, đối chiếu, so sánh, or asks which document says what, what differs between them, or what looks bất thường. Covers standards, contracts, specs, reports, meeting minutes — any document supplied in the session.
+description: Use when the user hands over one or more documents and asks to tóm tắt, đọc, đối chiếu, so sánh, or asks which document says what, what differs between them, or what looks bất thường; also when they ask for từ khoá chính / key terms of the documents, or to xác thực, kiểm chứng, đối chiếu nguồn công khai the figures and facts a document states. Covers standards, contracts, specs, reports, meeting minutes, drawings — any document supplied in the session.
 ---
 
 # Doc Compare
@@ -23,14 +23,15 @@ Read that file, not `using-doox/SKILL.md`: this skill runs no identity gate and 
 no plan file, so nothing else in `using-doox` applies to it.
 
 Read-only, no identity gate, no file written. Output is tables in the chat reply.
+Offline: no web access unless the user asks for public-source verification (§7).
 
 ## 1. Identify before reading
 
 One line per document, before producing anything:
 
 ```
-1. VG_TS_PLP_Quy trinh xay dung tram sac.docx | Quy trình nội bộ | VI | 24 trang
-2. Asiatel Bacoor Layout (07-21-28).pdf       | Bản vẽ + thuyết minh | EN | 8 trang
+1. Quy trinh bao duong xe taxi dien.docx | Quy trình nội bộ | VI | 24 trang
+2. Asiatel Bacoor Layout (07-21-28).pdf  | Bản vẽ + thuyết minh | EN | 8 trang
 ```
 
 A document whose type is not clear is asked about, not assumed.
@@ -47,7 +48,7 @@ again in the original.
 
 ## 3. Summarise
 
-Default length is the four-part output in §6; `ngắn` (5–10 dòng) and `chi tiết`
+Default length is the four-part output in §8; `ngắn` (5–10 dòng) and `chi tiết`
 (theo từng mục) on request. Several documents: summarise each, then one paragraph
 across them — never one merged blob that loses which document said what.
 
@@ -110,7 +111,49 @@ the cells. Reading a colour by convention is inventing data.
 
 Never correct an anomalous figure. Report it with both values and its position.
 
-## 6. Output
+## 6. Từ khoá chính
+
+The terms a reader must know to use the document: thuật ngữ định nghĩa, mã tiêu chuẩn,
+văn bản pháp lý viện dẫn, bên liên quan, sản phẩm/mã model, đại lượng chính. Per
+document, **8–15 terms**, each with where it appears:
+
+| Tài liệu | Từ khoá | Loại | Vị trí (mục/trang/ô) |
+|---|---|---|---|
+
+Several documents: add **Chung** (present in every document — note if the meaning or
+value differs, that is a `Khác`/`Xung đột` for §5) and **Riêng** (present in one only).
+
+Terms are copied as the document writes them (rule `DR3`): no translation, no synonym
+merging unless the document itself equates them, no term the documents do not contain.
+
+## 7. Xác thực với nguồn công khai — chỉ khi được yêu cầu
+
+Runs **only** when the user asks to xác thực / kiểm chứng / đối chiếu nguồn công khai.
+Otherwise skip this section and stay offline.
+
+Pick the factual claims worth checking — figures, văn bản pháp lý viện dẫn (số hiệu,
+hiệu lực), company facts (tên pháp lý, MST, địa chỉ, giấy phép). List them before
+searching. Judge sources with skill `research-method`, section "Source quality":
+evidence classes A/B/C are evidence, **class X is never evidence** — it may only
+point to an A/B/C source.
+
+Budget: ≤10 searches and ≤5 documents opened per request, unless the user asks for more.
+Claims left unchecked when the budget runs out are listed as `Chưa kiểm tra`.
+
+Result per claim:
+
+| Nội dung (tài liệu, vị trí) | Tài liệu ghi | Nguồn công khai ghi | Kết quả | Nguồn (lớp, đơn vị, ngày, URL) |
+|---|---|---|---|---|
+
+- **Khớp** — an A/B/C source says the same;
+- **Lệch** — an A/B/C source says otherwise: print both values, neither wins;
+- **Không tìm thấy nguồn công khai** — nothing A/B/C found within budget; never read as wrong.
+
+The web never overwrites the document. Every other section still reports what the
+document says; a `Lệch` is a finding for the CEO, not a correction. Cite only URLs
+actually opened in this session.
+
+## 8. Output
 
 ```
 Đọc tài liệu — [tên tài liệu / nhóm tài liệu]
@@ -118,21 +161,28 @@ Never correct an anomalous figure. Report it with both values and its position.
 1. Tài liệu đã đọc          (bảng §1)
 2. Tóm tắt từng tài liệu
 3. Nội dung mỗi tài liệu đề cập / không đề cập   (bảng §4)
-4. Số liệu & điều kiện quan trọng
+4. Từ khoá chính             (bảng §6; Chung / Riêng khi nhiều tài liệu)
+5. Số liệu & điều kiện quan trọng
    - Nội dung | Giá trị | Điều kiện áp dụng | Nguồn (tài liệu, vị trí)
-5. Giống / Khác / Xung đột
-6. Điểm bất thường
+6. Giống / Khác / Xung đột
+7. Điểm bất thường
    - Loại | Mô tả | Bằng chứng (tài liệu, vị trí) | So với baseline nào | Cần ai xác nhận
-7. Chưa đủ cơ sở kết luận
+8. Xác thực nguồn công khai  (bảng §7 — chỉ khi user yêu cầu)
+9. Chưa đủ cơ sở kết luận
 ```
 
-Sections 4 and 5 collapse to nothing when there is one document; section 7 never
-does — it is where "the document is silent on this" lands.
+Section 6 collapses to nothing when there is one document; section 8 appears
+only on a verification request; section 9 never collapses — it is where "the document
+is silent on this" lands.
 
 ## Before replying
 
 - every document handed over appears in section 1 and in section 2;
-- no figure, model code, tên pháp lý or ngày tháng that is not in a document;
+- no figure, model code, tên pháp lý or ngày tháng that is not in a document, except
+  the cited public value in section 8;
 - every anomaly names its baseline;
 - nothing marked `Xung đột` was quietly resolved;
-- every `Chưa có thông tin` says what is missing and who would confirm it.
+- every `Chưa có thông tin` says what is missing and who would confirm it;
+- every từ khoá appears in its document at the position given;
+- no web lookup without a verification request; no class X source cited as evidence;
+  every `Lệch` shows both values.

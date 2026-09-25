@@ -48,7 +48,7 @@ def inspect(path, sheets, max_chars, rows=None):
             print("# merged: " + " ".join(ranges))
         count = 0
         # The framework repeats the same placeholder paragraph down whole blocks
-        # (rows 17-25, 28-34): ~44% of this sheet's text is literal duplication.
+        # (Bảng 2 and Bảng 3 rows): a large share of this sheet's text is literal duplication.
         # Print each distinct string once and point later cells at it.
         first_seen = {}
         for row in ws.iter_rows(min_row=lo, max_row=hi):

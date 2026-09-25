@@ -24,7 +24,8 @@ own exemption. Nothing else in `using-doox` applies here, so do not load it.
 
 Two kinds of material, either one alone is enough to start:
 
-- **CV** — any format the user sends.
+- **CV** — any format the user sends, together with any giấy tờ attached (bằng lái, trích lục, giấy
+  khám, chứng chỉ, kết quả lái thử); a driver often sends these instead of a CV.
 - **Interview** — a transcript in text, a recap someone wrote, or an audio file.
 
 **Audio:** try to read it. If the harness cannot, say so plainly — "không đọc được file âm thanh
@@ -32,7 +33,8 @@ này, anh/chị gửi bản transcript dạng text giúp em" — and stop. Never
 contained, and never proceed on the CV alone while pretending the interview was covered.
 
 Only one of the two supplied: assess on it and say which nhóm could not be scored for lack of the
-other. A CV alone can never score §3 Xử lý vấn đề; an interview alone rarely evidences §0 and §1.
+other. A CV alone can never score B3 Xử lý vấn đề or A3 Phục vụ khách; an interview alone rarely
+evidences §0 or the licence and certificate items.
 
 ## 3. The three rules
 
@@ -59,19 +61,25 @@ the CV volunteers them.
 Read `assets/khung-danh-gia-nhan-su.md` and follow it — the mandatory conditions, the groups, the
 four levels, the required output sections. That file is the framework; this skill holds no copy.
 
-It is currently a **bản tạm**. Say so once at the end of the first assessment in a session — "khung
-đánh giá đang là bản tạm, anh/chị sửa lại file khung nếu công ty đã có bộ tiêu chí riêng" — so nobody
+It is currently a **bản nháp**. Say so once at the end of the first assessment in a session — "khung
+đánh giá đang là bản nháp, anh/chị sửa lại file khung nếu công ty đã có bộ tiêu chí riêng" — so nobody
 mistakes the result for a scoring the company signed off on. Once per session, not once per candidate.
 
+**Pick the nhánh from the vị trí.** Tài xế or kỹ thuật viên → Nhánh A; everything else → Nhánh B. When
+the position does not settle it (a "trưởng xưởng", a "giám sát đội xe"), ask which nhánh before
+scoring; never score one candidate on both.
+
 **Điều kiện bắt buộc are position-specific.** Ask the user what the vị trí requires before scoring §0
-if they have not said. Do not invent a requirement, and do not skip §0 because it was not stated —
+if they have not said — which items apply, the thresholds, the thị trường (it fixes C1's languages),
+and for a foreign candidate whether C2 giấy phép lao động is theirs to hold or the company's to
+obtain. Do not invent a requirement, and do not skip §0 because it was not stated —
 a candidate scored well and then rejected on a condition nobody checked is the worst outcome here.
 
 ## 5. Several candidates at once
 
-Score each one separately and in full first, then add the comparison. Same framework, same groups,
-same order for everyone — a criterion applied to one candidate and not another makes the whole
-ranking meaningless.
+Score each one separately and in full first, then add the comparison. Same framework, same nhánh,
+same groups, same order for everyone — a criterion applied to one candidate and not another makes the
+whole ranking meaningless.
 
 Rank only those who passed §0. More than 3 candidates: đề cử tối đa 3. More than 5: tối đa 5. Nobody
 passed: say nobody passed, and do not promote the least-bad to fill the list.

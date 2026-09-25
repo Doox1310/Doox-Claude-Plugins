@@ -1,8 +1,9 @@
 # Contractor enumeration and tier classification
 
-Sections 6 and 12E of `SKILL.md`, kept out of the main body because they apply only when the
-objective includes contractor selection. Section and table numbering matches the references in
-`SKILL.md` exactly — `§6.4` here is the `§6.4` cited there.
+§6 and §13E of `contractor-search`, kept out of its `SKILL.md` because they apply only when the
+objective includes a contractor list. Section and table numbering matches the references in
+`contractor-search/SKILL.md` exactly — `§6.4` here is the `§6.4` cited there. `§9`, `§10` and `§14`
+are `research-method`'s (the `§` numbers are shared across the research skills).
 
 ## 6. Contractor enumeration and tier classification
 
@@ -28,7 +29,7 @@ budget, before any enumeration — that finds the local equivalent of each frame
 | F2 | the construction-licence or contractor-qualification registry, and its grading scheme |
 | F3 | the utility's or system operator's list of contractors approved for grid-side work |
 | F4 | the company registry, and its industry-classification scheme — this supplies the identifier everything is keyed on |
-| F5 | the provincial/municipal authority that issues building and electrical permits |
+| F5 | the provincial/municipal authority that issues building, electrical and fire-safety permits |
 | F6, F7 | unchanged — these need no local system |
 
 Record the mapping in the ledger and state it in the §14 reply, so the next report on that market
@@ -41,7 +42,7 @@ own website.
 
 ### 6.1 Target profile — say what "Cấp 1" means in this run
 
-Default target: **tổng thầu turnkey (EPC/EC)** — one company that self-performs construction and carries the whole scope: thiết kế, vật tư/thiết bị, thi công xây dựng và điện, xin phép, thử nghiệm/nghiệm thu, bàn giao. Only a user statement changes this.
+Default target: **tổng thầu xây depot & lắp sạc cho đội xe (turnkey, EPC/EC)** — one company that self-performs construction and carries the whole scope of a fleet depot: thiết kế, xây dựng depot/bãi đỗ, vật tư/thiết bị, hạ tầng điện và trạm biến áp, cung cấp và lắp đặt bộ sạc cho đội xe, xin phép (xây dựng, đấu nối, PCCC), thử nghiệm/nghiệm thu, bàn giao. Only a user statement changes this.
 
 Classify every candidate into exactly one role:
 
@@ -62,16 +63,16 @@ Work the frames below in order; each returns candidate names that go into the le
 
 | # | Frame | What it yields | Class |
 |---|---|---|---|
-| F1 | Hệ thống mạng đấu thầu quốc gia (`muasamcong.mpi.gov.vn`) — kết quả lựa chọn nhà thầu; filter gói `EC/EPC`, "thiết kế và thi công", "chìa khóa trao tay", trạm sạc/điện/hạ tầng | winning contractor names + chủ đầu tư + scope + value + year — the strongest single frame | A |
+| F1 | Hệ thống mạng đấu thầu quốc gia (`muasamcong.mpi.gov.vn`) — kết quả lựa chọn nhà thầu; filter gói `EC/EPC`, "thiết kế và thi công", "chìa khóa trao tay"; depot/bãi đỗ/nhà xưởng, hệ thống sạc đội xe, điện/trạm biến áp | winning contractor names + chủ đầu tư + scope + value + year — the strongest single frame | A |
 | F2 | Chứng chỉ năng lực hoạt động xây dựng (`nangluchdxd.gov.vn` / Bộ Xây dựng, Sở Xây dựng tỉnh) — search by field and địa bàn | registry-listed firms with hạng I/II/III, field and validity. A pure trading company cannot hold one | A |
-| F3 | Công ty điện lực tỉnh / EVN — danh sách đơn vị đủ điều kiện thi công đường dây và trạm biến áp | firms already accepted for grid-side work — decisive for trạm sạc | A |
+| F3 | Công ty điện lực tỉnh / EVN — danh sách đơn vị đủ điều kiện thi công đường dây và trạm biến áp | firms already accepted for grid-side work — decisive for depot interconnection | A |
 | F4 | Cổng thông tin quốc gia về đăng ký doanh nghiệp (`dangkykinhdoanh.gov.vn`) — by mã ngành (§6.3) + địa bàn | legal name, MST, mã ngành chính, ngày cấp | A |
-| F5 | Sở Xây dựng / Sở Công Thương tỉnh — công bố năng lực nhà thầu, giấy phép xây dựng đã cấp | local firms and the projects they were permitted for | A |
-| F6 | Project-reverse: named EV/charging or comparable projects → who executed them (chủ đầu tư release, BQL khu công nghiệp, press) | firms with real delivered scope, often invisible to search | A/C |
-| F7 | Snowball: subcontractors and consortium members named inside F1/F6 results; contractors used by competing CPOs | second-ring firms — the main source of list completeness | A/C |
-| F8 | Adjacent-trade transfer: nhà thầu điện / trạm biến áp / hạ tầng viễn thông / cơ điện M&E with no EV project yet | capable candidates the market has not labelled "trạm sạc" | A/C |
+| F5 | Sở Xây dựng / Sở Công Thương tỉnh / cơ quan PCCC — công bố năng lực nhà thầu, giấy phép xây dựng đã cấp, nghiệm thu PCCC | local firms and the projects they were permitted for | A |
+| F6 | Project-reverse: named EV depots, fleet-charging sites (bus/taxi/logistics) or comparable projects → who executed them (chủ đầu tư release, BQL khu công nghiệp, press) | firms with real delivered scope, often invisible to search | A/C |
+| F7 | Snowball: subcontractors and consortium members named inside F1/F6 results; contractors that built depots for competing taxi/ride-hailing operators | second-ring firms — the main source of list completeness | A/C |
+| F8 | Adjacent-trade transfer: nhà thầu điện / trạm biến áp / cơ điện M&E / nhà xưởng-bãi đỗ / hạ tầng viễn thông with no EV depot yet | capable candidates the market has not labelled "sạc xe điện" | A/C |
 | F9 | Hiệp hội (VACC, hội nhà thầu / hội điện lực địa phương) — danh sách hội viên | membership frame | C |
-| F10 | Brand pages: "hệ thống đại lý ủy quyền" / "nhà phân phối" of charger OEMs | used **inversely** — to recognise Cấp 2 candidates and to know which firms only resell | B |
+| F10 | Brand pages: "hệ thống đại lý ủy quyền" / "nhà phân phối" of fleet-charger OEMs | used **inversely** — to recognise Cấp 2 candidates and to know which firms only resell | B |
 
 Skipping a frame is allowed only when it demonstrably does not exist for the jurisdiction; record that as a coverage note, not silence.
 
