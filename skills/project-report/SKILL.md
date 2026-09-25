@@ -1,6 +1,6 @@
 ---
 name: project-report
-description: Read ONE market's project plan and produce the progress report in the customer's template — every task sorted into overdue, near deadline, in progress, done. Use when the user asks for a báo cáo tiến độ, asks how one market's project is doing, asks what is overdue, or hands over a plan file and asks for the report. Also covers management reports that are not progress
+description: Read ONE market's project plan — or any progress checklist/tracker the user hands over, e.g. a launch checklist — and produce the progress report in the customer's template, or in the layout the user names (an Excel with Summary + Details sheets, a bilingual Word) — every task sorted into overdue, near deadline, in progress, done. Use when the user asks for a báo cáo tiến độ, asks how one market's project is doing, asks what is overdue, or hands over a plan file and asks for the report. Also covers management reports that are not progress
   reports — báo cáo điều hành, đề xuất quyết định, kế hoạch triển khai, báo cáo rủi ro/escalation,
   biên bản họp và bảng hành động — written from memos, notes or tables using the GX1–GX5 forms in
   `assets/form-report.md`. NOT the day's to-do list or team reminder (that is `reminder`), NOT issue classification or a completion forecast (that is `project-insights`), NOT for changing a value in the file (that is `project-update`). Load the `using-doox` skill first — it holds the identity gate and the file-reading rules this skill depends on.
@@ -48,12 +48,16 @@ un-shown.
   matches their name — the claim is verified there, and a failed check stops the run without
   revealing the real PM name. A `Chuyên gia` gets only the rows carrying their PIC code, as
   `Người phụ trách` or `Người hỗ trợ`. Print the identity line above the report.
-- The plan file — a spreadsheet, `.xlsx` or a native Google Sheet.
+- The plan file — a spreadsheet, `.xlsx` or a native Google Sheet — or any progress checklist or
+  tracker the user attached, read per `using-doox`, "When a file does not match a convention".
 - The market, the project and the PM name. They come from the filename, which follows
   `[Thị trường] - [Tên dự án] - [Tên PM]`, extension optional — use the `using-doox` skill to read them, and show
-  what was read before printing the report. If the filename does not follow the convention, that
-  skill says to ask the user; do that rather than guessing, or the report goes out under the wrong
+  what was read before printing the report. If the filename does not follow the convention, ask the
+  market once, per that same section, rather than guessing, or the report goes out under the wrong
   market.
+- Other sources the user hands over with it — meeting minutes, a mail, a news update. Their facts go
+  into `Hiện trạng vấn đề` / `Vấn đề phát sinh` of the rows they concern, each marked with its source
+  (`theo biên bản họp 22/09`); they never change a status or a date the file itself holds.
 
 ## 3. Fields to collect
 
@@ -95,7 +99,8 @@ reverse, counts as not done and still lands in table 1/2/3 by its dates. Flag it
 **The report is the chat reply, and the same report is also saved as a file.** Print it in full in
 the reply (below), then write the identical content to `Báo cáo tiến độ [Thị trường] dd_mm_yyyy.docx`
 (GX branch: `Báo cáo [tên form, e.g. Phê duyệt] [Thị trường] dd_mm_yyyy.docx`) in the local working
-folder, per `using-doox` — a `.md` of the same name only when a `.docx` cannot be produced; if the name
+folder — or, when the user named a layout (an `.xlsx` with Summary + Details, bilingual cells, a
+colour rule), in exactly that layout and file type instead, per `using-doox` — a `.md` of the same name only when a `.docx` cannot be produced; if the name
 exists, add ` (2)`, ` (3)`… rather than overwrite. The file carries exactly the rows the role may see,
 nothing more. The file never replaces the printed report: a reply that points at the file instead of
 printing the tables has not delivered it.

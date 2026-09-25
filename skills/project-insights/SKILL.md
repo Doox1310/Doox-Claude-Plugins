@@ -1,6 +1,6 @@
 ---
 name: project-insights
-description: Read the plan files and produce the issue summary — open issues grouped by work area and by issue type, past issues with what they had in common, lessons drawn across the finished plans, and a completion forecast per market. Use when the user asks what is going wrong or what is blocking, asks to tổng hợp or phân loại vấn đề, asks what finished projects can teach, asks when a project will finish, or hands over a plan file whose tasks are all done. NOT a per-task progress snapshot of one market (that is `project-report`), NOT the day's to-do list (that is `reminder`). Load the `using-doox` skill first — it holds the identity gate and the file-reading rules this skill depends on.
+description: Read the plan files — or a progress checklist/tracker the user hands over — and produce the issue summary — open issues grouped by work area and by issue type, past issues with what they had in common, lessons drawn across the finished plans, and a completion forecast per market. Use when the user asks what is going wrong or what is blocking, asks to tổng hợp or phân loại vấn đề, asks what finished projects can teach, asks when a project will finish, what risks threaten a deadline or milestone, how much slack is left, or hands over a plan file whose tasks are all done. NOT a per-task progress snapshot of one market (that is `project-report`), NOT the day's to-do list (that is `reminder`). Load the `using-doox` skill first — it holds the identity gate and the file-reading rules this skill depends on.
 ---
 
 # Project insights
@@ -34,7 +34,10 @@ and feeds mục 3 only, never mục 1, 2 or 4.
 Use the `using-doox` skill first: read the project `README.md`, settle who is running this, then take
 each spreadsheet following `[Thị trường] - [Tên dự án] - [Tên PM]` — extension optional, Google
 Sheets included, per `using-doox` — ignoring lock files. The market
-read from each filename fills the `Thị trường` column.
+read from each filename fills the `Thị trường` column. A checklist or tracker the user attached is
+read too, per `using-doox`, "When a file does not match a convention" — its market asked once, and
+any source handed over with it (meeting minutes, a news update) used as issue evidence, marked with
+where it came from.
 
 A `Project Manager` run covers only the files whose `Tên PM` matches them. A `Chuyên gia` run covers
 every file, filtered to rows where their code is `Người phụ trách` or `Người hỗ trợ`.
@@ -116,8 +119,10 @@ Mục 1 rows sort by `Ngày kết thúc` ascending inside their group, so the ov
 
 ## 7. Output
 
-**The report is the chat reply itself.** Produce no `.docx`, `.md`, `.pdf` or `.xlsx`, and do not
-offer to. Every row, every column, each cell carried whole — only collapsing newlines inside a cell
+**The report is the chat reply itself.** Produce no file and do not offer to — **unless the user asks
+for one**, in a named layout (a bilingual Excel, a Word): then write the same content, in that layout,
+to a new file in the local working folder, per `using-doox`, "When a file does not match a
+convention", and still print the report here. Every row, every column, each cell carried whole — only collapsing newlines inside a cell
 so the Markdown row stays valid. An empty cell prints `-`. Dates print `dd/mm/yyyy`. Print the
 identity line from `using-doox` first.
 
@@ -291,5 +296,5 @@ file**, and a "finished" one is still someone's record.
 **Quy tắc chung — `project-update` là skill duy nhất được ghi vào file kế hoạch.**
 
 **Quy tắc riêng của skill này — `project-insights` không ghi vào file kế hoạch.** It reads, classifies
-and forecasts; an issue it found is reported, never written back. The one file it writes is the
-project `README.md`, per `using-doox`.
+and forecasts; an issue it found is reported, never written back. The files it writes are the
+project `README.md`, per `using-doox`, and a report file only when the user asked for one (§7).

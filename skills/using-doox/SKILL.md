@@ -13,14 +13,14 @@ belongs here.
 | Skill | Use it when | Output |
 |---|---|---|
 | `using-doox` | always, before the others | nothing — conventions only |
-| `project-report` | the user asks how one market's project is doing, or hands over a plan file and asks for the report | 4 tables in the customer's template, in the chat reply + the same report as a new `.docx` |
+| `project-report` | the user asks how one market's project is doing, or hands over a plan file, checklist or tracker and asks for the progress report — in whatever layout they name | 4 tables in the customer's template (or the layout the user names), in the chat reply + the same report as a new file |
 | `reminder` | the user asks what has to be handled today, asks to remind the PICs, or the 9am run fires | PM: one table across their markets + an Outlook draft per PIC (gửi khi PM yêu cầu). Chuyên gia: their own tables, no mail |
 | `market-research` | the user names a target market and asks to research it, asks for a market report, asks to tìm nhà thầu, or asks how we compare against competitors/CPO | a new `.xlsx` built from the saved report framework, filled, every figure sourced — plus, for an answer outside the workbook (competitor comparison, a single question), a `.docx` beside it |
 | `mail-draft` | the user hands over a memo, a file or session data and asks to soạn/viết/draft a mail about it | one Outlook draft + the same content in the chat reply, filled into the saved form. Draft never sent unless the user says so in the same turn |
 | `calendar` | the user asks to đặt lịch, dời lịch, xếp lịch tránh trùng, or asks what is on the calendar | the proposed event or arrangement in the chat reply, written to Google Calendar only after the user confirms. Reads the calendar freely, writes never without a yes |
 | `candidate-review` | the user hands over a CV, hồ sơ ứng viên or interview transcript/recording and asks to đánh giá, chấm, so sánh or đề cử nhân sự | the scoring tables in the chat reply — per the saved evaluation framework, every mức carrying its evidence and source, plus the same as a new `.docx`. Reads only what the user supplied |
-| `project-update` | the user reports a change to a task — done, pending, slipped, blocked, deadline moved | the confirmed cells written into the plan files, and a report of what changed. The only skill that writes to a plan file |
-| `project-insights` | the user asks what is stuck or going wrong, asks to summarise/classify issues, asks what finished projects taught, asks how far along a project is, or hands over a plan file with every task done | 4 sections in the chat reply — open issues by work area and issue type, past issues and their patterns, lessons across the archived plans, progress forecast. No mail, ever |
+| `project-update` | the user reports a change to a task — done, pending, slipped, blocked, deadline moved — or hands over a checklist/report file and asks to update it from a source (meeting minutes, news, another plan) | the confirmed cells written into the plan files — or, for a file outside the convention, into a new dated copy — and a report of what changed. The only skill that writes to a plan file |
+| `project-insights` | the user asks what is stuck or going wrong, what the risks to the deadline are, how much slack is left, asks to summarise/classify issues, asks what finished projects taught, asks how far along a project is, or hands over a plan file with every task done | 4 sections in the chat reply — open issues by work area and issue type, past issues and their patterns, lessons across the archived plans, progress forecast. No mail, ever |
 | `doc-compare` | the user hands over documents and asks to tóm tắt, đọc, so sánh, or what differs and what looks bất thường | tables in the chat reply. Reads only what the user supplied, never a plan file |
 | `doc-translate` | the user hands over a `.docx` / `.xlsx` / `.pptx` and asks to dịch it | a new translated file keeping the original layout, plus what was passed through untranslated |
 | `bid-review` | the user hands over báo giá or hồ sơ năng lực and asks to duyệt, chấm, xếp hạng, đề cử | a normalised comparison plus a shortlist, in the chat reply |
@@ -303,8 +303,10 @@ under `market-research`, the market report `.xlsx` it produces plus its source-l
 (`doox-sources/<market-slug>/`, holding that market's evidence cache and the run's claim ledger)
 and the `.docx` (or its `.md` fallback) of any research answer outside the workbook;
 under `plan-consolidation`, the new `.xlsx` files it generates; under `doc-translate`, the translated
-copy it generates; under `project-report` and `candidate-review`, the new `.docx` (or `.md` fallback)
-of the report they print. Every other skill is read-only, and none of them ever writes over a file the user
+copy it generates; under `project-update`, the new copy of a file outside the convention
+("When a file does not match a convention"); under `project-report` and `candidate-review`, the new `.docx` (or `.md` fallback)
+of the report they print, or the file in the layout the user named; under `project-insights`, a
+report file only when the user asked for one. Every other skill is read-only, and none of them ever writes over a file the user
 supplied.
 
 Every file a skill produces goes to the local working folder the user opened for the session (in
@@ -424,8 +426,52 @@ Người dùng: Nguyễn Văn A (a.nguyen@example.com) | Vai trò: Chuyên gia |
 
 ## When a file does not match a convention
 
-Ask the user. Never guess a market from a filename with no separator, and never fall back to the
-whole filename — a report published under the wrong market is worse than one that stopped to ask.
+A progress file does not have to follow the plan-file convention to be worked on. A launch checklist,
+a tracker, a weekly progress report — `20260826_Launch_Checklist_Standard_CIV_vf ENG.xlsx` — is read
+by `project-report`, `project-insights` and `project-update` like a plan file, with these differences.
+Never hand it to a generic spreadsheet or document skill instead: the Doox rules on status, dates,
+rows and identity still apply to it.
+
+**Market and project — ask once.** Never guess a market from a filename with no separator, and never
+fall back to the whole filename — a report published under the wrong market is worse than one that
+stopped to ask. One structured question carrying the market (and project, when the file does not say)
+settles it for the session; do not ask again for the same file.
+
+**Columns — found by meaning, not by name.** The file may be one sheet or several, in English,
+Vietnamese or French. Find, from the header row: the task (`Task`, `Activity`, `Hạng mục`…), the owner
+(`PIC`, `Owner`, `Responsible`), start and end/deadline dates, the status text, and — if present — a
+checkbox, an issue column and a next-step column. Use a sheet on its own unless two sheets are plainly
+a detail/control pair, and then join them as a plan file is joined. **Required: task, status, end
+date.** Any of the three missing — stop and ask; start date is optional. Report the mapping in the
+same one-line-per-file form as a plan file.
+
+**Status — mapped, and the mapping shown.** Map every distinct value of the status column to
+`Chưa triển khai` / `Đang triển khai` / `Hoàn thành` (`Not started`, `In progress`/`On going`,
+`Done`/`Completed`/`Closed`…), and print the mapping on the column line. A value that fits none of
+the three is asked about, never guessed. Done = the status maps to `Hoàn thành`; where the file also
+has a checkbox, both must agree, exactly as on a plan file. The file's own values are quoted untouched
+in every table.
+
+**Row key.** The file's own ID/STT column if it has one, otherwise the sheet row number (`R12`).
+A row with a task but no dates is a heading only when it is visibly one (bold, merged, or numbered as
+a section); otherwise it is a task with a missing date, printed with `-`.
+
+**Identity.** The gate still runs first. What changes is the check a filename made: a file **outside the
+convention that the user attached in this session** is already in their hands whole, so a verified
+identity sees every row of it, for either role — there is no `Tên PM` to compare and nothing to
+withhold. This applies to files outside the convention only: a plan file that follows the convention
+is filtered by role however it arrived, attached or found, and so is every plan file read as a
+*source* for another file — only the rows the role may see feed the report or the copy. A file found
+in the project folder that does not follow the convention is not opened for either role: ask the
+user to attach it, or to rename it to the convention.
+
+**Output format.** When the user names their own layout — an Excel with a Summary and a Details sheet,
+a bilingual Word, a colour or font rule — the file follows it. The content rules do not bend: every
+row whole, statuses and dates as the file has them, nothing invented, identity line printed. With no
+layout named, the skill's own form is used.
+
+**Writing.** A file outside the convention is never written in place. `project-update` writes the
+change to a new copy, per its own §9.
 
 ## Say what was read
 

@@ -118,7 +118,9 @@ different job and lives in `using-doox`, "The `PIC → email` directory".
 ## Verifying a claimed Project Manager
 
 The real PM's name is in the filename, the third part of `[Thị trường] - [Tên dự án] - [Tên PM]`. A
-user who answers `Project Manager` is checked against it before they are shown anything.
+user who answers `Project Manager` is checked against it before they are shown anything. A file whose
+name carries no PM follows `using-doox`, "When a file does not match a convention", instead. Such a
+file verifies nothing: never record a `Project Manager` role in the README on the strength of it.
 
 Compare their `Tên` with the `Tên PM` of the files they are asking about. Ignore case, ignore
 diacritics, ignore repeated whitespace; require the rest to match. Matching one file grants the PM

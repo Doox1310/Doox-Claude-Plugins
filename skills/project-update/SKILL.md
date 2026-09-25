@@ -1,6 +1,6 @@
 ---
 name: project-update
-description: Update tasks in the plan files — status, dates, issues, handling — from what the user typed, across several markets in one message, confirming every change before writing and keeping the two sheets in step. Use when the user says a task is done, pending, late, blocked, moved, or hands over any change to a plan file. The only Doox skill that writes to a plan file.
+description: Update tasks in the plan files — status, dates, issues, handling — from what the user typed, across several markets in one message, confirming every change before writing (a new copy of a non-standard file excepted) and keeping the two sheets in step. Use when the user says a task is done, pending, late, blocked, moved, or hands over any change to a plan file — and when the user hands over a checklist, tracker or report file (a CEO checklist, a weekly progress report) and asks to update it from a source such as meeting minutes, news or the master plan; those are written to a new dated copy, never in place. The only Doox skill that writes to a plan file.
 ---
 
 # Project Update
@@ -14,10 +14,23 @@ issue appeared, a fix was decided. One task or twenty, one market or several in 
 "fixes" a cell it printed; it says the cell looks wrong and stops.
 
 **Quy tắc riêng của skill này — mọi lần ghi đều phải đi qua bước xác nhận ở mục 6.** No cell is
-written that the user has not seen and said yes to, in that turn.
+written that the user has not seen and said yes to, in that turn. The one exception is the new copy of
+a file outside the convention (§9): the original is untouched, so the copy is written straight away
+and the user reviews it.
 
 Not for reading the plan — that is `project-report`, `reminder`, `project-insights`. This skill
 changes values in rows that already exist.
+
+**A file outside the plan-file convention** — a checklist, a tracker, a report the user keeps from
+the plan (`CEO_Personal_Checklist_CIV_21092026_v2.xlsx`, `Progress report CIV.xlsx`) — is updated the
+same way, from what the user typed or from the sources they attached (the master plan, meeting
+minutes, a news update). It is read per `using-doox`, "When a file does not match a convention", and
+**written only to a new copy** (§9), never in place. Each changed cell names its source in the §6
+table (`kế hoạch gốc R42`, `biên bản 22/09`). A value the sources do not state is left as it was, not
+inferred; a source that contradicts the file is shown, not silently applied. New values use the
+file's own vocabulary (`Done`, not `Hoàn thành`, in an English file). On such a copy, write rights
+follow view rights (`using-doox`): every row of the attached file may be changed — never a row taken
+from a source plan file the role could not see.
 
 ## 2. Identity and permission — the gate
 
@@ -216,7 +229,8 @@ lack of information. Never infer a `Phương án xử lý` from the problem.
 
 ## 9. Writing
 
-Only after the confirmation came back yes.
+Only after the confirmation came back yes — except the new copy of a file outside the convention,
+below.
 
 **Write exactly the cells in the confirmed table. Nothing else.** Rule 5, and it is the rule most
 easily broken by being helpful: no tidying a date format elsewhere, no filling a `-`, no recomputing
@@ -226,8 +240,14 @@ shown for context.
 **Where the write lands** — per `using-doox`, "Writing a plan file". A local `.xlsx` (including one in
 a Drive / OneDrive / SharePoint folder synced to disk) is written in place, one cell at a time,
 formatting and formulas untouched. A file reachable only through a connector cannot be written: print
-the confirmed change-set and say the file was not written. Never upload a "corrected" copy, never
-create a second file — the team keeps editing the original.
+the confirmed change-set and say the file was not written. Never upload a "corrected" copy of a plan
+file, never create a second one — the team keeps editing the original.
+
+**A file outside the convention is written to a new copy** — `<tên file gốc>_ddmmyyyy.<đuôi>` in the
+local working folder, the date the run's date, ` (2)`, ` (3)`… if that name exists. Copy the original
+whole, then write only the confirmed cells into the copy, formatting and formulas untouched. The
+original is never modified. Because nothing shared changes, the §6 table is shown and the copy is
+written in the same turn, without waiting for a yes; the user reviews the copy instead.
 
 After writing, re-read the written cells and report what actually changed:
 

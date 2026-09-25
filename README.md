@@ -34,10 +34,10 @@ nhập `Doox1310/Doox-Claude-Plugins`, rồi cài `doox-assistant` như plugin t
 | Skill | Dùng khi | Ra |
 |---|---|---|
 | `using-doox` | luôn luôn, trước các skill đọc file kế hoạch | quy ước dùng chung, không in gì |
-| `project-report` | hỏi một thị trường đang thế nào; hoặc xin một báo cáo quản trị khác (quyết định, kế hoạch, rủi ro, biên bản) | 4 bảng trong chat, hoặc một form GX1–GX5 trong chat — kèm bản `.docx` |
+| `project-report` | hỏi một thị trường đang thế nào, kể cả từ checklist/tracker ngoài chuẩn; hoặc xin một báo cáo quản trị khác (quyết định, kế hoạch, rủi ro, biên bản) | 4 bảng trong chat, hoặc một form GX1–GX5 trong chat — kèm bản `.docx` |
 | `reminder` | hỏi hôm nay phải xử lý gì | bảng trong chat + draft Outlook mỗi PIC (chỉ vai trò PM) |
-| `project-insights` | hỏi đang vướng gì, bao giờ xong | 4 mục trong chat |
-| `project-update` | báo một đầu việc đổi trạng thái / hạn / vướng mắc | ghi vào file kế hoạch sau khi xác nhận |
+| `project-insights` | hỏi đang vướng gì, rủi ro tiến độ, bao giờ xong | 4 mục trong chat; file khi được yêu cầu |
+| `project-update` | báo một đầu việc đổi trạng thái / hạn / vướng mắc; cập nhật checklist/báo cáo từ nguồn khác | ghi vào file kế hoạch sau khi xác nhận; file ngoài chuẩn ra bản copy mới có ngày |
 | `plan-consolidation` | quy hoạch nhiều kế hoạch về một form, hoặc gộp | file `.xlsx` mới |
 | `market-research` | nghiên cứu thị trường, tìm nhà thầu, so đối thủ | `.xlsx` theo khung; câu hỏi lẻ và so sánh đối thủ ra `.docx` riêng |
 | `doc-compare` | đọc, tóm tắt, so sánh tài liệu | bảng trong chat |
