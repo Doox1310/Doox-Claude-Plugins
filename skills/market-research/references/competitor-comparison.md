@@ -1,26 +1,37 @@
 # Competitive position — mình so với đối thủ (§7)
 
-§7 and §13F of `competitor-research`. Applies whenever the objective includes a competitor
-comparison. Decision-grade throughout. `§5`, `§8`, `§9`, `§10`, `§11` are `research-method`'s (the
-`§` numbers are shared across the research skills); `§6` is `contractor-search`'s.
+Read when the objective includes a competitor comparison. Decision-grade throughout. Every other `§`
+cited here is in `SKILL.md` (§1, §5, §8, §9, §10, §11) or `references/contractor-enumeration.md`
+(§6).
 
 The question this section answers is not "who else is in this market". It is **"where do we stand
-against them, on what evidence, and where does that leave us exposed"**. A list of competitors with
-their fleet sizes is the input, not the output.
+against them, on what evidence, and where does that leave us exposed"** — for an operator running
+its own electric fleet, against the other ways the same rider gets the same trip. A list of
+competitors with their fleet sizes is the input, not the output. Lenses R05 (landscape) and R06
+(strategy) in `references/topic-lenses.md` govern the claims.
 
-Output goes to **its own `.docx` as tables** in RX2 shape (`competitor-research/SKILL.md`),
-summarised in the chat reply, not into the workbook — the bundled framework has no competitor block.
-Everything else in `research-method` still applies: sourcing (§5), freshness (§8), the evidence
-record (§10), conflicts (§11).
+The two failures this method exists to prevent — comparing a registered or licensed fleet against an
+active one, and counting announced vehicles as operating ones — both look like ordinary tables until
+someone acts on them.
+
+**Output**: an RX2 answer (`assets/form-research.md`) in
+`Nghiên cứu So sánh đối thủ [Thị trường] dd_mm_yyyy.docx` (§1), summarised in the reply — never in
+the workbook, which has no competitor block. State the comparison basis before the table, one column
+per side on a like-for-like measure, keep the trade-off conclusion conditional, and write
+`Chưa kết luận được` in cells that cannot be made comparable rather than forcing a ranking. RX2's
+`default_length` — one table plus 100–200 words — applies to the reading of the table (§7.6 part 2);
+the four parts of §7.6 are the appendix-level detail; a user-stated length wins. A missing own-side
+figure the user can supply is `[INPUT NEEDED: <field>]` in the draft and `Chưa có dữ liệu nội bộ` in
+the table.
 
 ## 7.1 "Mình" has to be stated, never assumed
 
 The comparison needs our own side, and **our own side comes only from the user, from documents in the
-session, or from a plan file they point at.** Never from model knowledge about the company, however
+session, or from a file they hand over.** Never from model knowledge about the company, however
 confidently it comes to mind — that knowledge is stale by construction, and a comparison built on a
 half-remembered own-side is worse than no comparison.
 
-Ask for the own-side profile in the same structured call as `market-research` §2's other unknowns,
+Ask for the own-side profile in the same structured call as §2's other unknowns,
 along the same dimensions the competitors will be measured on (§7.3) — planned or active fleet, cities
 covered, vehicle models, target segment, fare and commission, service levels, booking channels, driver
 model, backing, licences and contracts held. Whatever the user does not supply stays
@@ -45,12 +56,17 @@ in three buckets, and put every company in exactly one:
 | `Gián tiếp` | different mode, same trip need | xe ôm công nghệ / moto-taxi, xe buýt/BRT, minibus (matatu, jeepney, gbaka, wôro-wôro), private car |
 | `Thay thế / tiềm năng` | not competing yet but holds the assets to start | vehicle OEM or distributor with its own mobility arm, transport or conglomerate group, car-rental fleet, airport or hotel transport concession holder |
 
+**A class of small operators** — metered-taxi firms and owner-drivers, cooperatives, a minibus
+mode — is one aggregate column when no single member matters, sourced at class level (registry and
+plate counts, the fare order) and labelled as an aggregate; name any member big enough to compare on
+its own in its own column.
+
 **Segment before scale.** A platform ten times our size whose trips are mostly motorbike or
 budget-hatchback rides is a weaker `Trực tiếp` competitor than a small fleet serving the same airport
 and corporate riders. Ranking the set by fleet or trip count before segmenting it produces the wrong
 list every time.
 
-Enumeration is frame-first, exactly as `contractor-search` §6.2 argues — generic search surfaces
+Enumeration is frame-first, exactly as §6.2 argues — generic search surfaces
 whoever bought the SEO:
 
 | # | Frame | What it yields | Class |
@@ -71,7 +87,7 @@ note.
 
 Ten dimensions, same ten for us and for every competitor. A dimension measured for one side and not
 the other is not a comparison and does not go in the table. Metric definitions come from
-`research-method/references/metrics.md`; the K-codes name the rows to read.
+`references/metrics.md`; the K-codes name the rows to read.
 
 | # | Dimension | What is actually compared |
 |---|---|---|
@@ -134,7 +150,7 @@ is more useful than a flattering table, because it names what to go and find out
 
 ## 7.6 Output
 
-Four parts, in the `.docx`, in this order.
+Four parts in the `.docx` — this order reads best; keep all four.
 
 **1. Bảng so sánh ngang.** Rows D1–D10, columns: `Mình` then one per competitor. Each cell carries
 value, `Nguồn`, `Ngày`, and `Độ chắc chắn` (Đã xác minh / Ước tính / Chưa xác minh). Competitors
@@ -160,7 +176,7 @@ strengths list.
 ## 7.7 Boundaries and budget
 
 **No verdict.** This section reports position and exposure. It does not recommend entering, exiting,
-pricing, or acquiring — those are the reader's, and `research-method` §1's contract holds here as
+pricing, or acquiring — those are the reader's, and §1's contract holds here as
 everywhere.
 
 **No modelled internals.** A competitor's cost per trip, margin, utilisation, driver churn or payback
@@ -171,10 +187,11 @@ the comparison table itself.
 **No scoring from marketing.** An operator's own "hãng taxi điện lớn nhất" or "tài xế thu nhập đến …"
 is class B wording about itself — recorded as a claim, never as a D1 or D8 value.
 
-**Budget:** roughly **12–18 searches, 4–6 opened documents**, inside the §9 quota. Cap the set at
-**5 `Trực tiếp`** competitors plus whatever `Gián tiếp`/`Thay thế` genuinely bear on the objective;
+**Budget (default):** roughly **12–18 searches, 4–6 opened documents**, drawn from the §9
+decision-grade allowance. By default cap the set at
+**5 `Trực tiếp`** competitors (budget, and a table still readable) plus whatever `Gián tiếp`/`Thay thế` genuinely bear on the objective;
 beyond that, list the remainder by name in one line and say the comparison was capped. Run another
-search before opening another document — `contractor-search` §6.6's reasoning applies unchanged.
+search before opening another document — §6.6's reasoning applies unchanged.
 
 ## F. Competitor-comparison audit
 

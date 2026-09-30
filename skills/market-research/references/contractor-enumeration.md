@@ -1,13 +1,56 @@
-# Contractor enumeration and tier classification
+# Tìm nhà thầu / đối tác — §6 and audit E
 
-§6 and §13E of `contractor-search`, kept out of its `SKILL.md` because they apply only when the
-objective includes a contractor list. Section and table numbering matches the references in
-`contractor-search/SKILL.md` exactly — `§6.4` here is the `§6.4` cited there. `§9`, `§10` and `§14`
-are `research-method`'s (the `§` numbers are shared across the research skills).
+Read when the objective includes a contractor or partner. Every other `§` cited here is in `SKILL.md`
+(§1, §2, §4, §5, §9, §10, §14) or `references/workbook.md` (§3, §12).
 
-## 6. Contractor enumeration and tier classification
+## 6. Two jobs, not the same job
 
-Applies whenever the objective includes contractor selection. Everything here is decision-grade.
+| Request | Method | Output |
+|---|---|---|
+| **Full list** of contractors for a work package — default **nhà thầu xây depot & lắp sạc cho đội xe (turnkey)** | frame-first enumeration, role classification, scoring, saturation — §6.0–6.6 below | every company in `Bảng 3B` of the market workbook; the reply's summary in RX3 shape |
+| **Review of a named counterparty or a short set** of any partner type | RX3 counterparty review (`assets/form-research.md`) with the lens of that partner type | RX3 `.docx` (§1) |
+
+Other partner types are counterparty reviews, not the `Bảng 3B` enumeration, unless the user asks
+for a full list of them. Each is reviewed against its own lens row in `references/topic-lenses.md`:
+
+| Partner type | Lens |
+|---|---|
+| Nguồn xe — OEM / nhà phân phối | R10 |
+| Tài chính, thuê xe, bảo hiểm | R18 |
+| Bảo dưỡng, sửa chữa, phụ tùng, cứu hộ | R25 |
+| Công nghệ gọi xe & điều phối | R45 |
+| Dịch vụ đội xe hằng ngày (vệ sinh, bãi, chuẩn bị xe) | R49 |
+| Luật, thuế, kế toán, tư vấn | R51 |
+| Tuyển dụng & đào tạo tài xế | R08 |
+| Nhà cung cấp bộ sạc (thiết bị, không phải thi công) | R24 |
+
+Alongside a market report, a counterparty review's summary goes into the matching `Bảng 3` row
+(§12 cell rules) and the RX3 `.docx` holds the detail. A full list of a non-construction type runs the
+enumeration below with that type's target profile recorded in the ledger — re-map the frames to fit
+(F2 becomes the relevant licence registry, F3 the OEM's authorised-dealer list), name any frame with
+no equivalent as a blind spot, and write to `Bảng 3B` only if the user wants it there, otherwise to
+the RX3 `.docx`.
+
+**Why the method, not a quick search:** a generic web search ranks intermediaries first — resellers
+buy the SEO that contractors do not need — so a list built without the frames is a list of resellers.
+Everything in the enumeration is decision-grade.
+
+### Where the list goes — `Bảng 3B`
+
+The list lives in `Bảng 3B - Danh sách nhà thầu`. With no workbook yet (a contractor-only request),
+copy `assets/khung-bao-cao-thi-truong.xlsx` to `Báo cáo thị trường [Thị trường] dd_mm_yyyy.xlsx`
+first and fill only `Bảng 3B` plus row 30 of the report sheet (`Nhà thầu xây depot và lắp sạc`, the
+summary row); the other blocks stay placeholders and the reply says so.
+
+`Bảng 3B` is the one repeatable-row sheet: one row per company, one per exclusion, then the coverage
+block. It ships with blank rows reserved for both lists — fill those first; insert more only when
+they run out, without overwriting the block titles below (`SỔ LOẠI TRỪ`, `ĐỘ PHỦ TÌM KIẾM`). Inspect
+the row positions before writing, and again over the affected rows after inserting.
+
+The reply summarises the list in **RX3** shape at its `default_length`, with no separate `.docx`: a fit
+verdict in plain words, the shortlist with proven scope separated from claimed scope, the conditions
+on each candidate, and the checks still outstanding. A firm the evidence does not settle is named as
+unverified, never scored into a number.
 
 ### 6.0 Which market these frames are written for
 
@@ -35,6 +78,25 @@ budget, before any enumeration — that finds the local equivalent of each frame
 Record the mapping in the ledger and state it in the §14 reply, so the next report on that market
 reuses it instead of rediscovering it.
 
+The rest of §6 and audit E port the same way: MST becomes the jurisdiction's company identifier,
+§6.3's VSIC reading becomes its industry-classification scheme, and §6.5's hạng I / II / III becomes
+its contractor grading mapped to top / middle / lowest band. Record each mapping with its source; a
+scheme with no grading scores that line `Chưa xác minh` rather than guessing a band. A §6.5 criterion
+with no local equivalent at all (no public activity code, say) is dropped for every candidate alike,
+and the Nhóm A/B thresholds scale to the points still available (Nhóm A ≈ two-thirds of the maximum)
+— say so in the reply, since keeping ≥8 on a smaller maximum silently makes Nhóm A harder.
+
+In `Bảng 3B` the column headers stay as they are; write the local equivalent in the Vietnam-named
+column with its label — `KRA PIN: …` under `MST`, `KSIC …` under the mã ngành column, `NCA4
+(building)` under the licence column — and `Không có tương đương công khai` where none exists.
+
+The confirmed mapping is worth keeping beyond this run: add each confirmed frame to the evidence
+cache as a `claim_type=contractor` record whose value names the frame (`F2 = NCA contractor register`)
+and whose URL is the registry, so the next run on that market starts from it.
+
+Model knowledge may suggest *where to look* for a frame; what the frame contains is only what the
+discovery pass confirms.
+
 **A frame with no local equivalent is named, never silently dropped.** Say which frames could not be
 worked and what that costs: without F1 or F2 the list cannot claim saturation (§6.6), and a role
 that no registry corroborates stays `Chưa xác định` (§6.1) rather than being settled by a company's
@@ -42,7 +104,9 @@ own website.
 
 ### 6.1 Target profile — say what "Cấp 1" means in this run
 
-Default target: **tổng thầu xây depot & lắp sạc cho đội xe (turnkey, EPC/EC)** — one company that self-performs construction and carries the whole scope of a fleet depot: thiết kế, xây dựng depot/bãi đỗ, vật tư/thiết bị, hạ tầng điện và trạm biến áp, cung cấp và lắp đặt bộ sạc cho đội xe, xin phép (xây dựng, đấu nối, PCCC), thử nghiệm/nghiệm thu, bàn giao. Only a user statement changes this.
+Default target: **tổng thầu xây depot & lắp sạc cho đội xe (turnkey, EPC/EC)** — one company that self-performs construction and carries the whole scope of a fleet depot: thiết kế, xây dựng depot/bãi đỗ, vật tư/thiết bị, hạ tầng điện và trạm biến áp, cung cấp và lắp đặt bộ sạc cho đội xe, xin phép (xây dựng, đấu nối, PCCC), thử nghiệm/nghiệm thu, bàn giao. Lens R23 (contractor due diligence) governs the claims and R19–R22 the scope. Only a user statement changes this, and a user-stated target keeps the same method. Fleet size, charger count and power, and whether a site exists
+decide which licence grade or contractor class qualifies — ask for them in the §2 scope call, or keep
+them `[INPUT NEEDED: …]` and say which grade the list assumed.
 
 Classify every candidate into exactly one role:
 
@@ -59,7 +123,7 @@ A tổng thầu turnkey buying equipment through a distributor is normal. Distri
 
 A generic web search ranks intermediaries first — they buy the SEO that contractors do not need. Generic search is **class X: it may produce a lead, never a role classification, and never the shape of the list.**
 
-Work the frames below in order; each returns candidate names that go into the ledger keyed by **mã số thuế (MST)**. Legal name, trade name and website are attributes of an MST, not separate candidates.
+Work F1–F5 first — they carry registry evidence — then the loose frames; order within each group is free; each returns candidate names that go into the ledger keyed by **mã số thuế (MST)**. Legal name, trade name and website are attributes of an MST, not separate candidates.
 
 | # | Frame | What it yields | Class |
 |---|---|---|---|
@@ -75,6 +139,8 @@ Work the frames below in order; each returns candidate names that go into the le
 | F10 | Brand pages: "hệ thống đại lý ủy quyền" / "nhà phân phối" of fleet-charger OEMs | used **inversely** — to recognise Cấp 2 candidates and to know which firms only resell | B |
 
 Skipping a frame is allowed only when it demonstrably does not exist for the jurisdiction; record that as a coverage note, not silence.
+
+Queries that work inside the Vietnam frames: `site:muasamcong.mpi.gov.vn "[EPC | thiết kế và thi công | chìa khóa trao tay]" "[lĩnh vực]" [tỉnh]`, `"chứng chỉ năng lực hoạt động xây dựng" "[lĩnh vực]" [tỉnh]`, `"[chủ đầu tư | dự án]" "nhà thầu thi công"`, `"[company]" "thi công" OR "tổng thầu" OR "EPC"` for role corroboration, `site:linkedin.com/company "[company]"` for the social-profile check. Do not exclude `-"đại lý" -"phân phối"` — it hides firms that both build and distribute (§6.1).
 
 ### 6.3 Mã ngành (VSIC) reading
 
@@ -116,28 +182,29 @@ If the public description frames the company primarily around an unrelated line 
 - one row per MST; merge duplicates across frames instead of listing them twice;
 - every excluded candidate keeps a row in the exclusion ledger: MST, name, reason, source. Silent dropping is a coverage failure;
 - record, per frame: searched yes/no, new MSTs produced;
-- **stop rule: saturation** — two consecutive frames produce no new MST, and F1–F5 have all been worked. Not "3–5 found". The workbook's 3–5 minimum is a floor for the summary row, never a target for the list;
+- **stop rule: saturation** — two consecutive frames produce no new MST, and F1–F5 have all been worked. Not "3–5 found". The workbook's 3–5 minimum is a floor for the summary row, never a target for the list. Where some of F1–F5 do not exist publicly (common outside Vietnam), stop on the same two-frame rule over the frames that do, and call it saturation *over the available frames*, naming the missing ones — never full saturation;
 - state residual blind spots (firms with no web presence, unpublished tender results, provinces not covered).
 
-This enumeration runs on its **own budget, separate from both lines of the §9 report quota**, because registry pages are cheap to open and the report quota would otherwise cap the list at the first few SEO results. The budget is set by the objective, not by the run's mode:
+This enumeration runs on its **own budget, separate from both lines of the §9 report quota**, because registry pages are cheap to open and the report quota would otherwise cap the list at the first few SEO results. Default ceilings, set by the objective rather than the mode (exceed them with a stated reason when a market's registries are fragmented):
 
 - contractor selection **is** a stated objective — roughly 35–60 searches and 20–30 opened documents;
 - contractors appear only as one partner group in the `Bảng 3` overview — roughly 15–25 searches and 8–12 documents.
 
 §9's "stop when sufficient" does not override the saturation rule.
 
-Dispatch frames to parallel workers by default — one worker per frame, non-overlapping, returning candidate rows (MST, name, role evidence, source URL, date) and never raw document text. A frame brief is the one exception to §9's fixed-URL rule: the frame already pins the authority and the domain, so the worker runs the §9 step-3 gate itself inside that frame and reports how many results it opened. Frames F6–F10 are the loose ones — a worker there opens only what a registry-, owner- or permit-level snippet already supports.
+Frames parallelise well — one worker per frame, non-overlapping, returning candidate rows (MST, name, role evidence, source URL, date) rather than document text. Because a frame already pins the authority and the domain, a frame worker may run the §9 triage itself inside that frame and report how many results it opened, instead of receiving a fixed URL list (`references/dispatch.md`). Frames F6–F10 are the loose ones — a worker there opens only what a registry-, owner- or permit-level snippet already supports.
 
 ### E. Contractor-list audit
 
 Only when the objective includes contractor selection:
 
 - F1–F5 were all worked or explicitly recorded as unavailable, and the saturation rule was met or the shortfall is stated;
-- every listed company has an MST, a mã ngành with registry source, a role, and the evidence behind its role and score — no row scored from absence;
+- every listed company has an MST (or the local identifier), a mã ngành (or local code) with registry source, a role, and the evidence behind its role and score — no row scored from absence; an identifier or code the jurisdiction does not publish passes as `Không có tương đương công khai` when the frame mapping records why;
 - no company appears twice under different names;
 - every excluded candidate is in the exclusion ledger with a reason and source;
 - no `Tổng thầu turnkey` rests on first-party evidence alone (§6.4);
 - no candidate was dropped only for dealer/distribution wording (§6.1);
-- the shortlist is drawn from Nhóm A, or the shortfall and the reason are stated.
+- the shortlist is drawn from Nhóm A, or the shortfall and the reason are stated;
+- the `ĐỘ PHỦ TÌM KIẾM` coverage block on `Bảng 3B` is filled: frames worked, new identifiers per frame, saturation, blind spots.
 
 Running out of budget is not a reason to skip this section — it is short by design. It is a reason to ship the workbook with named gaps.

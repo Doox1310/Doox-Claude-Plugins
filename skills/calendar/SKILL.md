@@ -1,13 +1,31 @@
 ---
 name: calendar
-description: Đặt lịch hẹn, xếp lịch tránh trùng và tổng hợp thời gian biểu trên Google Calendar — từ điều user nói, từ memo, hoặc từ deadline trong plan file. Use when the user asks to đặt lịch, tạo lịch họp, xếp lịch, dời lịch, or asks lịch tuần này/hôm nay có gì. Confirms every event before creating it.
+description: Đặt lịch hẹn, xếp lịch tránh trùng và tổng hợp thời gian biểu trên Google Calendar — từ điều user nói, từ memo, hoặc từ deadline trong plan file. Use when the user asks to đặt lịch, tạo lịch họp, xếp lịch, dời lịch, or asks lịch tuần này/hôm nay có gì. Confirms every event before creating it. Load `using-doox` first.
 ---
 
 # Calendar
 
-## 1. When to use
+**Load `using-doox` first** — it routes the request, settles who is running this, and holds the plan-file rules this skill relies on.
 
-Three requests, one skill:
+## Hard limits
+
+On top of `using-doox` "Hard limits":
+
+- **No create, move or cancel without a yes in this turn, per event.** An event with attendees fires
+  invitations the moment it exists, so a wrong time or guest list is already in other inboxes. An
+  approval for one event, or from an earlier turn, does not cover the next.
+- **Attendee addresses only from the user or `using-doox` "The `PIC → email` directory".** A code with
+  no address → ask; a guessed address is a meeting request in a stranger's inbox. `Thầu` is never an
+  attendee.
+- **Only the user's own calendar is written.** Other people get invitations, never entries, even when
+  the connector would allow it.
+- **Identity gate once a plan file is opened** — a deadline pull or a PIC lookup ("Who is running
+  this"), and only the rows that role may see.
+- **Nothing invented.** No duration nobody stated, no attendee because they were on a similar meeting,
+  no guessed địa điểm — ask. A start time alone ("2h chiều") says nothing about the end; the one
+  exception is a clear duration given ("họp 30 phút lúc 2h").
+
+## 1. When to use
 
 | Request | Section |
 |---|---|
@@ -15,93 +33,43 @@ Three requests, one skill:
 | xếp lịch cho nhiều việc, tìm giờ trống, tránh trùng | §4 |
 | lịch tuần này có gì, tổng hợp thời gian biểu | §5 |
 
-Not `reminder`: that one reads plan files and tells the team what is due today. This one touches the
-calendar itself. The two do meet — a deadline in a plan file can become a calendar block — but only
-when the user asks for it, never automatically.
+A plan-file deadline becomes a calendar block only when the user asks — never automatically
+(`reminder` is the one that tells the team what is due).
 
-**Google Calendar**, through the connector already linked to Cowork. This is the one place in the
-plugin that is not Microsoft; it is a tạm thời arrangement and the skill says nothing about it to the
-user either way. No connector available → say so plainly and print what would have been created.
-Never fall back to another calendar.
+**Google Calendar**, through the connector linked to Cowork — the one non-Microsoft piece of the
+plugin; say nothing about that to the user. No connector → say so and print what would have been
+created; never fall back to another calendar.
 
-## 2. Before anything: what timezone, whose calendar
+## 2. Time and date
 
-Every time written or read is in the user's local timezone unless they say otherwise. A time with no
-date is **today** if it has not passed, tomorrow if it has — and that reading is stated out loud when
-it is used, never assumed silently.
-
-The calendar written to is the user's own. Never another person's calendar, even when their address
-is known and the connector would allow it — other people get **invitations**, not entries.
+Default to the user's local timezone unless they name another. A time with no date is today if it
+has not passed, tomorrow if it has; a relative date ("thứ 5 tuần sau") is resolved to `dd/mm/yyyy`.
+Either way, **state the reading** so a wrong one shows before anything is booked.
 
 ## 3. Creating, moving, cancelling
 
-**Confirm before writing. Every time.**
-
-Print what is about to happen — tiêu đề, ngày giờ bắt đầu và kết thúc, người tham dự, địa điểm /
-link — and wait for the user to say yes. Then create it. An event with attendees fires invitations
-the moment it exists; a wrong time or a wrong guest list has already reached other people's inboxes
-by the time anyone notices. This is the same rule as `mail-draft` and `reminder`: **soạn sẵn, người
-gật mới bắn đi.**
-
-The confirmation is per event and per turn. A user who approved one event has not approved the next
-one, and an approval from an earlier turn does not carry forward.
-
-Missing details are asked for, not filled in. No default duration invented for a meeting whose length
-nobody stated, no attendee added because they were on a similar meeting before, no địa điểm guessed.
-The one exception: an end time missing where the user gave a clear duration ("họp 30 phút lúc 2h").
-
-A start time with no duration and no end time is the ordinary case of that rule, not a gap in it —
-"2h chiều" says when it begins and nothing about when it ends. Ask; do not reach for an hour because
-an hour is what meetings usually are.
-
-**An attendee named by PIC code needs a real address, and this skill has no way to invent one.**
-Build the `code → email` directory per `using-doox`, section "The `PIC → email` directory" — scan
-every row of every plan file in the project folder, handle all four separators — and use what it
-returns. Nothing returned means asking the user for the address: an invitation fires the moment the
-event exists, so a guessed address is a meeting request in a stranger's inbox. `Thầu` is a contractor
-and has no personal address at all.
-
-Reading the directory opens plan files, so it puts the identity gate back on for that run — the same
-condition as pulling deadlines out of a plan file (§4).
-
-**Dời và huỷ read before they write.** Find the event, print it as it stands now, say what will change,
-then ask. Two events match the description → ask which, never pick the nearer one.
+Print what is about to happen — tiêu đề, bắt đầu và kết thúc, người tham dự, địa điểm / link — and
+wait for the yes (hard limits). **Dời và huỷ read before they write**: find the event, print it as it
+stands, say what changes, then ask. Two events match → ask which, never pick the nearer one.
 
 ## 4. Xếp lịch — finding the slot
 
-The user hands over several things to be scheduled — from what they typed, from a memo, or from
-deadlines in a plan file — and asks for them to be laid out.
+Read the existing calendar for the window **first**, then propose: each việc, the suggested slot,
+and why. Name conflicts with what is already there rather than silently working around them. Propose,
+do not book — the user will move things, and nothing is written until they accept.
 
-Read the existing calendar for the window in question **first**. Then propose an arrangement:
-each việc, the slot suggested, and why that slot. Conflicts with what is already there are named,
-not silently worked around.
-
-Nothing is written until the user accepts the arrangement. They will move things; propose, do not
-book.
-
-**What this skill does not decide:** which việc matters more. Priority comes from the user or from the
-deadline in the file. Two things genuinely colliding with no stated priority → present the collision
-and ask. Never rank someone's work for them.
-
-Pulling từ plan file: per `using-doox` — the filename convention, the two-sheet join, which field is
-the deadline. Only the files and rows the user pointed at.
+Priority comes from the user or the file's deadline, never from this skill: two things colliding with
+no stated priority → show the collision and ask. Deadlines pulled from a plan file are read per
+`using-doox` "Reading a plan file", only from the files and rows the user pointed at.
 
 ## 5. Tổng hợp thời gian biểu
 
-Read the window asked for — today, this week, a named range — and print it as a table: ngày, giờ,
-việc, người tham dự, địa điểm. Grouped by day, in time order.
-
-Read-only. A request to see the week is not a request to change it, and this section creates nothing.
-
-Nothing in the window is a real answer: "tuần này lịch trống". Never pad it with the plan file's
-deadlines unless the user asked for those too — and when they did, mark which lines came from the
-calendar and which from a plan file. The two are not the same thing and the user is about to act on
-the difference.
+Read-only. Print the window asked for as a table — ngày, giờ, việc, người tham dự, địa điểm —
+grouped by day, in time order. An empty window is a real answer: "tuần này lịch trống". Plan-file
+deadlines appear only if the user asked for them, and then each line is marked calendar or plan file
+— the user acts on the difference.
 
 ## 6. Output
 
-The chat reply. Every section prints what it found or what it created — after a create, say the
-event title and its time back, so the user can see what landed without opening the calendar.
-
-Nothing here writes to a plan file, a README, or any document. `project-update` is the only skill that
-writes to a plan file, and a calendar change is not a plan change.
+The chat reply. After a create, echo the event title and time so the user sees what landed. Nothing
+here writes to a plan file, a README or any document — a calendar change is not a plan change.

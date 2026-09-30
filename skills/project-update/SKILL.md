@@ -1,137 +1,110 @@
 ---
 name: project-update
-description: Update tasks in the plan files — status, dates, issues, handling — from what the user typed, across several markets in one message, confirming every change before writing (a new copy of a non-standard file excepted) and keeping the two sheets in step. Use when the user says a task is done, pending, late, blocked, moved, or hands over any change to a plan file — and when the user hands over a checklist, tracker or report file (a CEO checklist, a weekly progress report) and asks to update it from a source such as meeting minutes, news or the master plan; those are written to a new dated copy, never in place. The only Doox skill that writes to a plan file.
+description: Update tasks in the plan files — status, dates, issues, handling — from what the user typed, across several markets in one message, confirming every change before writing (a new copy of a non-standard file excepted) and keeping the two sheets in step. Use when the user says a task is done, pending, late, blocked, moved, or hands over any change to a plan file — and when the user hands over a checklist, tracker or report file (a CEO checklist, a weekly progress report) and asks to update it from a source such as meeting minutes, news or the master plan; those are written to a new dated copy, never in place. The only Doox skill that writes to a plan file. Load `using-doox` first.
 ---
 
 # Project Update
 
+**Load `using-doox` first** — it routes the request, settles who is running this, and holds the plan-file rules this skill relies on.
+
+## Hard limits
+
+1. **Identity and role first** (`using-doox`, "Who is running this"). Only rows the role may write
+   (§2) are written; a refused row is named with its reason, never written anyway.
+2. **Every write is confirmed in its own turn** (§6). A yes covers the table it answered, nothing
+   after it. Sole exception: the new dated copy of a file outside the convention (§9).
+3. **Write only the confirmed cells.** No tidying, filling, recomputing, sorting or fixing anything
+   else.
+4. **Keep the two sheets in step** (§4) — every sheet carrying the field, in the same write, or not
+   at all.
+5. **A shifted pair of sheets stops the run** — nothing written to any file in the batch (§7).
+6. **A file outside the convention is never written in place** — new dated copy only (§9).
+7. **A connector-only file is not written** — print the confirmed change-set and say so (§9).
+8. **Never invent or guess**: not a row, a market, a field, a year, a value the sources do not state,
+   nor a `Phương án xử lý`. Never write a fourth `Trạng thái` value (§5). Data is not translated.
+
 ## 1. When to use
 
-The user reports a change to a task: it finished, it is pending, it slipped, a deadline moved, an
-issue appeared, a fix was decided. One task or twenty, one market or several in the same message.
+The user reports a change to existing tasks — finished, pending, slipped, deadline moved, issue
+found, fix decided — one task or twenty, one market or several. Reading the plan is `project-report`
+/ `reminder`; a report that "fixed" a cell it printed is a bug.
 
-**Quy tắc chung — `project-update` là skill duy nhất được ghi vào file kế hoạch.** A report never
-"fixes" a cell it printed; it says the cell looks wrong and stops.
-
-**Quy tắc riêng của skill này — mọi lần ghi đều phải đi qua bước xác nhận ở mục 6.** No cell is
-written that the user has not seen and said yes to, in that turn. The one exception is the new copy of
-a file outside the convention (§9): the original is untouched, so the copy is written straight away
-and the user reviews it.
-
-Not for reading the plan — that is `project-report`, `reminder`, `project-insights`. This skill
-changes values in rows that already exist.
-
-**A file outside the plan-file convention** — a checklist, a tracker, a report the user keeps from
-the plan (`CEO_Personal_Checklist_CIV_21092026_v2.xlsx`, `Progress report CIV.xlsx`) — is updated the
-same way, from what the user typed or from the sources they attached (the master plan, meeting
-minutes, a news update). It is read per `using-doox`, "When a file does not match a convention", and
-**written only to a new copy** (§9), never in place. Each changed cell names its source in the §6
-table (`kế hoạch gốc R42`, `biên bản 22/09`). A value the sources do not state is left as it was, not
-inferred; a source that contradicts the file is shown, not silently applied. New values use the
-file's own vocabulary (`Done`, not `Hoàn thành`, in an English file). On such a copy, write rights
-follow view rights (`using-doox`): every row of the attached file may be changed — never a row taken
-from a source plan file the role could not see.
+**A file outside the plan-file convention** (`CEO_Personal_Checklist_CIV_21092026_v2.xlsx`,
+`Progress report CIV.xlsx`) is updated the same way, from what the user typed or from attached sources
+(master plan, minutes, news). Read it per `using-doox`, "When a file does not match a convention";
+write it to a new copy (§9). Each changed cell names its source in the §6 table (`kế hoạch gốc R42`,
+`biên bản 22/09`). A value the sources do not state stays as it was; a source contradicting the file
+is shown, not silently applied. New values use the file's own vocabulary (`Done` in an English file).
+Write rights follow view rights: every row of the attached file, never a row from a source plan file
+the role could not see.
 
 ## 2. Identity and permission — the gate
-
-Settle who is running this per `using-doox`, "Who is running this", before reading a plan file and
-long before writing one. Then:
 
 | Role | May write |
 |---|---|
 | `Project Manager` | every row of the files whose `Tên PM` matches their name |
-| `Chuyên gia` | only rows where their PIC code is `Người phụ trách` **or** `Người hỗ trợ` |
+| `Chuyên gia` | rows where their PIC code is `Người phụ trách` **or** `Người hỗ trợ` |
 
-**A row outside that set is not written, not partially written, and not silently dropped.** The user
-is told which of their requested changes were refused and why, in one line each — `Doox3 không phụ
-trách công việc này` — and the rest of the batch still goes through. A batch is never rejected whole
-because one row was out of reach, and a refused row is never "written anyway because it was
-obviously right".
-
-**`Người hỗ trợ` counts as owner for this skill.** Rule 1 grants it, and a supporter reporting that
-they finished their part is exactly the case this exists for.
+`Người hỗ trợ` counts as owner here — a supporter reporting their part done is the core case. A row
+outside the set is refused in one line (`Doox3 không phụ trách công việc này`) and the rest of the
+batch goes through; one refused row never rejects the batch.
 
 ## 3. Reading the request
 
-The user writes in free text, several markets in one message, no fixed order. Example 3 of the spec
-is two markets in two lines. **Parse it into a list of intents, one per task, before touching
-anything**, each carrying: market → file, task, field(s), new value.
+Parse the free text into one intent per task **before touching anything**: market → file, task,
+field(s), new value.
 
-Pull these keywords, in whatever form they appear:
+Default keyword map (extend by obvious meaning; a word whose field is unclear is asked about —
+a wrong column is worse than one question):
 
-| Keyword | What it sets |
+| Keyword | Sets |
 |---|---|
-| `hoàn thành`, `xong`, `đã xong`, `done` | Trạng thái = `Hoàn thành`, checkbox TRUE |
-| `đang làm`, `đang triển khai` | Trạng thái = `Đang triển khai`, checkbox FALSE |
-| `chưa làm`, `chưa triển khai`, `chưa bắt đầu` | Trạng thái = `Chưa triển khai`, checkbox FALSE |
-| `pending`, `treo`, `tạm dừng`, `chờ …` | not a value of the column — see section 5 |
+| `hoàn thành`, `xong`, `đã xong`, `done` | Trạng thái `Hoàn thành`, checkbox TRUE |
+| `đang làm`, `đang triển khai` | `Đang triển khai`, checkbox FALSE |
+| `chưa làm`, `chưa triển khai`, `chưa bắt đầu` | `Chưa triển khai`, checkbox FALSE |
+| `pending`, `treo`, `tạm dừng`, `chờ …` | not a column value — §5 |
 | `lùi deadline`, `dời hạn`, `gia hạn`, a date | Ngày kết thúc |
 | `bắt đầu từ …` | Ngày bắt đầu |
 | `vướng`, `chưa đủ`, `thiếu`, `bị …` | Vấn đề phát sinh |
 | `đã xử lý bằng …`, `phương án là …` | Phương án xử lý |
 | `hiện tại đang …` | Cập nhật hiện trạng |
 
-**A word that is not in that table is not guessed at.** Ask which field it belongs to. Writing to the
-wrong column is worse than one extra question.
-
 ### Finding the market
 
-The user writes the market their own way — `Bờ Biển Ngà`, `BBN`, `Philippine`, `PLP` — the file is
-named `Bo Bien Nga`, `Philippines`. Match against the markets read from the filenames
-(`using-doox`, "Plan file naming"), in order:
-
-1. Equal after dropping diacritics, case, spaces, dots and hyphens.
-2. Equal to the initials of the market's words — `BBN` = **B**o **B**ien **N**ga.
-3. Prefix of the market, at least 3 characters — `Philip` → `Philippines`, `PLP` matched by 2 only
-   when nothing else does.
-
-**Exactly one file matched — take it, and name the file in the confirmation of section 6** so a wrong
-match is caught before the write, not after. Nothing matched, or two files did — ask with a picker
-listing the candidate markets. Never write to a file the user has not seen named.
+Users write `BBN`, `Bờ Biển Ngà`, `PLP`; files say `Bo Bien Nga`, `Philippines` ("Plan file naming").
+Default matching: equal ignoring diacritics/case/spaces/dots/hyphens; else initials (`BBN`); else a
+prefix of ≥3 characters. One file matched — take it and name it in the §6 table, so a wrong match is
+caught before the write. None or several — ask with a picker.
 
 ### Finding the task
 
-`Danh mục CV` repeats — on the reference file 4 labels cover 14 rows. **A label that matches more
-than one row is never resolved by guessing.** Show the matching rows with their built STT, their
-dates and their PIC, and ask which one. The STT built per `using-doox` is the key that identifies a
-row; use it in every question and every confirmation.
-
-The user's wording is rarely the exact label: match on the label containing their words, diacritics
-and case ignored. No row matches at all — say so and name the market, do not fall back to the
-closest-looking task.
+`Danh mục CV` repeats (4 labels cover 14 rows on the reference file), so **a label matching several
+rows is never resolved by guessing**: show the candidates with built STT, dates and PIC, and ask. The
+built STT ("Reading a plan file") identifies the row in every question and confirmation. Match on
+labels containing the user's words, diacritics and case ignored; no match — say so, never fall back
+to the closest-looking task.
 
 ## 4. What syncs with what
 
-Rule 3, and the reason this skill exists rather than "just edit the cell". The two sheets both carry
-`Ngày bắt đầu`, `Ngày kết thúc`, `Trạng thái` and `Ghi chú` (`using-doox`, "Where each field comes
-from"). **A change to any of those is written to every sheet that carries it, in the same write, or
-not at all.**
+Both sheets carry `Ngày bắt đầu`, `Ngày kết thúc`, `Trạng thái`, `Ghi chú` ("Where each field comes
+from"):
 
 | Change | Cells written |
 |---|---|
-| Trạng thái | detail `Trạng thái` (text) **and** control `Trạng thái` (checkbox) |
-| `Hoàn thành` | text = `Hoàn thành` **and** checkbox = TRUE — done is both, per `using-doox` |
-| anything not `Hoàn thành` | text **and** checkbox = FALSE |
+| Trạng thái `Hoàn thành` | detail text `Hoàn thành` **and** control checkbox TRUE |
+| any other Trạng thái | text **and** checkbox FALSE |
 | Ngày bắt đầu / Ngày kết thúc | both sheets, wherever the column exists |
-| Ghi chú | the sheet the user meant; if both carry a value, ask which |
+| Ghi chú | the sheet the user meant; both carry a value — ask |
 
-Writing the checkbox without the text, or one sheet without the other, is the bug this table exists
-to prevent: `reminder` reads the text, `project-report` reads the checkbox, and the two then
-disagree about the same task.
+Half a status change is the bug this prevents: `reminder` reads the text, `project-report` the
+checkbox, and they would disagree. Rows are joined by position after the STT alignment check
+("Reading a plan file").
 
-Rows are matched between the sheets by **row position**, checked with the STT alignment test in
-`using-doox` before anything is written. **A shifted pair of sheets stops the run** — a write into a
-shifted join lands on the wrong task and looks perfectly fine.
+## 5. Values not in the file's vocabulary
 
-## 5. Values that are not in the file's vocabulary
-
-`Trạng thái` holds exactly three values: `Chưa triển khai`, `Đang triển khai`, `Hoàn thành`. The user
-will type others — `pending`, `chưa đủ hồ sơ`, `đang chờ đối tác`.
-
-**Never write a fourth value into the column** — every other Doox skill reads those three, and one
-`pending` cell breaks the done-check everywhere.
-
-**Ask before mapping, then propose the nearest value plus the detail as text:**
+`Trạng thái` holds only `Chưa triển khai`, `Đang triển khai`, `Hoàn thành`; one `pending` cell breaks
+the done-check in every skill. Propose the nearest value plus the detail as text, confirmed in the §6
+table:
 
 ```
 "pending" không phải trạng thái có trong file. Bạn xác nhận cách ghi sau nhé:
@@ -139,24 +112,15 @@ will type others — `pending`, `chưa đủ hồ sơ`, `đang chờ đối tác
   Vấn đề phát sinh: chưa đủ hồ sơ
 ```
 
-`pending` / `treo` / `chờ …` → `Chưa triển khai` with the reason in `Vấn đề phát sinh`, checkbox
-FALSE. Work that is genuinely under way and merely blocked is `Đang triển khai` — the user says
-which; do not decide it for them. The mapping is confirmed like any other change, in the same table
-of section 6.
+Default: `pending` / `treo` / `chờ …` → `Chưa triển khai`, reason in `Vấn đề phát sinh`, checkbox
+FALSE; work genuinely under way but blocked is `Đang triển khai` — the user decides which.
 
-Dates: the file's format is `dd/mm/yyyy`. `20/08/2026` is unambiguous, `20/08` is not — ask for the
-year rather than assuming the current one. A date written into a cell is written as a real date
-value, not as text.
+Dates are written as real date values. `20/08` has no year — ask, do not assume the current one.
 
 ## 6. Confirm before writing
 
-**Rule 2, and it has no exception. Every write is confirmed in its own turn, every time.** Not
-skipped for a one-cell change, not skipped because the user already wrote the change clearly, not
-skipped because they said `cứ làm đi` or confirmed a batch in an earlier turn. A yes covers the table
-it was given and nothing after it: the next batch, in the same conversation, is confirmed again from
-scratch.
-
-Print the whole change-set as one table, then the question:
+No exception for a one-cell change, a clearly worded request, `cứ làm đi`, or an earlier yes. Print
+the whole change-set as one table, one line per cell (the checkbox is its own line), `-` for empty:
 
 ```
 Xác nhận các thay đổi sau:
@@ -165,38 +129,23 @@ Xác nhận các thay đổi sau:
 |---|---|---|---|---|---|
 | Bo Bien Nga | II.3.1 | Phê duyệt ngân sách & nhà thầu | Trạng thái | Đang triển khai | Hoàn thành |
 | Bo Bien Nga | II.3.1 | Phê duyệt ngân sách & nhà thầu | Checkbox | FALSE | TRUE |
-| Philippines | I.2.4 | Nghiệm thu giấy phép | Trạng thái | Đang triển khai | Chưa triển khai |
-| Philippines | I.2.4 | Nghiệm thu giấy phép | Vấn đề phát sinh | - | chưa đủ hồ sơ |
 
 Bạn xác nhận cập nhật các nội dung trên chứ?
 ```
 
-One line per cell — the checkbox is its own line, so the user sees both halves of a status change.
-Every line names the file's market and the STT. `-` for an empty current value.
+Below it, whatever applies: rows refused (§2); rows already at the asked value (`không thay đổi`,
+dropped); desync found (§7); fields still missing (§8). Then wait. A reply that changes something
+("đúng rồi nhưng deadline là 21/08") is not a yes — rebuild and ask again.
 
-Below the table, in this order, whatever applies:
-
-- rows refused for permission (section 2);
-- rows where the value is **already** what the user asked for — listed as `không thay đổi`, and
-  dropped from the write;
-- desync found in the file (section 7);
-- fields still missing (section 8).
-
-Then wait. **A confirmation is a yes to the table as printed.** The user answering with a change —
-"đúng rồi nhưng deadline là 21/08" — is not a yes: rebuild the table and ask again.
-
-**No row resolved at all: there is no table, and that is a complete answer.** Section 3 runs before
-this one, so a batch where every intent hit a repeated label or matched nothing never reaches a
-change-set. Print what section 3 produced — the candidate rows per ambiguous intent, the intents that
-matched no row — and one closing line saying plainly that nothing was written, e.g. `Chưa ghi ô nào
-vào file — cả ba nội dung đều chưa xác định được đúng một dòng.` Do not print an empty confirmation
-table, do not ask for a yes to nothing, and do not resolve an ambiguity by picking a row so that the
-batch has something in it.
+**No row resolved at all** (a past failure: the skill had no output for this): print no table and ask
+for no yes. Print what §3 produced — candidates per ambiguous intent, intents with no match — and one
+line saying nothing was written (`Chưa ghi ô nào vào file — cả ba nội dung đều chưa xác định được
+đúng một dòng.`). Never pick a row so the batch has something in it.
 
 ## 7. Desync already in the file
 
-Rule 4. Before writing a row, compare what the two sheets say about it. Report anything that already
-disagrees, do not quietly "fix" it as part of the user's change:
+Before writing a row, compare what both sheets say about it. Report any existing disagreement and
+ask; do not fix it as a side effect:
 
 ```
 Lưu ý: công việc II.3.1 đang bất đồng bộ giữa 2 sheet —
@@ -205,63 +154,39 @@ Lưu ý: công việc II.3.1 đang bất đồng bộ giữa 2 sheet —
 Bạn muốn ghi thành Hoàn thành (checkbox TRUE) hay giữ nguyên?
 ```
 
-The user's answer decides it, and it becomes rows in the confirmation table like everything else. A
-desync the user does not answer is left exactly as it is and reported again next time — never
-resolved by picking the value that happens to agree with the new change.
+The answer becomes rows in the §6 table; unanswered, it is left as is and reported next time.
 
-The STT alignment check failing is a different, worse case: **stop the whole run**, name the first
-row index that differs and quote both values, write nothing to any file in the batch.
+A failed STT alignment check is worse: stop the whole run, name the first differing row index with
+both values, write nothing — a write into a shifted join lands on the wrong task and looks fine.
 
 ## 8. Missing information
 
-Rule 7. A status change to something blocked, without a reason, leaves `Vấn đề phát sinh` and
-`Phương án xử lý` empty. Ask once, in one message, for everything missing across the whole batch:
-
-```
-Mình cần thêm thông tin cho các mục sau:
-  Philippines - Nghiệm thu giấy phép: vấn đề cụ thể là gì? phương án xử lý?
-```
-
-The user may answer that there is none — `chưa có phương án`, `đang chờ đối tác`. **That is a valid
-answer and it is written as the user said it**, not left blank and not filled with an invented plan.
-No answer at all: the cell stays empty, and the reply says plainly which fields were left empty for
-lack of information. Never infer a `Phương án xử lý` from the problem.
+A change to a blocked state without a reason leaves `Vấn đề phát sinh` / `Phương án xử lý` empty. Ask
+once, in one message, for everything missing across the batch. `chưa có phương án` is a valid answer,
+written as said. No answer — the cell stays empty and the reply says which fields were left empty.
 
 ## 9. Writing
 
-Only after the confirmation came back yes — except the new copy of a file outside the convention,
-below.
+After the yes (or, for a non-convention copy, straight away), write exactly the confirmed cells.
+Where the write lands follows `using-doox`, "Writing a plan file": a local or synced `.xlsx` in place,
+cell by cell, formatting and formulas untouched; a connector-only file is not written — never upload a
+"corrected" copy or create a second plan file.
 
-**Write exactly the cells in the confirmed table. Nothing else.** Rule 5, and it is the rule most
-easily broken by being helpful: no tidying a date format elsewhere, no filling a `-`, no recomputing
-a percentage, no sorting, no fixing a typo the user did not mention, no touching a row that was only
-shown for context.
+**A file outside the convention → a new copy** `<tên file gốc>_ddmmyyyy.<đuôi>` in the local working
+folder (run date; ` (2)`, ` (3)`… if taken): copy the original whole, write the confirmed cells into
+the copy. The original is never modified; since nothing shared changes, the §6 table is shown and the
+copy written in the same turn, and the user reviews the copy.
 
-**Where the write lands** — per `using-doox`, "Writing a plan file". A local `.xlsx` (including one in
-a Drive / OneDrive / SharePoint folder synced to disk) is written in place, one cell at a time,
-formatting and formulas untouched. A file reachable only through a connector cannot be written: print
-the confirmed change-set and say the file was not written. Never upload a "corrected" copy of a plan
-file, never create a second one — the team keeps editing the original.
-
-**A file outside the convention is written to a new copy** — `<tên file gốc>_ddmmyyyy.<đuôi>` in the
-local working folder, the date the run's date, ` (2)`, ` (3)`… if that name exists. Copy the original
-whole, then write only the confirmed cells into the copy, formatting and formulas untouched. The
-original is never modified. Because nothing shared changes, the §6 table is shown and the copy is
-written in the same turn, without waiting for a yes; the user reviews the copy instead.
-
-After writing, re-read the written cells and report what actually changed:
+Then re-read the written cells and report what actually changed:
 
 ```
 Đã cập nhật 4 ô trong 2 file:
   Bo Bien Nga - II.3.1 Phê duyệt ngân sách & nhà thầu: Trạng thái → Hoàn thành, checkbox → TRUE
-  Philippines - I.2.4 Nghiệm thu giấy phép: Trạng thái → Chưa triển khai, Vấn đề phát sinh → chưa đủ hồ sơ
 ```
 
-A cell that failed to write is named as failed. Never report a write that was not verified by reading
-it back.
+A cell that failed is named as failed; no write is reported unverified.
 
 ## 10. Boundaries
 
-Batch changes are per-row, always. `Hoàn thành hết các việc của tôi` is expanded into the actual list
-of rows and confirmed row by row in the table — never applied as a sweep, never with a count instead
-of the rows.
+Batches are per row. `Hoàn thành hết các việc của tôi` is expanded into the actual rows and
+confirmed row by row — never a sweep, never a count instead of rows.
