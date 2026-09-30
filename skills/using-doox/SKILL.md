@@ -27,8 +27,16 @@ Never crossed, whatever the request, the role or the budget:
    missing (`DR2`), never filled from model knowledge. A third party's email comes from the user (typed
    in the request or in material they handed over) or from the plan files ("The `PIC → email`
    directory") — never guessed from a name, a pattern or a domain.
-6. **Data is never translated.** Values, names, codes, units and file status words are quoted as the
-   source has them; dates print `dd/mm/yyyy` ("Language").
+6. **Data is never translated on your own initiative.** Values, names, codes, units and file status
+   words are quoted as the source has them; dates print `dd/mm/yyyy` ("Language"). Three cases are not
+   translation of data, or are asked for:
+   - a **status written into another file** uses that file's own vocabulary (`Done` → `Completed` /
+     `Hoàn thành`), with the mapping shown in the reply;
+   - a **note or summary a skill composes** is its own text: it follows the language the user asked
+     for, else the language of the file it is written into;
+   - when the user **explicitly asks for the content in a language** ("nội dung tiếng Anh"), task
+     text and notes may be translated; proper names, legal names, codes, numbers, units and dates
+     never are, and the reply says which columns were translated.
 7. **Deliverables are local files** in the user's working folder (in Cowork, what shows under Output;
    otherwise the session's outputs folder) — never Claude Docs, an artifact or a document a connector
    creates on a remote service.
@@ -90,11 +98,33 @@ and settle identity and language once for the whole chain:
 | "dịch hồ sơ nhà thầu này rồi chấm" | `doc-translate` → `bid-review` |
 | "tìm nhà thầu rồi so với báo giá mình có" | `market-research` (list) → `bid-review` (the supplied quotes); compare only on the same scope (`DR4`) and keep public-source and supplied evidence apart |
 | "lấy deadline tuần này xếp lịch" | `calendar` (it pulls the deadlines itself — one skill, not a chain) |
+| "cập nhật file báo cáo từ kế hoạch gốc + biên bản, rồi báo cáo tiến độ" | `project-update` (new copy) → `project-report` (on the updated copy) |
+| "chỉ ra các cập nhật để tôi tự điền vào kế hoạch gốc" | `project-update`, list-only — nothing written |
 
 If any step of the chain is gated, settle identity once, before step 1, so the chain is not
 interrupted halfway. Each step's confirmation rules still hold inside a chain: a `project-update` write is confirmed
 before it happens, a mail is a draft until the user says send. A chain never skips a step's gate
 because an earlier step already asked something.
+
+### Working across a conversation
+
+Customers work in long threads: one turn sets the job, later turns re-run or refine it. Keep a
+**job spec** for the session — for each file its role (master plan / source, target to update, form
+to follow), for each output its file, format, sheets and language, and every standing constraint
+("chỉ bổ sung notes", "nội dung tiếng Anh", "đúng format gốc"). Later turns add to it; a later
+instruction overrides an earlier one only where they conflict. A file re-sent with the same name
+replaces its earlier version. The spec lives in the conversation; if the thread has been compacted and
+it is no longer certain, restate what you still hold and ask for the rest rather than guess.
+
+- **"Xác nhận bạn hiểu rõ yêu cầu"** — restate the job spec compactly (file → role, job → output,
+  constraints) with any assumption marked, then carry on in the same turn. Stop to ask only for an
+  item that is genuinely unclear or has two readings that change the output; being asked to confirm
+  is not a reason to wait for another turn. Writes that need a yes (`project-update` on a plan file)
+  still wait for it.
+- **"Tôi mới cập nhật kế hoạch gốc, cập nhật lại các files"** — re-run the same jobs with the new
+  source against the same targets, starting from this session's latest outputs (they hold changes
+  already agreed) unless the user says otherwise, and report **what changed since the previous run**
+  (rows added or removed, statuses, dates, notes) — the delta is what the user checks.
 
 ### When the request is unclear or fits nothing
 

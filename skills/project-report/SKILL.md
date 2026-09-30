@@ -20,7 +20,8 @@ On top of `using-doox`, "Hard limits":
 - **Read-only.** This skill never writes to a plan file (§6). A status conflict is listed, not fixed.
 - **The four tables are the customer's template** (§5): opening lines, section headings, their order,
   numbering and the six columns are fixed. Never render a progress report as a GX form, never add a
-  GX block to it, never add, merge, rename or drop a section.
+  GX block to it, never add, merge, rename or drop a section. The one exception is a layout the user
+  names (§5): its Details sheet adds a fifth group; the chat reply still keeps the four tables.
 - **Done is exact** (§4): checkbox TRUE *and* text `Hoàn thành`, per `using-doox`, "Reading a plan file".
 - **Print in full.** Every row, every cell, in the chat reply; the saved file is a copy, never a
   substitute. Never invent a cell, never translate a value.
@@ -83,6 +84,10 @@ dd_mm_yyyy.docx` — GX1 `Kết quả và tiến độ`, GX2 `Đề xuất quy�
 name must never split into three parts on ` - `, or `using-doox` reads it as a plan file. A layout the
 user named (an `.xlsx` with Summary + Details, bilingual cells, a colour rule) replaces the `.docx`,
 content rules unchanged; `.md` only when a `.docx` cannot be produced.
+In such a layout a **Details** sheet holds every task **the role may see** — the four groups plus a fifth,
+`Chưa bắt đầu` / `Not started`, so a "toàn dự án" ask leaves no task invisible — and a **Summary**
+sheet holds the count per group, the status conflicts and the points the reader must act on. The
+chat reply keeps the four tables of the template.
 
 **Print every table in full, as Markdown.** Every row, every column in order, each cell whole (only
 newlines inside a cell collapsed). Empty cell `-`; empty section keeps its heading and header row plus

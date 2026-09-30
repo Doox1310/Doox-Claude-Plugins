@@ -21,7 +21,8 @@ description: Update tasks in the plan files — status, dates, issues, handling 
 6. **A file outside the convention is never written in place** — new dated copy only (§9).
 7. **A connector-only file is not written** — print the confirmed change-set and say so (§9).
 8. **Never invent or guess**: not a row, a market, a field, a year, a value the sources do not state,
-   nor a `Phương án xử lý`. Never write a fourth `Trạng thái` value (§5). Data is not translated.
+   nor a `Phương án xử lý`. Never write a fourth `Trạng thái` value (§5). Data is not translated unless
+   the user asked for the output in a language (`using-doox`, "Hard limits" 6).
 
 ## 1. When to use
 
@@ -37,6 +38,35 @@ write it to a new copy (§9). Each changed cell names its source in the §6 tabl
 is shown, not silently applied. New values use the file's own vocabulary (`Done` in an English file).
 Write rights follow view rights: every row of the attached file, never a row from a source plan file
 the role could not see.
+
+### Syncing from a source
+
+Defaults for the common customer asks — each exists because the opposite reading has cost a redo:
+
+- **Scope is what the user named.** "Chỉ bổ sung notes" writes the note field and nothing else; other
+  differences between source and target are listed after the table, not applied.
+- **Notes are added, not replaced.** A source note is appended to the target's note with its tag
+  (`[File điều chỉnh, 26/09]`) unless the target already says the same; replace only when asked.
+  Re-running from the same source refreshes that source's own tagged segment instead of stacking a
+  second copy beside it.
+- **Matching rows across files**: by the shared ID/STT first, then by task text plus dates. Files in
+  different languages match on ID only — no matching by meaning. A row that matches several or none
+  is listed, never forced onto the closest one.
+  Free text with no IDs (a mail, minutes) is matched to rows by meaning — that is the only way — so
+  each change it causes names the sentence it came from in the §6 table, for the user to check.
+- **A source may be another sheet of the same workbook** (`Level 3_suggestion`). "Còn gì chưa bổ sung"
+  first lists what the source has that the target lacks. Where the missing items should go is asked,
+  unless the user already said; the target files are then updated from the sheet as it stands. A
+  master or source file is never written in place — only into a new copy, if the user wants it.
+- **Several targets in one ask** each get their own new copy (§9); the §6 table groups by file.
+- **List-only** — "chỉ ra các cập nhật để tôi tự điền vào kế hoạch gốc": print the change-set table
+  (file to fill, row ID, task, field, current value in that file, new value, source) and write
+  nothing; no yes needed.
+- **Output language**: a note you compose (a summary of a mail or minutes) is your own text, not
+  data — write it in the language the user asked for, or else in the target file's language (an
+  English progress report gets English notes). Only a verbatim quotation keeps its original words.
+  Status values use the target file's own vocabulary (`Done` in an English file); names, codes,
+  numbers and dates never change.
 
 ## 2. Identity and permission — the gate
 

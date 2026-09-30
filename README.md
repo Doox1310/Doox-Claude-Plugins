@@ -85,6 +85,11 @@ gộp lại `research-method`, `contractor-search`, `competitor-research` vào *
 có lý do mà model được lệch nếu nói rõ trong reply. Cũng trong `1.2.1`, `using-doox` thành bộ điều
 phối nạp trước **mọi** yêu cầu Doox (định tuyến, chuỗi skill, brief cho agent, 7 luật cứng chung), và
 cả 12 skill viết lại theo cùng 3 tầng.
+Bản `1.2.2`, sau khi thử chuỗi prompt thật của khách (CIV): `using-doox` giữ job spec theo cuộc chat
+("xác nhận hiểu" → tóm tắt rồi làm tiếp; "kế hoạch gốc vừa cập nhật" → chạy lại từ output gần nhất,
+báo delta), quy đổi trạng thái theo từ vựng file đích, dịch nội dung khi user yêu cầu; `project-update`
+đồng bộ đúng phạm vi, nối ghi chú, chế độ chỉ liệt kê, nguồn là sheet khác; `project-report` sheet
+Details đủ mọi việc role được xem.
 
 Muốn dựng bộ test cho bản fork của mình thì cần: một file kế hoạch theo đúng quy ước
 `[Thị trường] - [Tên dự án] - [Tên PM]`, một bộ đọc tham chiếu độc lập với skill để so kết quả,
