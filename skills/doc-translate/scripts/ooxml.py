@@ -21,24 +21,29 @@ import sys
 import zipfile
 from xml.sax.saxutils import escape, quoteattr
 
-# part pattern -> (paragraph tag, text tag)
+# part pattern -> (paragraph tag, text tag, line-break pattern)
 # The paragraph is the translation unit: a single sentence is routinely split
 # across several text nodes ("Điện 1 " + "pha"), so nodes must be merged first.
+# A line break inside the paragraph becomes "\n" in the merged text, so each line
+# of the translation can go back in front of its own break.
 FORMATS = {
     ".docx": (
         re.compile(r"^word/(document|header\d*|footer\d*|footnotes|endnotes)\.xml$"),
         "w:p",
         "w:t",
+        re.compile(r"<w:(?:br|cr)\b[^>]*/>"),
     ),
     ".pptx": (
         re.compile(r"^ppt/(slides|notesSlides|diagrams)/[^/]+\.xml$"),
         "a:p",
         "a:t",
+        re.compile(r"<a:br\b[^>]*/>|<a:br\b[^>]*>.*?</a:br>", re.S),
     ),
     # Every string in a workbook lives in sharedStrings.xml. Worksheet XML holds
     # formulas and cell references and is deliberately out of scope: renaming a
-    # sheet or rewriting a formula string breaks the workbook.
-    ".xlsx": (re.compile(r"^xl/sharedStrings\.xml$"), "si", "t"),
+    # sheet or rewriting a formula string breaks the workbook. A newline in a cell
+    # is a literal "\n" inside <t>, so no break pattern is needed.
+    ".xlsx": (re.compile(r"^xl/sharedStrings\.xml$"), "si", "t", None),
 }
 
 def _fmt(path):
@@ -48,19 +53,29 @@ def _fmt(path):
     return FORMATS[ext]
 
 
-def _paragraphs(xml, ptag, ttag):
-    """Yield (match, [text node matches]) for every paragraph holding text."""
+def _paragraphs(xml, ptag, ttag, brk):
+    """Yield (match, lines) for every paragraph holding text.
+
+    `lines` holds one list of text-node matches per line of the paragraph — the
+    line breaks split it — so a line may be an empty list.
+    """
     para = re.compile(rf"<{ptag}(?:\s[^>]*)?>.*?</{ptag}>", re.S)
     text = re.compile(rf"(<{ttag}(?:\s[^>]*)?>)(.*?)(</{ttag}>)", re.S)
     for p in para.finditer(xml):
-        nodes = list(text.finditer(p.group(0)))
-        if nodes:
-            yield p, nodes
+        body = p.group(0)
+        nodes = list(text.finditer(body))
+        if not nodes:
+            continue
+        breaks = [b.start() for b in brk.finditer(body)] if brk else []
+        lines = [[] for _ in range(len(breaks) + 1)]
+        for n in nodes:
+            lines[sum(b < n.start() for b in breaks)].append(n)
+        yield p, lines
 
 
-def _merged(nodes):
-    """The paragraph's full text, XML entities resolved."""
-    return html.unescape("".join(n.group(2) for n in nodes))
+def _merged(lines):
+    """The paragraph's full text, one "\n" per line break, XML entities resolved."""
+    return html.unescape("\n".join("".join(n.group(2) for n in line) for line in lines))
 
 
 def _translatable(s):
@@ -73,38 +88,44 @@ def _translatable(s):
 
 
 def extract(path):
-    ppat, ptag, ttag = _fmt(path)
+    ppat, ptag, ttag, brk = _fmt(path)
     found = {}
     with zipfile.ZipFile(path) as z:
         for name in z.namelist():
             if not ppat.match(name):
                 continue
             xml = z.read(name).decode("utf-8")
-            for _, nodes in _paragraphs(xml, ptag, ttag):
-                s = _merged(nodes)
+            for _, lines in _paragraphs(xml, ptag, ttag, brk):
+                s = _merged(lines)
                 if _translatable(s):
                     found.setdefault(s, "")
     return found
 
 
 def apply(path, table, out):
-    ppat, ptag, ttag = _fmt(path)
-    used, rewritten = set(), 0
+    """Returns (parts rewritten, sources written, sources whose line count differed)."""
+    ppat, ptag, ttag, brk = _fmt(path)
+    used, collapsed, rewritten = set(), set(), 0
     with zipfile.ZipFile(path) as zin, zipfile.ZipFile(
         out, "w", zipfile.ZIP_DEFLATED
     ) as zout:
         for item in zin.infolist():
             data = zin.read(item.filename)
             if ppat.match(item.filename):
-                new = _rewrite(data.decode("utf-8"), ptag, ttag, table, used)
+                new = _rewrite(data.decode("utf-8"), ptag, ttag, brk, table, used, collapsed)
                 if new is not None:
                     data, rewritten = new.encode("utf-8"), rewritten + 1
             zout.writestr(item, data)
-    return rewritten, used
+    return rewritten, used, collapsed
 
 
-def _rewrite(xml, ptag, ttag, table, used):
-    """Put each paragraph's translation into its first text node, empty the rest.
+def _rewrite(xml, ptag, ttag, brk, table, used, collapsed):
+    """Put each line of a translation into the first text node of that line, empty
+    the rest of the line's nodes, and leave every break where it was.
+
+    A translation whose line count differs from the paragraph's is written on the
+    first line with its newlines turned into spaces, and reported, rather than
+    guessed onto lines it may not belong to.
 
     Formatting that varies inside one paragraph (a bold word mid-sentence) is lost;
     the alternative is translating fragments, which produces nonsense. Text is
@@ -112,8 +133,8 @@ def _rewrite(xml, ptag, ttag, table, used):
     otherwise, and the corruption is silent until the document is opened.
     """
     edits = []
-    for p, nodes in _paragraphs(xml, ptag, ttag):
-        src = _merged(nodes)
+    for p, lines in _paragraphs(xml, ptag, ttag, brk):
+        src = _merged(lines)
         dst = table.get(src)
         if not dst:
             continue
@@ -123,20 +144,33 @@ def _rewrite(xml, ptag, ttag, table, used):
         used.add(src)
         if dst == src:
             continue
-        for i, n in enumerate(nodes):
-            # Node offsets are relative to the paragraph; edits are applied to the
-            # whole part, so shift them. Without this the replacements land inside
-            # neighbouring tags and the document will not open.
-            start, end = p.start() + n.start(), p.start() + n.end()
-            open_tag = n.group(1)
-            if i == 0:
-                # Leading/trailing spaces are dropped by readers unless the node
-                # says to keep them, and merging often moves a space to the front.
-                if "xml:space" not in open_tag:
-                    open_tag = f"{open_tag[:-1]} xml:space={quoteattr('preserve')}>"
-                edits.append((start, end, open_tag + escape(dst) + n.group(3)))
-            else:
-                edits.append((start, end, n.group(1) + n.group(3)))
+        # Without a break tag (xlsx) a "\n" is literal cell text and stays in place.
+        parts = dst.split("\n") if brk else [dst]
+        # Translators often drop trailing empty lines; those lines hold no text.
+        if len(parts) < len(lines) and not any(lines[len(parts):]):
+            parts += [""] * (len(lines) - len(parts))
+        fits = len(parts) == len(lines) and all(
+            line or not part for line, part in zip(lines, parts)
+        )
+        if not fits:
+            collapsed.add(src)
+            parts = [" ".join(parts)] + [""] * (len(lines) - 1)
+            lines = [[n for line in lines for n in line]] + [[] for _ in lines[1:]]
+        for line, part in zip(lines, parts):
+            for i, n in enumerate(line):
+                # Node offsets are relative to the paragraph; edits are applied to
+                # the whole part, so shift them. Without this the replacements land
+                # inside neighbouring tags and the document will not open.
+                start, end = p.start() + n.start(), p.start() + n.end()
+                open_tag = n.group(1)
+                if i == 0:
+                    # Leading/trailing spaces are dropped by readers unless the node
+                    # says to keep them, and merging often moves a space to the front.
+                    if "xml:space" not in open_tag:
+                        open_tag = f"{open_tag[:-1]} xml:space={quoteattr('preserve')}>"
+                    edits.append((start, end, open_tag + escape(part) + n.group(3)))
+                else:
+                    edits.append((start, end, n.group(1) + n.group(3)))
     if not edits:
         return None
     out, last = [], 0
@@ -175,9 +209,14 @@ def main():
         table = {k: v for k, v in json.load(f).items() if v}
     if os.path.abspath(args.file) == os.path.abspath(args.out):
         sys.exit("refusing to overwrite the source document")
-    parts, used = apply(args.file, table, args.out)
+    parts, used, collapsed = apply(args.file, table, args.out)
     missing = sorted(set(table) - used)
     print(f"{len(used)} strings written across {parts} parts -> {args.out}")
+    if collapsed:
+        print(f"WARNING {len(collapsed)} translations have a different number of lines")
+        print("than their source and were written on one line (keep one \\n per line):")
+        for s in sorted(collapsed)[:10]:
+            print("  " + s.replace("\n", " / ")[:70])
     if missing:
         print(f"WARNING {len(missing)} translations matched nothing:")
         for s in missing[:10]:

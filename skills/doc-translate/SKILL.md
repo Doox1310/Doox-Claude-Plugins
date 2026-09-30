@@ -52,8 +52,15 @@ must read differently in two places has to be edited in the output afterwards �
 because a `_VI` on an English translation mislabels it (TEST-PLAN #15). The script takes the name from
 `-o` and refuses only an output equal to its input.
 
-**Report `WARNING … matched nothing`** if `apply` prints it: the source changed between the two
-commands and those strings are missing from the output.
+**A line break inside a paragraph is a `
+` in the key** (a table cell typed on three lines). Keep one
+`
+` per source line in the translation, in the same order — each line goes back in front of its own
+break. A different line count cannot be placed and is written on one line.
+
+**Report both warnings** if `apply` prints them: `matched nothing` (the source changed between the two
+commands, those strings are missing) and `different number of lines` (fix the `
+` count and re-run).
 
 ## What this cannot do — say so
 
@@ -63,7 +70,9 @@ commands and those strings are missing from the output.
 - **PowerPoint text can overflow** (Vietnamese runs 20–30% longer than English); fonts and shapes are
   not resized. List the slides with long strings.
 - **Excel: only `sharedStrings.xml` is touched.** Formulas, named ranges, sheet names and number
-  formats are out of scope by construction — renaming a sheet breaks its formulas.
+  formats are out of scope by construction — renaming a sheet breaks its formulas. A workbook that
+  stores its text inline in the sheets (some exporters do; `extract` then returns nothing) cannot be
+  translated this way — say so rather than rebuild it.
 - **PDF is not supported.** Content can go into a chat reply; the layout cannot be reproduced.
 - **SmartArt** (`ppt/diagrams/`) is covered but not verified on a real deck — check the output.
 

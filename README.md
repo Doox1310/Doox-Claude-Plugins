@@ -90,6 +90,8 @@ Bản `1.2.2`, sau khi thử chuỗi prompt thật của khách (CIV): `using-do
 báo delta), quy đổi trạng thái theo từ vựng file đích, dịch nội dung khi user yêu cầu; `project-update`
 đồng bộ đúng phạm vi, nối ghi chú, chế độ chỉ liệt kê, nguồn là sheet khác; `project-report` sheet
 Details đủ mọi việc role được xem.
+Bản `1.2.3`: `doc-translate` giữ đúng chỗ xuống dòng trong một đoạn (`<w:br/>`, `<a:br/>`) khi dịch —
+trước đó bản dịch của một ô nhiều dòng dồn hết lên dòng đầu; `test_ooxml.py` chạy không tham số là tự kiểm.
 
 Muốn dựng bộ test cho bản fork của mình thì cần: một file kế hoạch theo đúng quy ước
 `[Thị trường] - [Tên dự án] - [Tên PM]`, một bộ đọc tham chiếu độc lập với skill để so kết quả,
