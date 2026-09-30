@@ -3,18 +3,11 @@
 Đây là form cố định mà skill `mail-draft` điền vào. Sửa file này là đổi form —
 không cần sửa `SKILL.md`.
 
-Hai tầng, đọc theo thứ tự:
+Chọn khung theo người nhận (mục "Chọn khung"), rồi chọn một form EX1–EX5 theo *kết quả người gửi
+cần* và lấy `reasoning`, `core_output`, `missing_data`, `boundary` của form đó làm luật nội dung.
 
-1. **Chọn khung theo người nhận** (mục "Chọn khung" ngay dưới) — `template_*` của form EX, hoặc form
-   nhà.
-2. **Thư viện EX1–EX5** ở phần sau — chọn một form theo *kết quả người gửi cần*, rồi lấy
-   `reasoning`, `core_output`, `missing_data`, `boundary` của form đó làm luật viết nội dung.
-
-Mục nào không có dữ liệu trong đầu vào thì **bỏ hẳn mục đó**. Không viết câu lấp chỗ trống.
-
-Trừ một trường hợp: user **yêu cầu nêu** một thứ mà đầu vào không có. Khi đó giữ mục lại và
-viết `[INPUT NEEDED: …]` vào đúng chỗ thiếu, đúng như `SKILL.md` mục 2 — bỏ mục đi là giấu mất
-chính thứ user vừa dặn phải có trong mail.
+Mục không có dữ liệu thì bỏ hẳn; riêng thứ user **dặn nêu** mà đầu vào không có thì giữ mục, viết
+`[INPUT NEEDED: …]` (`SKILL.md` mục 2).
 
 ---
 
@@ -26,13 +19,9 @@ chính thứ user vừa dặn phải có trong mail.
 | Thành viên dự án, nội bộ, bằng tiếng Việt | Form nhà bên dưới |
 | Mọi trường hợp khác (nội bộ bằng tiếng Anh/Pháp…), hoặc user yêu cầu memo/chat/bố cục khác | `template_*` của form EX đã chọn |
 
-`template_*` viết bằng tiếng Anh: đó là **khung**, không phải ngôn ngữ đầu ra — giữ nguyên cấu trúc
-và thứ tự, dịch sang ngôn ngữ người nhận khi điền. Ngôn ngữ người nhận theo `using-doox`, mục
-"Language" — không phải ngôn ngữ user đang gõ. Số liệu, tên riêng, mã hiệu, đơn vị giữ nguyên ở mọi
-ngôn ngữ. Ngày luôn `dd/mm/yyyy`.
-
-Marker thiếu dữ liệu: `[INPUT NEEDED: <field>]` — một marker duy nhất cho mọi ngôn ngữ và mọi khung.
-Liệt kê lại toàn bộ sau bản draft bằng ngôn ngữ user.
+`template_*` viết bằng tiếng Anh vì là **khung**: giữ cấu trúc và thứ tự, dịch sang ngôn ngữ người
+nhận khi điền (`using-doox`, "Language"). Marker thiếu dữ liệu `[INPUT NEEDED: <field>]` dùng cho mọi
+ngôn ngữ, liệt kê lại sau bản draft.
 
 ## Form nhà — chỉ mail nội bộ dự án, tiếng Việt
 
@@ -63,9 +52,6 @@ Form nhà là **bố cục**, EX1–EX5 là **nội dung**. Bốn mục trên l�
 quyết định mục nào phình ra, mục nào biến mất. Ví dụ: EX3 (cảnh báo) mở đầu bằng sự việc đã xác
 nhận và mốc cập nhật kế tiếp, không mở đầu bằng bối cảnh dài; EX2 (xin quyết định) bắt buộc có mục 3
 và mục 4, vì thiếu chúng thì mail không xin được gì.
-
-Mã form (`EX2`) và tên trường (`core_output`, `template_body`…) là ký hiệu nội bộ. Không bao giờ in
-ra trong mail, ở bất kỳ ngôn ngữ nào.
 
 ## Chọn form
 

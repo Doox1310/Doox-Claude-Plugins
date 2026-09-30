@@ -1,30 +1,29 @@
 # Form nghiên cứu — RX1–RX5
 
-Thư viện form cho phần **đầu ra nghiên cứu không nằm trong workbook**, dùng chung cho
-`market-research`, `contractor-search` và `competitor-research`. Sửa file này là đổi form — không cần
-sửa `SKILL.md` nào. Mọi `§` dưới đây là của `research-method` trừ khi ghi tên skill khác.
+Thư viện form cho phần **đầu ra nghiên cứu không nằm trong workbook** của skill `market-research`.
+Sửa file này là đổi form — không cần sửa `SKILL.md`. Mọi `§` dưới đây là của `SKILL.md` hoặc
+reference ghi trong bảng "Files and section numbers" của nó.
 
 Ranh giới, đọc trước khi dùng:
 
-- Yêu cầu **điền khung báo cáo thị trường** (`market-research/assets/khung-bao-cao-thi-truong.xlsx`)
-  chạy theo `market-research` §3 và §12 như cũ. File này không thay thế khung đó và không đổi một ô
-  nào của nó.
-- Yêu cầu nghiên cứu **ngoài workbook** — một câu hỏi lẻ, một bảng so sánh, một hồ sơ nhà thầu/đối
-  tác, một kịch bản, một bản cập nhật thay đổi — dùng RX1–RX5 dưới đây làm bố cục câu trả lời, ghi ra
-  file `.docx` trên máy người dùng (§1), chat chỉ tóm tắt và nêu tên file.
-- `competitor-research` ghi ra `.docx` riêng chứ không vào workbook, nên nó là RX2.
-  `contractor-search` là RX3: danh sách đầy đủ chỉ nằm trong workbook (`Bảng 3B`) và RX3 chỉ là bố
-  cục phần tóm tắt trong chat; đánh giá một đối tác có tên (xe, tài chính, bảo dưỡng, công nghệ…) là
-  RX3 ghi ra `.docx`. Hai skill đó vẫn giữ nguyên phương pháp của mình — RX chỉ quyết định **hình
-  dạng đầu ra**, không thay `contractor-search/references/contractor-enumeration.md` hay
-  `competitor-research/references/competitor-comparison.md`.
+- Yêu cầu **điền khung báo cáo thị trường** (`assets/khung-bao-cao-thi-truong.xlsx`) chạy theo §3 và
+  §12 (`references/workbook.md`). File này không thay thế khung đó và không đổi một ô nào của nó.
+- Yêu cầu nghiên cứu **ngoài workbook** — một câu hỏi lẻ, một brief thông tin và từ khoá quan trọng
+  của thị trường, một bảng so sánh, một hồ sơ nhà thầu/đối tác, một kịch bản, một bản cập nhật thay
+  đổi — dùng RX1–RX5 dưới đây làm bố cục câu trả lời, ghi ra file `.docx` trên máy người dùng (§1),
+  chat chỉ tóm tắt và nêu tên file.
+- So sánh đối thủ ghi ra `.docx` riêng chứ không vào workbook, nên nó là RX2. Tìm nhà thầu là RX3:
+  danh sách đầy đủ chỉ nằm trong workbook (`Bảng 3B`) và RX3 chỉ là bố cục phần tóm tắt trong chat;
+  đánh giá một đối tác có tên (xe, tài chính, bảo dưỡng, công nghệ…) là RX3 ghi ra `.docx`. RX chỉ
+  quyết định **hình dạng đầu ra**, không thay phương pháp trong `references/contractor-enumeration.md`
+  hay `references/competitor-comparison.md`.
 
 Ngôn ngữ — ba thứ khác nhau trong cùng một run: **câu trả lời** theo ngôn ngữ user (vi / en / fr);
 **workbook** giữ nguyên tiếng Việt của khung, kể cả bốn trạng thái; **tìm kiếm** theo ngôn ngữ của
 thị trường đang nghiên cứu. Trích dẫn giữ nguyên ngôn ngữ gốc; bản dịch phải được gọi tên là bản dịch.
 Các trường `template_*` dưới đây là khung, không phải ngôn ngữ đầu ra.
 
-Mọi luật bằng chứng của `research-method` vẫn nguyên giá trị và **thắng** khi va nhau: phân loại
+Mọi luật bằng chứng của `SKILL.md` vẫn nguyên giá trị và **thắng** khi va nhau: phân loại
 nguồn A/B/C/X (§5), ledger và cache (§10), ngân sách tìm kiếm (§9), bốn trạng thái `Đã xác minh` /
 `Ước tính` / `Chưa xác minh` / `Không áp dụng` (§4).
 
@@ -47,7 +46,7 @@ cần xác nhận. Thiếu **thông tin người dùng phải cung cấp** (đ�
 cước của mình…) → `[INPUT NEEDED: <trường>]` đúng chỗ cần, theo `SHARED_RULES.missing`; không đoán,
 không thay bằng 0.
 
-**Độ dài theo `default_length` của form.** Viết đúng độ dài mặc định của form đã chọn (RX1 50–120 từ
+**Độ dài theo `default_length` của form.** Viết theo độ dài mặc định của form đã chọn (lệch thì nói lý do) (RX1 50–120 từ
 cho câu tra cứu, 200–400 từ cho brief; RX2 một bảng + 100–200 từ; RX3 một bảng shortlist + kết luận
 ngắn, 250 từ cho một ứng viên; RX4 250–450 từ + bảng nhỏ; RX5 150–300 từ hoặc một bảng thay đổi).
 Độ dài user yêu cầu thắng. Phần sâu hơn (bảng bằng chứng, phép tính) để ở phụ lục; khoảng trống trọng
@@ -69,13 +68,13 @@ Chưa có mốc so sánh thì không dùng RX5 — chạy RX1 để lập mốc 
 
 ## Hai reference đi kèm
 
-Cùng thư mục `research-method`:
+Cùng thư mục skill:
 
 - `references/topic-lenses.md` — 40 lens chủ đề (R01–R52): với mỗi chủ đề là phạm vi cần quét và
   **cái bẫy đếm sai** của chủ đề đó. Đọc dòng đúng chủ đề đang làm, trước khi search.
 - `references/metrics.md` — 56 định nghĩa chỉ số (K01–K56): đơn vị, phạm vi bắt buộc, và lý do hai
   con số trông giống nhau lại không so được với nhau. Đọc trước khi đặt hai số cạnh nhau trong một
-  bảng, đúng luật chuẩn hóa `research-method` §11.
+  bảng, đúng luật chuẩn hóa §11.
 
 Cả hai là tra cứu theo dòng, không phải đọc từ đầu đến cuối.
 

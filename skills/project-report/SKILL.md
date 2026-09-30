@@ -1,126 +1,94 @@
 ---
 name: project-report
-description: Read ONE market's project plan — or any progress checklist/tracker the user hands over, e.g. a launch checklist — and produce the progress report in the customer's template, or in the layout the user names (an Excel with Summary + Details sheets, a bilingual Word) — every task sorted into overdue, near deadline, in progress, done. Use when the user asks for a báo cáo tiến độ, asks how one market's project is doing, asks what is overdue, or hands over a plan file and asks for the report. Also covers management reports that are not progress
-  reports — báo cáo điều hành, đề xuất quyết định, kế hoạch triển khai, báo cáo rủi ro/escalation,
-  biên bản họp và bảng hành động — written from memos, notes or tables using the GX1–GX5 forms in
-  `assets/form-report.md`. NOT the day's to-do list or team reminder (that is `reminder`), NOT issue classification or a completion forecast (that is `project-insights`), NOT for changing a value in the file (that is `project-update`). Load the `using-doox` skill first — it holds the identity gate and the file-reading rules this skill depends on.
+description: "Read ONE market's project plan — or any progress checklist/tracker the user hands over, e.g. a launch checklist — and produce the progress report in the customer's template, or in the layout the user names (an Excel with Summary + Details sheets, a bilingual Word) — every task sorted into overdue, near deadline, in progress, done. Use when the user asks for a báo cáo tiến độ, asks how one market's project is doing, asks what is overdue, or hands over a plan file and asks for the report. Also covers management reports that are not progress reports — báo cáo điều hành, đề xuất quyết định, kế hoạch triển khai, báo cáo rủi ro/escalation, biên bản họp và bảng hành động — written from memos, notes or tables using the GX1–GX5 forms in `assets/form-report.md`. NOT the day's to-do list or team reminder (that is `reminder`), NOT for changing a value in the file (that is `project-update`). Load `using-doox` first — it holds the identity gate and the file-reading rules this skill depends on."
 ---
 
 # Project report
 
+**Load `using-doox` first** — it routes the request, settles who is running this, and holds the plan-file rules this skill relies on.
+
+## Hard limits
+
+On top of `using-doox`, "Hard limits":
+
+- **Identity gate before the file.** Nothing from the plan file — row, count, filename, PM name — is
+  read out until `using-doox`, "Who is running this" is settled; then only the rows that role may see
+  ("What each role sees" — for a `Chuyên gia`, rows where their code is `Người phụ trách` or
+  `Người hỗ trợ`, together in the four tables), in the reply **and** in the saved file. A claimed `Project Manager` whose
+  name does not match the file's `Tên PM` is stopped without the real PM name being shown. Both
+  branches.
+- **Read-only.** This skill never writes to a plan file (§6). A status conflict is listed, not fixed.
+- **The four tables are the customer's template** (§5): opening lines, section headings, their order,
+  numbering and the six columns are fixed. Never render a progress report as a GX form, never add a
+  GX block to it, never add, merge, rename or drop a section.
+- **Done is exact** (§4): checkbox TRUE *and* text `Hoàn thành`, per `using-doox`, "Reading a plan file".
+- **Print in full.** Every row, every cell, in the chat reply; the saved file is a copy, never a
+  substitute. Never invent a cell, never translate a value.
+- **Never overwrite** an existing file; a new name gets ` (2)`, ` (3)`…
+
 ## 1. When to use
 
-The user hands over a plan file (`.xlsx`) and asks about progress, or asks for a progress report for
-one market.
-
-**Two branches, and the wrong one silently destroys the deliverable.**
-
-| The ask | Branch | Where the rules are |
+| The ask | Branch | Rules |
 |---|---|---|
-| Tiến độ / quá hạn / một thị trường đang thế nào, từ file kế hoạch | **Progress report** | Sections 2–6 below. Four fixed tables. |
-| Báo cáo điều hành, đề xuất quyết định, kế hoạch triển khai, báo cáo rủi ro/escalation, biên bản họp + bảng hành động — từ memo, ghi chú, email, bảng rời hoặc đầu ra của một skill khác | **Management report** | `assets/form-report.md`, forms GX1–GX5. |
+| Tiến độ / quá hạn / một thị trường đang thế nào, từ file kế hoạch hoặc checklist/tracker | **Progress report** | §2–§6. Four fixed tables. |
+| Báo cáo điều hành, đề xuất quyết định, kế hoạch triển khai, báo cáo rủi ro/escalation, biên bản họp + bảng hành động — từ memo, ghi chú, email, bảng rời hoặc đầu ra của skill khác | **Management report** | §7, forms GX1–GX5 in `assets/form-report.md`. |
 
-The progress branch is the default and it is rigid: the four tables are the customer's own template,
-not a layout choice. Never render a progress report as a GX form, never add a GX block to it, and
-never drop a table because a GX form has no equivalent.
-
-The management branch exists for the material the four tables cannot hold — a decision that needs an
-approver, a plan that needs owners and gates, a meeting that needs a decision register. Read
-`assets/form-report.md`, pick one form by the outcome the reader needs, and follow that form's
-`reasoning`, `missing_data` and `template_*` fields. Output is the chat reply plus the same content in
-a `.docx`, same as the progress branch (§5).
-
-An ask that could be either — a plan file handed over with "viết cho tôi báo cáo gửi sếp" — is
-**asked about, not guessed**. One question, then run one branch.
+The progress branch is the default. An ask that could be either — a plan file with "viết cho tôi báo
+cáo gửi sếp" — is **asked about in one question, not guessed**: the wrong branch silently loses the
+deliverable.
 
 ## 2. Input — progress branch
 
-Sections 2 to 6 are the progress branch only. The management branch has its own input, its own form
-and its own output, all in §7.
-
-**Load the `using-doox` skill before anything else in this section.** If this skill was dispatched on
-its own, that has not happened yet — do it now, before listing the folder and before opening the
-file. The identity gate lives there, and a report printed before the role is known cannot be
-un-shown.
-
-- Who is running this — `using-doox`, "Who is running this". If the README does not answer it, ask
-  before reading the file. A `Project Manager` gets every row, but only of a file whose `Tên PM`
-  matches their name — the claim is verified there, and a failed check stops the run without
-  revealing the real PM name. A `Chuyên gia` gets only the rows carrying their PIC code, as
-  `Người phụ trách` or `Người hỗ trợ`. Print the identity line above the report.
-- The plan file — a spreadsheet, `.xlsx` or a native Google Sheet — or any progress checklist or
-  tracker the user attached, read per `using-doox`, "When a file does not match a convention".
-- The market, the project and the PM name. They come from the filename, which follows
-  `[Thị trường] - [Tên dự án] - [Tên PM]`, extension optional — use the `using-doox` skill to read them, and show
-  what was read before printing the report. If the filename does not follow the convention, ask the
-  market once, per that same section, rather than guessing, or the report goes out under the wrong
-  market.
-- Other sources the user hands over with it — meeting minutes, a mail, a news update. Their facts go
-  into `Hiện trạng vấn đề` / `Vấn đề phát sinh` of the rows they concern, each marked with its source
-  (`theo biên bản họp 22/09`); they never change a status or a date the file itself holds.
+- **Identity** — `using-doox`, "Who is running this"; print the identity line above the report.
+- **The file** — a plan file (`.xlsx` or native Google Sheet), or any checklist/tracker the user
+  attached, read per `using-doox`, "When a file does not match a convention".
+- **Market and project** — from the filename (`using-doox`, "Plan file naming"), shown per "Say what
+  was read" before the report. Not readable from the name — ask the market once; a guess sends the
+  report out under the wrong market.
+- **Other sources handed over with it** (minutes, a mail, news) — their facts go into `Ghi chú` of
+  the rows they concern, tagged with the source (`theo biên bản họp 22/09`). They never change a
+  status or a date the file holds.
 
 ## 3. Fields to collect
 
-Read the file per `using-doox`, section "Reading a plan file" — the two sheets, the join by row
-position, the built STT, the required columns, the section-heading rows to drop, and which sheet each
-field comes from all live there. Do not re-derive any of it here.
+Read per `using-doox`, "Reading a plan file" (join, built STT, required columns, heading rows, which
+sheet each field comes from, the one column-mapping line per file).
 
-Thirteen fields end up in the report: STT, Danh mục công việc, PIC, Ngày bắt đầu, Ngày kết thúc,
-Trạng thái (text), the completion checkbox, Hiện trạng vấn đề, Vấn đề phát sinh, Phương án xử lý,
-Ghi chú, Phương án triển khai, Tiêu chuẩn hoàn thành. `Rủi ro` is read but not printed.
+Eight fields: STT, Danh mục công việc, PIC, Ngày bắt đầu, Ngày kết thúc, Trạng thái (text), the
+checkbox (classification only, not printed), Ghi chú. The other columns are not part of the report.
 
 ## 4. Classification
 
-`using-doox` defines done — checkbox TRUE **and** text `Hoàn thành`; anything failing either
-condition counts as not done.
-
-Table 4 holds only `Hoàn thành`; tables 1, 2 and 3 hold only `Chưa triển khai` and
-`Đang triển khai`.
-
-Test in order, top to bottom. A task placed in an earlier table never reappears in a later one.
+Tables 1–3 hold only `Chưa triển khai` / `Đang triển khai`; table 4 only done tasks. Test top to
+bottom; a task placed in an earlier table never reappears later.
 
 | # | Table | Condition | Date column |
 |---|---|---|---|
 | 1 | Đầu việc quá deadline | not done + Ngày kết thúc < today | Ngày kết thúc |
 | 2 | Các đầu việc gần deadline | not done + today ≤ Ngày kết thúc ≤ today+3 | Ngày kết thúc |
-| 3 | Các đầu việc đang trong quá trình triển khai | not done + Ngày bắt đầu ≤ today + not already in 1/2 | Ngày bắt đầu |
+| 3 | Các đầu việc đang trong quá trình triển khai | not done + Ngày bắt đầu ≤ today + not in 1/2 | Ngày bắt đầu |
 | 4 | Các công việc đã hoàn thành | checkbox TRUE **and** text `Hoàn thành` | Ngày kết thúc |
-| — | Chưa bắt đầu | everything left: Ngày bắt đầu in the future, or no dates | no table |
+| — | Chưa bắt đầu | the rest: start in the future, or no dates | no table |
 
-**Status conflicts.** A task whose checkbox is TRUE while the text column is not `Hoàn thành`, or the
-reverse, counts as not done and still lands in table 1/2/3 by its dates. Flag it twice:
-
-- In its own row, append `[đã tick, cột chữ chưa cập nhật]` to whatever `Ghi chú` already holds.
-- List it again after table 4: Danh mục công việc plus both status values, so the user can fix the
-  file.
+**Status conflict** — checkbox and text disagree: not done, placed in 1/2/3 by its dates, and flagged
+twice so the user can fix the file: `[đã tick, cột chữ chưa cập nhật]` appended to its `Ghi chú`, and
+listed after table 4 with Danh mục công việc and both status values quoted as written.
 
 ## 5. Output
 
-**The report is the chat reply, and the same report is also saved as a file.** Print it in full in
-the reply (below), then write the identical content to `Báo cáo tiến độ [Thị trường] dd_mm_yyyy.docx`
-(GX branch: `Báo cáo [tên form] [Thị trường] dd_mm_yyyy.docx` — tên form: GX1 `Kết quả và tiến độ`,
-GX2 `Đề xuất quyết định`, GX3 `Kế hoạch triển khai`, GX4 `Rủi ro và xử lý`, GX5 `Quyết định và hành
-động`; `[Thị trường]` is omitted when the report is not about one market; whatever the name, it must
-not split into three parts on ` - `, or `using-doox` reads it as a plan file) in the local working
-folder — or, when the user named a layout (an `.xlsx` with Summary + Details, bilingual cells, a
-colour rule), in exactly that layout and file type instead, per `using-doox` — a `.md` of the same name only when a `.docx` cannot be produced; if the name
-exists, add ` (2)`, ` (3)`… rather than overwrite. The file carries exactly the rows the role may see,
-nothing more. The file never replaces the printed report: a reply that points at the file instead of
-printing the tables has not delivered it.
+**The chat reply is the report; the same content is also saved as a file** in the local working
+folder: `Báo cáo tiến độ [Thị trường] dd_mm_yyyy.docx` (GX branch: `Báo cáo [tên form] [Thị trường]
+dd_mm_yyyy.docx` — GX1 `Kết quả và tiến độ`, GX2 `Đề xuất quyết định`, GX3 `Kế hoạch triển khai`, GX4
+`Rủi ro và xử lý`, GX5 `Quyết định và hành động`; `[Thị trường]` omitted when not about one market). A
+name must never split into three parts on ` - `, or `using-doox` reads it as a plan file. A layout the
+user named (an `.xlsx` with Summary + Details, bilingual cells, a colour rule) replaces the `.docx`,
+content rules unchanged; `.md` only when a `.docx` cannot be produced.
 
-**Print every table in full, as Markdown, in the reply.** All four sections, every row of every
-section, every column in the order given below, each cell carried whole. `Phương án triển khai` and
-`Tiêu chuẩn hoàn thành` run to several hundred characters with numbered sub-steps — carry them
-whole, only collapsing newlines inside a cell so the Markdown row stays valid. An empty cell prints
-as `-`. An empty section still prints its header row plus `_(không có)_`.
-
-A prose recap of the counts is not the report. `"Quá deadline: 4, Đang triển khai: 14"` states the
-numbers correctly and still fails, because it drops `Hiện trạng vấn đề`, `Vấn đề phát sinh` and
-`Phương án xử lý` — exactly the columns the PM acts on.
-
-The report runs long on a real market: reading the file in slices and printing the tables in
-consecutive messages marked `(tiếp)` is fine. Shortening is not. Never cut rows, never cut cells,
-never replace a table with a sentence, never point at a file instead.
+**Print every table in full, as Markdown.** Every row, every column in order, each cell whole (only
+newlines inside a cell collapsed). Empty cell `-`; empty section keeps its heading and header row plus
+`_(không có)_`. A count recap (`"Quá deadline: 4, Đang triển khai: 14"`) is not the report — it drops
+which task, whose, when, which is what the PM acts on. A long report may run over consecutive messages
+marked `(tiếp)`; shortening it may not.
 
 Opening lines, verbatim:
 
@@ -129,8 +97,7 @@ Báo cáo tiến độ dự án:
 Cập nhật tiến độ dự án tại thị trường [Tên thị trường] dựa theo cập nhật mới nhất:
 ```
 
-Then four sections, each heading written exactly like this — number, label, colon, row count in
-brackets, then the table:
+Then the four sections, heading written exactly — number, label, colon, row count — then the table:
 
 ```
 1. Đầu việc quá deadline: (4)
@@ -139,15 +106,27 @@ brackets, then the table:
 4. Các công việc đã hoàn thành: (3)
 ```
 
-Do not rename, reorder, merge or drop a section, and do not add one — no `Các công việc sắp tới`, no
-`Chưa bắt đầu` table, no count-total line at the end. A `Chuyên gia` still gets all four sections,
-filtered to their rows; a section left empty by the filter prints `_(không có)_` like any other.
+No extra section (`Các công việc sắp tới`, `Chưa bắt đầu`), no total line. A `Chuyên gia` gets all
+four sections, filtered to their rows.
 
-### The same four sections in English and French
+All four tables, six columns:
 
-The Vietnamese above is **canonical** — it is the customer's template, and the four sections, their
-order and their numbering never change. What changes with the reply's language (`using-doox`,
-"Language") is the wording of the labels, and only to these:
+| STT | Danh mục công việc | PIC | Timeline | Ghi chú | Trạng thái |
+|---|---|---|---|---|---|
+
+`Timeline` = `Ngày bắt đầu – Ngày kết thúc`, `dd/mm/yyyy`, a missing side `-`. `Trạng thái` is the text
+column as written. `Ghi chú` is empty on most rows — `-`, never invented. Level of detail expected:
+
+```
+| II.3.1 | Chuẩn bị hồ sơ & đầu mối nộp hồ sơ | Doox4 | 01/08/2026 – 21/08/2026 | - | Đang triển khai |
+```
+
+After table 4: the status-conflict list, if any.
+
+### Labels in English and French
+
+The Vietnamese is canonical (the customer's template). In an en/fr reply (`using-doox`, "Language")
+only these labels change; sections, order and numbering do not:
 
 | # | vi | en | fr |
 |---|---|---|---|
@@ -158,87 +137,41 @@ order and their numbering never change. What changes with the reply's language (
 | 3 | `Các đầu việc đang trong quá trình triển khai` | `Tasks in progress` | `Tâches en cours` |
 | 4 | `Các công việc đã hoàn thành` | `Completed tasks` | `Tâches terminées` |
 
-Empty section: `_(không có)_` / `_(none)_` / `_(aucune)_`. Continued message: `(tiếp)` / `(cont.)` /
-`(suite)`. The status-conflict tag is the skill's own annotation, so it follows the reply's language:
-`[đã tick, cột chữ chưa cập nhật]` / `[checkbox ticked, text column not updated]` /
-`[case cochée, colonne texte non mise à jour]` — but the two conflicting values it reports are quoted
-from the file exactly as written.
-
-Column headers follow the same split: the eight/seven headers below are rendered in the reply's
-language, while **every cell under them is quoted from the file untouched** — `Danh mục công việc`
-values, PIC codes, `Trạng thái` words and note text stay exactly as the plan file wrote them, in the
-plan file's language. Say so in one line above the report when the two languages differ.
-
-Tables 1, 2, 3 — eight columns:
-
-| STT | Danh mục công việc | PIC | Ngày kết thúc | Hiện trạng vấn đề | Vấn đề phát sinh | Phương án xử lý | Ghi chú |
-|---|---|---|---|---|---|---|---|
-
-Table 3 swaps `Ngày kết thúc` for `Ngày bắt đầu`. Every other column keeps its place.
-
-Dates print as `dd/mm/yyyy`. One real row, to fix the level of detail expected:
-
-```
-| II.3.1 | Chuẩn bị hồ sơ & đầu mối nộp hồ sơ | Doox4 | 21/08/2026 | Đã nhận checklist bản mềm, chờ tư vấn xác nhận | - | - | - |
-```
-
-`Hiện trạng vấn đề`, `Vấn đề phát sinh`, `Phương án xử lý` and `Ghi chú` come from the control
-sheet and are empty on most rows — print `-`, never leave the cell out and never invent content.
-
-Table 4 — seven columns:
-
-| STT | Danh mục công việc | PIC | Ngày kết thúc | Ghi chú | Phương án triển khai | Tiêu chuẩn hoàn thành |
-|---|---|---|---|---|---|---|
-
-`Phương án triển khai` and `Tiêu chuẩn hoàn thành` are the long ones — print them whole, they appear
-only in table 4.
-
-After table 4: the status-conflict list, if there is one.
+Empty: `_(không có)_` / `_(none)_` / `_(aucune)_`. Continued: `(tiếp)` / `(cont.)` / `(suite)`.
+Conflict tag: `[đã tick, cột chữ chưa cập nhật]` / `[checkbox ticked, text column not updated]` /
+`[case cochée, colonne texte non mise à jour]`. Column headers translate; every cell stays as the file
+wrote it — say so in one line above the report when the languages differ.
 
 ## 6. Boundaries
 
-**Quy tắc chung — `project-update` là skill duy nhất được ghi vào file kế hoạch.**
-
-**Quy tắc riêng của skill này — `project-report` không ghi vào file kế hoạch.** A status conflict it
-finds is listed, never corrected; the correction goes through `project-update`, with its
-confirmation. The files it writes are the project `README.md`, per `using-doox`, and the new report
-`.docx` (§5).
-
-Both rules hold on the management branch too. A GX report reads the plan file; it never edits it.
+**`project-update` is the only skill that writes to a plan file; `project-report` never does**, on
+either branch. A conflict it finds goes to `project-update`, with its confirmation. It writes only the
+report file (§5) and the project README (`using-doox`, "The project README").
 
 ## 7. Management branch
 
-For the material the four tables cannot hold. Read `assets/form-report.md` before writing anything —
-it holds the selection table, the five forms and the twelve context rules, and a user who edited it
-gets what they edited.
+Read `assets/form-report.md` before writing — it holds the selection table, the five forms and the
+context rules, and a user who edited it gets what they edited.
 
 ### 7.1 Input
 
-Whatever the user supplied in this session: a memo, meeting notes, an email, a loose table, a plan
-file, or the output of an earlier skill in the same conversation. Read it whole first.
+Whatever the user supplied this session — memo, notes, email, loose table, plan file, an earlier
+skill's output. Read it whole. The identity gate still runs before a plan file is read; a `Chuyên
+gia` report is built only from their own rows.
 
-The identity gate still applies, and for the same reason: run `using-doox` before reading a plan file
-or printing anything. A `Chuyên gia` gets a report built only from rows carrying their PIC code,
-exactly as on the progress branch.
+Extract purpose, audience, scope, period, deadline and format rather than re-asking; ask only about a
+gap that changes the report. Three rules are why this branch exists:
 
-**Extract, do not re-ask** — purpose, audience, scope, period or cutoff, deadline, format. Ask only
-about a gap that changes the report.
-
-Three rules decide what the report may say, and they are the reason this branch exists rather than
-free-form writing:
-
-- **A figure in the material is the figure.** Never replaced by model knowledge, never rounded into a
-  nicer number, never carried across with a different unit or period than the source used.
-- **Missing is named, not filled.** A critical input that is absent is written
-  `[INPUT NEEDED: <field>]` and listed after the report. Missing is not zero, not "no issue", not
-  approved and not complete.
-- **States are kept apart.** Đã giao ≠ đã nghiệm thu ≠ đã đóng; đề xuất ≠ đã duyệt; baseline gốc ≠
-  ngày điều chỉnh chưa được duyệt. Owner-complete does not establish reviewer acceptance, and an
-  unapproved change is a proposal, not a new baseline.
+- **A figure in the material is the figure** — never replaced by model knowledge, rounded, or carried
+  across in another unit or period.
+- **Missing is named, not filled** — `[INPUT NEEDED: <field>]`, listed after the report. Missing is not
+  zero, not "no issue", not approved, not complete.
+- **States are kept apart** — đã giao ≠ đã nghiệm thu ≠ đã đóng; đề xuất ≠ đã duyệt; baseline gốc ≠
+  ngày điều chỉnh chưa duyệt. Owner-complete is not reviewer acceptance.
 
 ### 7.2 Pick the form
 
-One form, by the outcome the reader needs — not by cadence and not by topic:
+One form, by the outcome the reader needs — not by cadence or topic:
 
 | The reader needs | Form |
 |---|---|
@@ -248,38 +181,30 @@ One form, by the outcome the reader needs — not by cadence and not by topic:
 | đánh giá rủi ro / sự cố và định phương án, hoặc escalate vượt thẩm quyền | GX4 |
 | ghi nhận quyết định, giao việc, theo dõi cam kết đã có | GX5 |
 
-A risk needing intervention takes GX4 first. Otherwise: GX2 → GX3 → GX5 → GX1. Then read the one
-`90_Context_Rules` row matching the source report type — weekly, project status, escalation,
-milestone, change proposal and so on. That row adds checks; it never selects a second form.
-
-Material fitting no row uses the closest intent and states the assumption. A request that is really
-two reports — a decision proposal and a meeting record — is asked about, not merged.
+A risk needing intervention takes GX4 first; otherwise GX2 → GX3 → GX5 → GX1. Then apply the one
+`90_Context_Rules` row for the source report type — it adds checks, never a second form. Material
+fitting no row takes the closest intent and says so; a request that is really two reports is asked
+about, not merged.
 
 ### 7.3 Output
 
-The chat reply, in the shape the chosen form's `template_*` fields give: its title line, its
-conclusion first, then its tables. `reasoning` is the order the argument is made in,
-`minimum_inputs` is what must be present or flagged, the `template_*` fields are what must survive
-any shortening, `missing_data` is the gap that may not be hidden, and `adaptive_blocks` are added only
-when the material actually triggers them.
+The chat reply in the chosen form's `template_*` shape — title, conclusion first, then tables —
+following its `reasoning`, `minimum_inputs`, `missing_data` and, only when triggered,
+`adaptive_blocks`. Saved as a `.docx` as in §5.
 
-Save it to a `.docx` exactly as §5 does for the progress branch. Default length is one page, around
-250–450 words, shorter for an alert or an action register, unless the user asked otherwise.
+Default length about one page (250–450 words), shorter for an alert or action register, because the
+reader is a manager; go longer when the user asks or the material needs it, and say why.
 
-Written in the user's language (`using-doox`, "Language") — English when the user writes English.
-This deliberately replaces the library's "English default": the reader of this branch is the user,
-so the user's language wins. Every value quoted from the material stays in the material's own
-language. The GX `template_*` fields are English because they are the frame, not the output language.
-Form IDs and field keys — `GX2`, `template_options` — are internal and never printed.
+Written in the user's language (`using-doox`, "Language"), not the library's English default; quoted
+values stay in the material's language. Form IDs and field keys (`GX2`, `template_options`) are never
+printed — name the form by its Vietnamese name from §5.
 
-Before returning, check the report against its own inputs: arithmetic and denominators reproduce,
-periods and units match the wording, every `[INPUT NEEDED: …]` is still visible, and no
-`{{placeholder}}` survived. Then say which form was used — by its Vietnamese name from §5 (e.g.
-`Đề xuất quyết định`), never the GX code — and list the gaps.
+Before returning, check: arithmetic and denominators reproduce, periods and units match, every
+`[INPUT NEEDED: …]` is visible, no `{{placeholder}}` survived. Then name the form used and list the
+gaps.
 
 ### 7.4 Boundaries
 
-This branch writes a report from supplied internal facts. It does not go out and research an external
-question — that is `market-research` — and it does not send anything. A report the user then wants
-mailed goes to `mail-draft`, with the figures, the cutoff and the wording of any decision carried
-across unchanged. Run only the stage that was asked for.
+Writes from supplied internal facts only: no external research (that is `market-research`), nothing
+sent. A report the user wants mailed goes to `mail-draft`, figures, cutoff and decision wording
+carried across unchanged. Run only the stage asked for.

@@ -1,8 +1,8 @@
 # Final audit
 
-`research-method` §13. Read once, after the last block is written and before the reply.
+§13 of `SKILL.md`. Read once, after the last block is written and before the reply.
 
-Blocks were already audited as they were written (`market-research` §12; an RX answer is audited
+Blocks were already audited as they were written (§12 in `references/workbook.md`; an RX answer is audited
 against its form's `review_check`), so this pass covers only what a single block cannot see. Run it
 against the runtime ledger and the blocks written in this run; do not re-read the whole workbook to
 perform it.
@@ -10,7 +10,7 @@ perform it.
 ## A. Framework coverage
 
 Coverage is checked **ledger-side**, not by re-reading the file. For the workbook the denominator is
-`wb.py cells` (`market-research` §3) — the writable set, already computed at the split — and the §4
+`wb.py cells` (§3) — the writable set, already computed at the split — and the §4
 split opened one ledger row per claim against it; for an RX answer it is the form's required parts.
 So:
 
@@ -30,13 +30,14 @@ Then confirm, without a full re-read:
 - no cell outside the `cells` set was written — column A labels, block titles and column headers are
   intact, and the conclusion-block field lists on the title rows (`B49`/`B53` on the bundled asset)
   are still there;
-- prose cells carry the framework's full field list (`market-research` §12), `Giới hạn` and the
+- prose cells carry the framework's full field list (§12), `Giới hạn` and the
   closing action included, one field per line rather than one paragraph;
 - an RX answer sits at its form's `default_length` or the user's stated length, with depth in an
   appendix rather than in the body.
 
 A cell whose block was skipped or interrupted is a coverage failure — fill it with a named gap rather
-than leaving it blank.
+than leaving it blank. The denominator is the blocks the objective covers: a contractor-only workbook
+is complete with `Bảng 3B` and row 30 filled, and the reply names the blocks left as placeholders.
 
 ## B. Cross-block consistency
 
@@ -49,7 +50,7 @@ than leaving it blank.
 
 Every conclusion row draws only on rows already populated above, introduces no new factual claim, and
 carries no stronger status than the weakest material premise beneath it. In an RX answer, a sentence
-labelled suy luận or kịch bản never carries `Đã xác minh`.
+labelled `Suy luận` or `Kịch bản` never carries `Đã xác minh`.
 
 ## D. Adversarial audit of decision-grade claims
 
@@ -76,10 +77,10 @@ Fix the claim or expose the limitation before delivery.
 ## E. Contractor-list audit
 
 Only when the objective includes a contractor list. Run audit E as written in
-`../../contractor-search/references/contractor-enumeration.md`. It is short by design — running out of budget is a reason to
+`references/contractor-enumeration.md`. It is short by design — running out of budget is a reason to
 ship the workbook with named gaps, never a reason to skip it.
 
 ## F. Competitor-comparison audit
 
 Only when the objective includes a competitor comparison. Run audit F as written in
-`../../competitor-research/references/competitor-comparison.md`.
+`references/competitor-comparison.md`.

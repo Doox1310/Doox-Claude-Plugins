@@ -1,40 +1,47 @@
 ---
 name: plan-consolidation
-description: Use when the user hands over several kế hoạch spreadsheets built to different structures and asks to quy hoạch chúng về một form chung, or to gộp kế hoạch của nhiều phòng ban vào một file tổng hợp.
+description: Use when the user hands over several kế hoạch spreadsheets built to different structures and asks to quy hoạch chúng về một form chung, or to gộp kế hoạch của nhiều phòng ban vào một file tổng hợp. Load `using-doox` first.
 ---
 
 # Plan Consolidation
 
-Two commands, run separately. **Never chain them.**
+**Load `using-doox` first** — it routes the request, settles who is running this, and holds the plan-file rules this skill relies on.
+
+## Hard limits
+
+1. **Only a verified `Project Manager`**, on files whose `Tên PM` matches their name (gate below).
+2. **Never write to a source file.** Output is new files; `project-update` alone writes the originals.
+3. **Never chain the two commands** — `gộp` does not run after `quy hoạch` unasked.
+4. **The form is confirmed before any file is written** (step 5).
+5. **Never invent data**: a form column with no source is written empty (`null`), never filled, never
+   dropped; rows sharing a `Danh mục CV` are never merged; duplicate conflicts go to the user.
+6. **The output name must not split into three parts on ` - `** — anything that does is read as a plan
+   file and pulled into the reminder. `Ke hoach tong hop [dự án] dd_mm_yyyy.xlsx` is safe.
+7. **No row passes through the model** — never read a whole sheet into the reply.
 
 | Lệnh | Vào | Ra |
 |---|---|---|
 | `quy hoạch` | N file khác cấu trúc | N file cùng một form chung |
 | `gộp` | N file **đã cùng form** | 1 file tổng hợp, thêm cột `Phòng ban` |
 
-`gộp` adds a column, so its output schema is not the form. Running it automatically
-after `quy hoạch` hands the user a file they did not ask for, in a shape they did not
-approve. Finish `quy hoạch`, print the form, stop.
+`gộp` adds a column, so chaining it would hand the user a shape they never approved. Finish
+`quy hoạch`, print the form, stop.
 
-## Identity gate — required
+## Identity gate
 
-This skill reads whole plan files, which is exactly the row filter that `using-doox`
-exists to enforce. Settle identity first, per `using-doox`, and **only a verified
-`Project Manager` may run it**, on the files whose `Tên PM` matches their name. A
-`Chuyên gia` is refused: consolidating is how every row of every market would leave
-the filter. The refusal, verbatim, and nothing added to it:
+Settle identity per `using-doox`, "Who is running this". A `Chuyên gia` is refused — consolidating
+is how every row of every market would leave the role filter. The refusal says exactly this and
+nothing more, in the user's language (`using-doox`, "Language"):
 
 ```
 Quy hoạch và gộp kế hoạch chỉ chạy được với vai trò Project Manager. Vai trò hiện tại
 của bạn là Chuyên gia nên mình không thực hiện được yêu cầu này.
 ```
 
-Never name the PM, never list the files, never say how many rows were in them, never
-offer a filtered version instead — a refusal that shows the shape of the data has
-already leaked part of it.
+No PM name, no file list, no row count, no filtered version instead — a refusal that shows the shape
+of the data has already leaked part of it.
 
-Exception: input files that do **not** split into three parts on ` - ` carry no PM
-name to check against. There is nothing to verify and nothing to leak a role past —
+Exception: input files whose names do **not** split into three parts on ` - ` carry no PM to check —
 run them without the gate, as ordinary documents.
 
 ## The script does the rows
@@ -46,117 +53,71 @@ python scripts/sheets.py merge     <normalized>... -o "<out>.xlsx" --key "Danh m
 python scripts/sheets.py selftest
 ```
 
-`scan` prints each sheet's header row and two sample rows. That is enough to decide a
-mapping; reading every row to decide it costs far more and decides nothing extra.
-**Never read a whole sheet into the reply.** `normalize` and `merge` copy the rows
-themselves, so no row passes through the model.
-
-`scan` **guesses** the header row and the guess is sometimes wrong — a company
-letterhead beats the real header on a form with a title block. Read the `HEAD` line:
-if it holds `CÔNG TY …` or `CỘNG HOÀ …` instead of column names, set `header_row`
-yourself in the mapping.
+`scan` prints each sheet's header and two sample rows — enough to decide a mapping. Its header-row
+guess can lose to a letterhead: if the `HEAD` line holds `CÔNG TY …` / `CỘNG HOÀ …`, set `header_row`
+in the mapping.
 
 ## Deriving the form (`quy hoạch`)
 
-There is no fixed template. The form is derived from the files themselves, and it
-must come out the same on the next run or the normalized files stop matching.
+No fixed template: the form comes from the files and must come out the same next run, or normalised
+files stop matching.
 
-**1. Group sheets by role, not by name.** Every department names its sheets
-differently. Group on the columns they carry — chi tiết công việc, kiểm soát tiến
-độ, tổng quan. A sheet in only one file still belongs in the form, marked optional;
-the other files leave it empty. A sheet whose role is unclear is asked about.
+1. **Group sheets by role** (chi tiết công việc, kiểm soát tiến độ, tổng quan), not by name. A sheet
+   in one file only is kept as optional; an unclear role is asked about.
+2. **Group columns within each role**, first match wins:
+   - identical after normalising (bỏ dấu, lowercase, bỏ dấu câu và khoảng trắng thừa);
+   - known synonyms (default list, open — an obvious pair belongs here, not in a question to the user):
+     - `Danh mục CV` = `Nội dung công việc` = `Đầu việc` = `Hạng mục công việc`
+     - `Người phụ trách` = `PIC` = `Người TH` = `Chủ trì`
+     - `Ngày bắt đầu` = `Start` = `Ngày BĐ`
+     - `Ngày kết thúc` = `Hạn hoàn thành` = `Deadline` = `Ngày KT`
+     - `Trạng thái` = `Tình trạng` = `Tình trang` = `Status`
+     - `Vấn đề phát sinh` = `Vướng mắc` = `Issue`
+     - `Phương án giải quyết` = `Hướng xử lý` = `Phương án xử lý`
+     - `Cập nhật hiện trạng` = `Hiện trạng` = `Tình hình hiện tại`
+   - by the column's **values** (mostly dates, three repeating labels) — proposes only; the user
+     confirms.
+3. **Name each column by the variant used most across sources**, never a new name — the user must
+   recognise their column. Two files make every merge a tie; default tie-break: first in the synonym
+   group, then the variant also used in the workbook's other sheets, then the unabbreviated form.
+   State the pick in the `Gộp:` line — a silent tie-break is the column nobody checks.
+4. **Order** (default): columns in ≥50% of files, then the rest — kept, never dropped — then the three
+   provenance columns the script appends.
+5. **Print the form and stop** — normalising first and asking after is the work done twice:
 
-**2. Group columns within each role.** Three tiers, first match wins:
+   ```
+   Form đề xuất (từ 5 file):
+   Sheet:   Chi tiết CV (5/5) · Kiểm soát tiến độ (3/5, tùy chọn)
+   Cột lõi: Danh mục CV (5/5) | Người phụ trách (5/5) | Ngày kết thúc (4/5)
+   Bổ sung: Rủi ro (2/5) | Ghi chú nội bộ (1/5)
+   Gộp:     "PIC" (B, C) + "Người TH" (A) → "Người phụ trách"
+   Chưa xếp: cột "Ghi chú 2" ở file D — nội dung không nhận dạng được
+   ```
+6. **Record the form in sheet `00 - Form`** of every output file, so the next run reuses it.
 
-- identical after normalising (bỏ dấu, lowercase, bỏ dấu câu và khoảng trắng thừa);
-- known synonyms, one line per group:
-  - `Danh mục CV` = `Nội dung công việc` = `Đầu việc` = `Hạng mục công việc`
-  - `Người phụ trách` = `PIC` = `Người TH` = `Chủ trì`
-  - `Ngày bắt đầu` = `Start` = `Ngày BĐ`
-  - `Ngày kết thúc` = `Hạn hoàn thành` = `Deadline` = `Ngày KT`
-  - `Trạng thái` = `Tình trạng` = `Tình trang` = `Status`
-  - `Vấn đề phát sinh` = `Vướng mắc` = `Issue`
-  - `Phương án giải quyết` = `Hướng xử lý` = `Phương án xử lý`
-  - `Cập nhật hiện trạng` = `Hiện trạng` = `Tình hình hiện tại`
+## Output rules
 
-  The list is not closed — a pair this obvious that is missing from it belongs in tier 2,
-  not in tier 3. Tier 3 is for columns whose meaning genuinely cannot be read off the
-  name. Sending `Ngày bắt đầu` / `Start` to the user as a question spends their attention
-  on something nobody needed to be asked.
-- the column's **values**, not its name — mostly dates → a date column; three repeating labels → a status column. This tier only proposes; the user confirms.
-
-**3. Name each column with the variant used most often across the sources.** Never
-invent a new name: the user has to recognise their own column.
-
-Two files means every merged column is a 1–1 tie, and that is the normal case, not the
-edge one. Break a tie in this order, first rule that decides it: the variant listed
-first in the tier-2 synonym group above; then the one that also appears in the other
-sheets of the same workbook; then the longer, unabbreviated form (`Ngày kết thúc` over
-`Deadline`). State the pick in the `Gộp:` line of the form so the user can overrule it
-— a tie broken silently is the one column they will not think to check.
-
-**4. Order.** Columns in ≥50% of files first, then the rest — **kept, never
-dropped** — then the three provenance columns the script appends.
-
-**5. Print the form and stop.** This is a gate.
-
-```
-Form đề xuất (từ 5 file):
-Sheet:   Chi tiết CV (5/5) · Kiểm soát tiến độ (3/5, tùy chọn)
-Cột lõi: Danh mục CV (5/5) | Người phụ trách (5/5) | Ngày kết thúc (4/5)
-Bổ sung: Rủi ro (2/5) | Ghi chú nội bộ (1/5)
-Gộp:     "PIC" (B, C) + "Người TH" (A) → "Người phụ trách"
-Chưa xếp: cột "Ghi chú 2" ở file D — nội dung không nhận dạng được
-```
-
-Normalising five files and then asking is five files done twice.
-
-**6. The form is recorded in sheet `00 - Form` of every output file**, so the next
-run reuses it instead of deriving a different one.
-
-## Rules
-
-**Never touch a source file.** Output is new files. `project-update` still writes to
-the originals.
-
-**A form column with no source column is written empty**, mapped to `null`. Never
-filled with a plausible value, never dropped.
-
-**Do not merge rows that share a `Danh mục CV`.** The label repeats — on the
-reference file four labels cover fourteen rows. Row position is the identity; the
-provenance columns preserve it.
-
-**Values are copied, not formulas.** The output is derived and read-only. Say so.
-A workbook not written by Excel — a Google Sheets export — can carry formulas with no
-cached result; those cells become `Chưa có giá trị (công thức chưa tính)` and
-`normalize` prints how many. Pass that count on to the user: the number is missing
-from the output, not zero.
-
-**`--key` must name a real column.** `merge` stops if it does not, rather than
-reporting no duplicates for a key it never looked at — an all-clear that was never
-checked is worse than no check.
+- Row position is the identity (a label repeats — four labels cover fourteen rows on the reference
+  file); the provenance columns preserve it.
+- Values are copied, not formulas; the output is derived and read-only — say so. Formulas with no
+  cached result (a Google Sheets export) become `Chưa có giá trị (công thức chưa tính)`; pass on the
+  count `normalize` prints — missing, not zero.
+- `--key` must name a real column; `merge` stops otherwise, because an all-clear on a key never
+  checked is worse than no check.
 
 ## Merging (`gộp`)
 
-`--key` reports rows whose key value appears under more than one department. The
-script **does not de-duplicate and does not resolve anything** — it lists the groups.
-Take them to the user:
+`--key` lists rows whose key appears under more than one department; the script resolves nothing.
+Take each group to the user: same task twice → giữ cả hai / gộp / bỏ một; same task with different
+deadline, PIC or status → both values with both sources, their call, never the more plausible side.
 
-- same task in two departments → giữ cả hai / gộp / bỏ một, their call;
-- same task, different deadline or PIC or status → print both values with both
-  sources and let them settle it. Never pick the more plausible side.
-
-The output opens with a `00 - Đọc trước` sheet stating it is generated and read-only.
-Updates happen in the department files; a refreshed total is a re-run, not an edit.
-
-**Name the output so it does not split into three parts on ` - `.** Anything that
-does is read as a plan file by `using-doox` and pulled into the daily reminder.
-`Ke hoach tong hop [dự án] dd_mm_yyyy.xlsx` is safe.
+The output opens with a `00 - Đọc trước` sheet stating it is generated and read-only; a refreshed
+total is a re-run, not an edit.
 
 ## Before replying
 
 - rows out = rows in, per file — print the comparison;
-- every source column appears in the form, in the optional tier, or in `Chưa xếp`;
+- every source column is in the form, the optional tier, or `Chưa xếp`;
 - the form was confirmed before any file was written;
-- every duplicate group was reported, none silently merged;
+- every duplicate group reported, none silently merged;
 - source files unchanged.

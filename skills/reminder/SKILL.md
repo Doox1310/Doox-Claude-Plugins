@@ -1,46 +1,57 @@
 ---
 name: reminder
-description: Read EVERY market's plan file in the project folder and produce the daily reminder — only the rows that are overdue, due within 3 days, or starting today — as the PM's full table or a specialist's own tasks, plus one Outlook draft per PIC on a PM run. Use when the user asks what has to be handled today, asks to nhắc việc or remind the PICs, or the scheduled morning run fires. NOT a full progress report of one market (that is `project-report`), NOT issue analysis or forecasting (that is `project-insights`). Load the `using-doox` skill first — it holds the identity gate and the file-reading rules this skill depends on.
+description: "Read EVERY market's plan file in the project folder and produce the daily reminder — only the rows that are overdue, due within 3 days, or starting today — as the PM's full table or a specialist's own tasks, plus one Outlook draft per PIC on a PM run. Use when the user asks what has to be handled today, asks to nhắc việc or remind the PICs, or the scheduled morning run fires. NOT a full progress report of one market (that is `project-report`). Load `using-doox` first — it holds the identity gate and the file-reading rules this skill depends on."
 ---
 
 # Reminder
 
+**Load `using-doox` first** — it routes the request, settles who is running this, and holds the plan-file rules this skill relies on.
+
+## Hard limits
+
+On top of `using-doox`, "Hard limits":
+
+- **Identity gate before any file.** Nothing from a plan file is read until `using-doox`, "Who is
+  running this" is settled. A run then prints one view only: a `Project Manager` sees mục 2, a
+  `Chuyên gia` sees mục 1 (§6) — never the other's, never another code's rows.
+- **Read-only.** Never writes to a plan file (§8).
+- **Chat only.** No `.docx`, `.md`, `.pdf` or `.xlsx`, and none offered.
+- **Draft, never send** (§7) — including the unattended 9am run. Send only when the PM asks in that
+  turn, and only the drafts already built. A `Chuyên gia` run writes no mail at all.
+- **No invented addresses.** An email comes only from the plan files (§5); `Thầu` and a code with no
+  address get no mail.
+- **Always print**, even when nothing is due (§6).
+- **Done is exact** — checkbox TRUE *and* text `Hoàn thành`, per `using-doox`, "Reading a plan file".
+
 ## 1. When to use
 
-The user asks what has to be handled today, asks to remind the PICs, or the 9am scheduled run fires.
+The user asks what has to be handled today, asks to remind the PICs, or the 9am run fires.
 
-**The 9am run is not part of this plugin.** The schedule belongs to the harness — Cowork provides it;
-`plugin.json` declares no hook, no cron and no command. Installed anywhere else, this skill runs only
-when a user asks, and nothing announces the difference. Say so if the user assumes a morning mail
-that never arrived: the skill did not fail, it was never fired.
+The 9am schedule is the harness's (Cowork), not this plugin's — `plugin.json` declares no hook, cron
+or command, so installed anywhere else the skill runs only when asked. If a user expects a morning
+mail that never came, say so: the skill was never fired, it did not fail.
 
 ## 2. Input
 
-Every plan file in the Cowork project folder, not one file. Use the `using-doox` skill: read the
-project `README.md` first, settle who is running this, then take each spreadsheet whose name follows
-`[Thị trường] - [Tên dự án] - [Tên PM]` — extension optional, Google Sheets included, per
-`using-doox` — ignoring lock files (`~$…`, `.~lock.…#`). The market
-read from each filename fills the `Thị trường` column, so every row can be traced back to its file.
+Every plan file in the project folder, not one. After identity is settled (`using-doox`, "Who is
+running this"), take each spreadsheet named per `using-doox`, "Plan file naming" (lock files
+ignored); the market from each name fills the `Thị trường` column so every row traces to its file.
 
-A `Project Manager` run covers only the files whose `Tên PM` matches them. A `Chuyên gia` run covers
-every file, filtered to their own rows.
-
-A file that does not follow the convention is not silently skipped and not guessed at — ask the user
-about it, then carry on with the rest.
+A `Project Manager` run covers only files whose `Tên PM` matches them; a `Chuyên gia` run covers
+every file, filtered to their own rows. A file outside the convention is neither skipped silently nor
+guessed at — ask about it (`using-doox`, "When a file does not match a convention") and carry on with
+the rest.
 
 ## 3. Reading a plan file
 
-Per `using-doox`, section "Reading a plan file" — the join by row position, the built STT, the
-required columns, the section-heading rows to drop, which sheet each field comes from, and what
-counts as done. Follow it rather than inventing a second reading, and report the column mapping one
-line per file before printing anything.
-
-The reminder prints no STT column, but still build it: it is the only key that identifies a row when
-the user asks about one.
+Per `using-doox`, "Reading a plan file", including the one column-mapping line per file before
+anything is printed. Build STT even though the reminder does not print it — it is the only key when
+the user asks about a row.
 
 ## 4. Which tasks appear
 
-A task appears when it is **not done** — per `using-doox` — and at least one of:
+A task appears when it is **not done** and fits one case, tested in this order — first match wins,
+so a row sits in exactly one table and is never counted twice:
 
 | Case | Condition |
 |---|---|
@@ -48,66 +59,45 @@ A task appears when it is **not done** — per `using-doox` — and at least one
 | Sắp đến hạn | today ≤ Ngày kết thúc ≤ today+3 |
 | Bắt đầu hôm nay | Ngày bắt đầu = today |
 
-Nothing else. A task that started last week and is due next month is being worked on, not something
-the reminder has to raise; it would repeat every morning until the day it matters and train the
-reader to stop opening the mail.
+Nothing else — a task mid-way and due next month would repeat every morning and train the reader to
+stop opening the mail. The 3-day threshold is the customer's (`idea.txt`: `ngày hoàn thành - 3 ngày`).
 
-**A row belongs to exactly one case.** They overlap — a task starting today and due in two days fits
-two — so assign in this order and stop at the first that holds: **Quá hạn → Sắp đến hạn → Bắt đầu
-hôm nay**. The same task printed in two tables makes the reader count it twice.
-
-Inside each case, order by `Ngày kết thúc` ascending, then by `Thị trường`.
-
-The 3-day threshold comes from `idea.txt` (`ngày hoàn thành - 3 ngày`).
+Default order inside a case: `Ngày kết thúc` ascending, then `Thị trường`, because the nearest
+deadline is what the reader acts on first.
 
 ## 5. PIC codes and their emails
 
-Needed on a `Project Manager` run only — that is the only run that writes mail. Skip this section
-entirely on a `Chuyên gia` run.
+PM runs only — skip on a `Chuyên gia` run. Build the directory per `using-doox`, "The `PIC → email`
+directory". Then:
 
-Build the directory per `using-doox`, section "The `PIC → email` directory" — the one-row-per-code
-layout, the four separators including the en dash `–` (U+2013), and the rule that a missing address
-is never guessed. Do not re-derive it here.
-
-What this skill does with the result:
-
-- `Thầu` appears in the PM table and gets no mail. A `Chuyên gia` therefore never sees `Thầu` rows
-  unless their own code supports one.
-- A code with no email still has its rows in the PM table. It gets no draft, and it is listed at the
-  end of the report so the user can fill the address in.
+- `Thầu` rows appear in the PM table and get no mail. A `Chuyên gia` sees a `Thầu` row only when their
+  own code supports it.
+- A code with no email keeps its rows in the PM table, gets no draft, and is listed after the report
+  so the user can fill the address in.
 
 ## 6. Output
 
-**The report is the chat reply itself.** Produce no `.docx`, `.md`, `.pdf` or `.xlsx`, and do not
-offer to. Print the section in full, every row, every column, each cell carried whole — only
-collapsing newlines inside a cell so the Markdown row stays valid. An empty cell prints as `-`.
-Dates print as `dd/mm/yyyy`.
+The chat reply is the report: every row, every column, each cell whole (only newlines inside a cell
+collapsed), empty cell `-`, dates `dd/mm/yyyy`.
 
-Opening line, verbatim:
+Print the identity line, then the opening line exactly (in the reply's language — see "Labels in
+English and French" below):
 
 ```
 Các công việc cần xử lý trong ngày:
 ```
 
-Then the tables — **no section heading**. A run prints one section, never both, so
-`1. Đối với PIC:` / `2. Đối với PM:` label nothing: the reader already knows which view is theirs,
-and a lone `2.` only advertises the section they did not get. Print neither line.
+Then the tables, with **no section heading** — `1. Đối với PIC:` / `2. Đối với PM:` are not printed;
+a run shows one view and a lone `2.` only advertises the one they did not get. `Mục 1` / `mục 2` are
+names used in this file only.
 
-**A run prints one of the two sections, never both** — which one comes from `using-doox`, "Who is
-running this". Print the identity line first, then:
+- `Project Manager` — **mục 2 only**: one six-column table of every due row of their files, `Thầu`
+  included. No per-PIC tables.
+- `Chuyên gia` — **mục 1 only**: their own rows (`Người phụ trách`), then a table headed `Hỗ trợ` for
+  rows where they are `Người hỗ trợ`.
 
-- `Project Manager` — **mục 2 only**: the single twelve-column table below, every row of every file
-  whose `Tên PM` matches them, `Thầu` included. No per-PIC tables.
-- `Chuyên gia` — **mục 1 only**: their own table (rows where their code is `Người phụ trách`) and,
-  below it, a second table headed `Hỗ trợ` for rows where their code is `Người hỗ trợ`. No other
-  code's table, and no mục 2 — the PM view is not theirs to read.
-
-`Mục 1` / `mục 2` below are names for the two layouts, used here only — never printed.
-
-### Three tables, one per case
-
-**Never one table holding all three cases.** The rows of section 4 are split into three tables, in
-this order, each under its own heading, written exactly:
+**Three tables, one per case, never merged**, headings written exactly (reply's language), in this
+order:
 
 ```
 Quá hạn:
@@ -115,69 +105,70 @@ Sắp đến hạn (trong 3 ngày):
 Bắt đầu hôm nay:
 ```
 
-Same columns in all three — the mục 1 or mục 2 layout below, whichever the run prints. A case with no
-rows still prints its heading, then `_(không có)_`: a morning with an empty `Quá hạn` is the one
-thing the reader most wants to see, and a missing heading reads as a run that forgot it.
+An empty case still prints its heading and `_(không có)_` — an empty `Quá hạn` is what the reader most
+wants to see, and a missing heading reads as a run that forgot it. Nothing due at all still prints the
+opening line and the three empty headings: the 9am run is unattended and Cowork reports no failure,
+so silence must mean the run broke. Inside `Hỗ trợ`, empty cases are dropped, and an empty `Hỗ trợ`
+is dropped whole.
 
-A `Chuyên gia` run splits their own table the same way, and the `Hỗ trợ` table below it too — there
-the empty cases are dropped instead of printed, and an entirely empty `Hỗ trợ` is dropped whole; a
-specialist supporting nobody today does not need to be told so three times.
+Mục 1, five columns (no `PIC` — every row is the specialist's own):
 
-Mục 1, eleven columns — no `PIC` column, every row is the specialist's own:
+| Thị trường | Danh mục công việc | Timeline | Ghi chú | Trạng thái |
+|---|---|---|---|---|
 
-| Thị trường | Danh mục công việc | Ngày bắt đầu | Ngày kết thúc | Phương án triển khai | Tiêu chuẩn hoàn thành | Rủi ro | Hiện trạng vấn đề | Vấn đề phát sinh | Phương án xử lý | Ghi chú |
-|---|---|---|---|---|---|---|---|---|---|---|
+Mục 2, six columns, `PIC` third:
 
-Mục 2, twelve columns — every row of the PM's markets, `Thầu` included, `PIC` inserted third:
+| Thị trường | Danh mục công việc | PIC | Timeline | Ghi chú | Trạng thái |
+|---|---|---|---|---|---|
 
-| Thị trường | Danh mục công việc | PIC | Ngày bắt đầu | Ngày kết thúc | Phương án triển khai | Tiêu chuẩn hoàn thành | Rủi ro | Hiện trạng vấn đề | Vấn đề phát sinh | Phương án xử lý | Ghi chú |
-|---|---|---|---|---|---|---|---|---|---|---|---|
+`Timeline` = `Ngày bắt đầu – Ngày kết thúc`, a missing side `-`. `Trạng thái` is the text column as
+written. `Ghi chú` is empty on most rows — `-`, never invented. No other plan-file column is part of
+the reminder.
 
-`Phương án triển khai`, `Tiêu chuẩn hoàn thành` and `Rủi ro` run to several hundred characters —
-print them whole. `Hiện trạng vấn đề`, `Vấn đề phát sinh`, `Phương án xử lý` and `Ghi chú` come from
-the control sheet and are empty on most rows — print `-`, never invent content.
+After mục 2: the codes with no email, if any. A specialist sees only their own address status.
 
-**Print the report even when nothing is due.** The opening line, then the three headings each with
-`_(không có)_`. The 9am run is
-unattended and Cowork does not report a failed task, so a morning with no message has to mean the run
-broke, never "nothing to do today".
+### Labels in English and French
 
-On a PM run, after mục 2: the list of PIC codes with no email, if there are any. A specialist sees
-only their own address status, not the team's.
+The reply follows the user's language (`using-doox`, "Language"); the unattended 9am run has no
+request to read it from, so it uses the plan files' language. Only these labels change — tables,
+order and cases do not:
+
+| vi | en | fr |
+|---|---|---|
+| `Các công việc cần xử lý trong ngày:` | `Tasks to handle today:` | `Tâches à traiter aujourd'hui :` |
+| `Quá hạn:` | `Overdue:` | `En retard :` |
+| `Sắp đến hạn (trong 3 ngày):` | `Due soon (within 3 days):` | `Échéance proche (sous 3 jours) :` |
+| `Bắt đầu hôm nay:` | `Starting today:` | `Commence aujourd'hui :` |
+| `Hỗ trợ` | `Supporting` | `En appui` |
+| `_(không có)_` | `_(none)_` | `_(aucune)_` |
+
+Column headers: `Thị trường` / `Market` / `Marché`, `Danh mục công việc` / `Task` / `Tâche`, `PIC`,
+`Timeline` / `Timeline` / `Calendrier`, `Ghi chú` / `Notes` / `Remarques`, `Trạng thái` / `Status` /
+`Statut`. Every cell stays as the file wrote it (`Đang triển khai` is quoted, not translated) — say so
+in one line above the report when the languages differ.
 
 ## 7. Mail
 
-**Only a `Project Manager` run writes mail.** One Outlook **draft** per PIC code that has an email and
-at least one row due: recipient that address, body that code's rows in the mục 1 layout (eleven
-columns, no `PIC` column) and split into the same three tables, subject `Nhắc việc [dd/mm/yyyy]`.
-In the mail the empty cases are dropped — a PIC gets the tables that have rows, with no
-`_(không có)_` lines.
+**`Project Manager` runs only.** One Outlook **draft** per code that has an email and at least one due
+row: to that address, subject `Nhắc việc [dd/mm/yyyy]` / `Task reminder [dd/mm/yyyy]` / `Rappel des tâches
+[dd/mm/yyyy]`, body that code's rows in the mục 1 layout split into the three case tables, empty cases
+dropped. Each draft is in the recipient's language, with the labels above; unknown — the user's
+(`using-doox`, "Language"). No draft for the mục 2 table, for `Thầu`, or
+for a code with no address.
 
-Building those per-code tables is the one thing a PM run does beyond printing mục 2 — the report
-stays a single table, the mail does not.
+**Stop at the drafts** — a draft costs a click, a wrong mail in a PIC's inbox cannot be recalled.
+Send only when the PM asks in the same turn (`gửi đi`, `gửi mail cho PIC`): send the drafts already
+built, nothing re-read, no new recipient. A send instruction from an earlier turn or run does not
+carry over; silence is not a request.
 
-**Draft, never send.** The run stops at the drafts every time, including the unattended 9am one. A
-draft costs a click; a wrong mail already in a PIC's inbox cannot be recalled.
+**A `Chuyên gia` run writes no mail** — none to the team, none to themselves, none offered; a request
+to send is refused, because mail on this project goes out from the PM.
 
-**Send only when the PM asks for it in that turn** — `gửi đi`, `gửi mail cho PIC` and the like.
-Then send the drafts already built, and only those: no re-reading, no new recipient, no address that
-was not read out of a plan file, nothing to `Thầu` or to a code whose email is missing. An
-instruction to send given in an earlier turn does not carry over to the next run — the request is per
-run, and silence is not a request.
-
-**A `Chuyên gia` run writes no mail at all.** No draft to the team, none to themselves. They read
-their tables in the chat reply and that is the whole delivery. Do not offer to draft one either, and
-a `Chuyên gia` asking to send is refused: mail on this project goes out from the PM.
-
-No draft for the mục 2 table, none for `Thầu`, none for a code with no address.
-
-Say how many drafts were created and to which addresses, after the report — and after a send, say
-what went out and to whom.
+After the report, say how many drafts were created and to which addresses; after a send, what went
+out and to whom.
 
 ## 8. Boundaries
 
-**Quy tắc chung — `project-update` là skill duy nhất được ghi vào file kế hoạch.**
-
-**Quy tắc riêng của skill này — `reminder` không ghi vào file kế hoạch.** It reads and prints. A cell
-that looks wrong is reported, not corrected — the correction goes through `project-update`, with its
-confirmation. The one file this skill writes is the project `README.md`, per `using-doox`.
+**`project-update` is the only skill that writes to a plan file; `reminder` never does.** A cell that
+looks wrong is reported, and the fix goes through `project-update` with its confirmation. The only
+file this skill writes is the project README (`using-doox`, "The project README").
