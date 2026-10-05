@@ -1,6 +1,6 @@
 ---
 name: reminder
-description: "Read EVERY market's plan file in the project folder and produce the daily reminder — only the rows that are overdue, due within 3 days, or starting today — as the PM's full table or a specialist's own tasks, plus one Outlook draft per PIC on a PM run. Use when the user asks what has to be handled today, asks to nhắc việc or remind the PICs, or the scheduled morning run fires. NOT a full progress report of one market (that is `project-report`). Load `using-doox` first — it holds the identity gate and the file-reading rules this skill depends on."
+description: "Read EVERY market's plan file in the project folder and produce the daily reminder — only the rows that are overdue, due within 3 days, or starting today — as the PM's full table or a specialist's own tasks, plus one Outlook draft per PIC on a PM run. Use when the user asks what has to be handled today, asks to nhắc việc or remind the PICs, or a scheduled run fires. NOT a full progress report of one market (that is `project-report`). Load `using-doox` first — it holds the identity gate and the file-reading rules this skill depends on."
 ---
 
 # Reminder
@@ -16,7 +16,7 @@ On top of `using-doox`, "Hard limits":
   `Chuyên gia` sees mục 1 (§6) — never the other's, never another code's rows.
 - **Read-only.** Never writes to a plan file (§8).
 - **Chat only.** No `.docx`, `.md`, `.pdf` or `.xlsx`, and none offered.
-- **Draft, never send** (§7) — including the unattended 9am run. Send only when the PM asks in that
+- **Draft, never send** (§7) — including an unattended scheduled run. Send only when the PM asks in that
   turn, and only the drafts already built. A `Chuyên gia` run writes no mail at all.
 - **No invented addresses.** An email comes only from the plan files (§5); `Thầu` and a code with no
   address get no mail.
@@ -25,9 +25,9 @@ On top of `using-doox`, "Hard limits":
 
 ## 1. When to use
 
-The user asks what has to be handled today, asks to remind the PICs, or the 9am run fires.
+The user asks what has to be handled today, asks to remind the PICs, or a scheduled run fires.
 
-The 9am schedule is the harness's (Cowork), not this plugin's — `plugin.json` declares no hook, cron
+Any schedule is the harness's (Cowork), not this plugin's — `plugin.json` declares no hook, cron
 or command, so installed anywhere else the skill runs only when asked. If a user expects a morning
 mail that never came, say so: the skill was never fired, it did not fail.
 
@@ -59,7 +59,7 @@ so a row sits in exactly one table and is never counted twice:
 | Sắp đến hạn | today ≤ Ngày kết thúc ≤ today+3 |
 | Bắt đầu hôm nay | Ngày bắt đầu = today |
 
-Nothing else — a task mid-way and due next month would repeat every morning and train the reader to
+Nothing else — a task mid-way and due next month would repeat every run and train the reader to
 stop opening the mail. The 3-day threshold is the customer's (`idea.txt`: `ngày hoàn thành - 3 ngày`).
 
 Default order inside a case: `Ngày kết thúc` ascending, then `Thị trường`, because the nearest
@@ -107,7 +107,7 @@ Bắt đầu hôm nay:
 
 An empty case still prints its heading and `_(không có)_` — an empty `Quá hạn` is what the reader most
 wants to see, and a missing heading reads as a run that forgot it. Nothing due at all still prints the
-opening line and the three empty headings: the 9am run is unattended and Cowork reports no failure,
+opening line and the three empty headings: the scheduled run is unattended and Cowork reports no failure,
 so silence must mean the run broke. Inside `Hỗ trợ`, empty cases are dropped, and an empty `Hỗ trợ`
 is dropped whole.
 
@@ -129,7 +129,7 @@ After mục 2: the codes with no email, if any. A specialist sees only their own
 
 ### Labels in English and French
 
-The reply follows the user's language (`using-doox`, "Language"); the unattended 9am run has no
+The reply follows the user's language (`using-doox`, "Language"); the unattended scheduled run has no
 request to read it from, so it uses the plan files' language. Only these labels change — tables,
 order and cases do not:
 

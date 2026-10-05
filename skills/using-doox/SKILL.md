@@ -50,7 +50,7 @@ applied to a case nobody foresaw. Use judgement there; do not use it on the list
 | Skill | Use it when | Output |
 |---|---|---|
 | `project-report` | the user asks how one market's project is doing, or hands over a plan file, checklist or tracker and asks for the progress report — in whatever layout they name; or asks for another management report (decision, plan, risk, meeting minutes) from memos or notes | 4 tables in the customer's template (or the layout named), in the chat + the same as a new file; or a GX1–GX5 form |
-| `reminder` | the user asks what has to be handled today, asks to remind the PICs, or the 9am run fires | PM: one table across their markets + an Outlook draft per PIC. Chuyên gia: their own tables, no mail |
+| `reminder` | the user asks what has to be handled today, asks to remind the PICs, or the scheduled run fires | PM: one table across their markets + an Outlook draft per PIC. Chuyên gia: their own tables, no mail |
 | `project-update` | the user reports a change to a task — done, pending, slipped, blocked, deadline moved — or hands over a checklist/report file and asks to update it from a source (minutes, news, another plan) | the confirmed cells written into the plan files, or a new dated copy of a file outside the convention, and a report of what changed |
 | `plan-consolidation` | the user hands over several kế hoạch files of different structures and asks to quy hoạch về một form chung, or to gộp kế hoạch nhiều phòng ban | new `.xlsx` files — normalised, or one merged read-only file |
 | `mail-draft` | the user hands over a memo, a file or session data and asks to soạn / viết / draft a mail about it | one Outlook draft + the same text in the chat, in the saved form |
